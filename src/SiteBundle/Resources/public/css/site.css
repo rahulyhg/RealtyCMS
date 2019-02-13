@@ -1,13 +1,3 @@
-@font-face {
-font-family: 'Littera Text Book';
-src: url('/fonts/LitteraTextBook.eot');
-src: url('/fonts/LitteraTextBook.eot?#iefix') format('embedded-opentype'),
-url('/fonts/LitteraTextBook.woff') format('woff'),
-url('/fonts/LitteraTextBook.ttf') format('truetype');
-font-weight: normal;
-font-style: normal;
-}
-
 html {
     height: 100%;
 }
@@ -16,7 +6,7 @@ body {
 	position: relative;
     padding-bottom: 250px;
     min-height: 100%;
-    font-family: "Littera Text Book", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 h1 {
 	font-weight:900;
@@ -34,7 +24,7 @@ h1 {
     margin-bottom:15px;
 }
 .navbar {
-    min-height: 0px;
+    min-height: 0;
     margin-bottom: 0;
 	border:0;
 }
@@ -134,14 +124,12 @@ h1 {
 .carousel-control .glyphicon-chevron-right { right:10%;}
 .carousel-control .glyphicon-chevron-left { left:10%;}
 #owl-first h1 {
-    /*background:RGBA(229, 28, 34, 0.75);
-    border-radius: 10px;*/
     text-shadow: 2px 2px 10px #000;
 }
 #owl-first .img-slide {
     width: 100%;
-    -webkit-filter: blur(0.1px);
-    filter: blur(0.1px);
+    -webkit-filter: blur(1px);
+    filter: blur(1px);
     -webkit-transition: 2s all;
     -o-transition: 2s all;
     transition: 2s all;
@@ -194,8 +182,7 @@ h1 {
 	background: #e0f5ff;
 }
 .pay div {
-    padding-top: 20px;    
-    border-radius: 6px;    
+    padding-top: 20px;
     -webkit-transition: 1s all;
     -o-transition: 1s all;
     transition: 1s all;
@@ -458,7 +445,7 @@ transform: scale(1.02);
     display: block;
 }
 a:focus {
-    outline: 0px auto -webkit-focus-ring-color;
+    outline: 0 auto -webkit-focus-ring-color;
 }
 .dropdown-toggle {
   border: 1px solid #CCC !important;
@@ -692,7 +679,7 @@ ul.social-network li a {
     transition:all .4s;
 }
 .tile:hover .tile-c {
-    top: 0px;
+    top: 0;
     background: rgba(0, 0, 0, 0.9);
 }
 .btn-phone {
@@ -713,8 +700,8 @@ ul.social-network li a {
 	margin-bottom:0;
 }
 .fixed {
-	margin-top: 0px;
-    box-shadow: 0 0px 5px 2px rgb(204, 204, 204);
+	margin-top: 0;
+    box-shadow: 0 0 5px 2px rgb(204, 204, 204);
 	background:#fff;
 }
 .nav-fixed, .fixed .nav-non-fixed {
@@ -804,7 +791,7 @@ ul.social-network li a {
     -o-transition: all 0.3s ease-in-out;
 }
 .tile:hover h4 {    
-	right:0px;
+	right:0;
 }
 .bootstrap-select .dropdown-toggle:focus {
 	outline:0 !important;

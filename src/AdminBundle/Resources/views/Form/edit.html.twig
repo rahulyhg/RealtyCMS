@@ -1,0 +1,43 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+{% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.html.twig' %}{% endif %}
+
+{% block content %}
+    <h1>Добавление / Редактирование</h1>
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('alert') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    {% if photo is defined and photo %}
+        <div class="clearfix">
+            <div class="col-sm-offset-3 col-sm-2">
+                <img width="400" src="{{ photo }}"><br><br>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if form is defined %}
+        {% if form %}
+            <div id="form">
+                <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
+                    {{ form_widget(form) }}
+                </form>
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if form %}
+        <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+        {{ form_javascript(form) }}
+    {% endif %}
+{% endblock %}

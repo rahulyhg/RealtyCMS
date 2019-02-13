@@ -1,0 +1,146 @@
+imports:
+    - { resource: parameters.yml }
+    - { resource: security.yml }
+    - { resource: services.yml }
+    - { resource: "@AdminBundle/Resources/config/services.yml" }
+    - { resource: "@SiteBundle/Resources/config/services.yml" }
+
+# Put parameters here that don't need to change on each machine where the app is deployed
+# http://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
+parameters:
+    locale: ru
+
+framework:
+    #esi:             ~
+    translator:      { fallback: %locale% }
+    secret:          "%secret%"
+    router:
+        resource: "%kernel.root_dir%/config/routing.yml"
+        strict_requirements: ~
+    form:            ~
+    csrf_protection: ~
+    validation:      { enable_annotations: true }
+    #serializer:      { enable_annotations: true }
+    templating:
+        engines: ['twig']
+    default_locale:  %locale%
+    trusted_hosts:   ~
+    trusted_proxies: ~
+    session:
+        # handler_id set to null will use default session handler from php.ini
+        handler_id:  ~
+    fragments:       ~
+    http_method_override: true
+
+# Twig Configuration
+twig:
+    debug:            "%kernel.debug%"
+    strict_variables: "%kernel.debug%"
+
+services:
+     twig.extension.text:
+         class: Twig_Extensions_Extension_Text
+         tags:
+             - { name: twig.extension }
+
+# Propel Configuration
+propel:
+    logging:    %kernel.debug%
+    dbal:
+        driver:               %database_driver%
+        user:                 %database_user%
+        password:             %database_password%
+        dsn:                  %database_driver%:host=%database_host%;dbname=%database_name%;charset=UTF8
+        options:              {}
+        attributes:           {}
+        settings:
+                    charset:    { value: UTF8 }
+
+# Swiftmailer Configuration
+swiftmailer:
+    transport: "%mailer_transport%"
+    host:      "%mailer_host%"
+    username:  "%mailer_user%"
+    password:  "%mailer_password%"
+    spool:     { type: memory }
+
+assetic:
+    java: /usr/bin/java
+    node: /usr/bin/nodejs
+
+    filters:        
+#        yui_css:
+#          jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.8.jar          
+#        yui_js:
+#          jar: %kernel.root_dir%/Resources/java/yuicompressor-2.4.8.jar
+        lessphp:
+            file: %kernel.root_dir%/../vendor/oyejorge/less.php/lessc.inc.php
+            apply_to: "\.less$"
+        cssrewrite: ~        
+#        uglifycss:
+#            bin: /usr/local/bin/uglifycss
+#            apply_to: "\.css$"
+#        uglifyjs2:
+#            bin: /var/www/sm/app/Resources/node_modules/uglify-js/bin/uglifyjs
+#            apply_to: "\.js$"
+
+    assets:
+        bootstrap_css:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/less/bootstrap.less
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/less/responsive-embed.less
+            filters:
+                - lessphp
+                - cssrewrite                
+ #               - uglifycss
+            output: css/bootstrap.css
+        jquery_js:
+            inputs:
+                - %kernel.root_dir%/Resources/public/js/jquery-1.12.1.min.js
+ #           filters:                
+ #               - uglifyjs2
+        bootstrap_js:
+            inputs:
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/transition.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/alert.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/button.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/carousel.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/collapse.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/dropdown.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/modal.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/tooltip.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/popover.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/scrollspy.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/tab.js
+                - %kernel.root_dir%/../vendor/twbs/bootstrap/js/affix.js
+ #           filters:                
+ #               - uglifyjs2
+            output: js/bootstrap.js
+
+fos_user:
+    db_driver: propel
+    firewall_name: main
+    user_class: FOS\UserBundle\Propel\User
+    profile:
+            form:
+                type:               AdminBundle\Form\UsersType
+                name:               fos_user_profile_form
+                validation_groups:  [Profile, Default]
+
+knp_paginator:
+    page_range: 3
+    default_options:
+        page_name: page
+        distinct: true
+    template:
+        pagination: SiteBundle:Default:pagination.html.twig
+
+genemu_form:
+    autocompleter:
+      doctrine: false
+    autocomplete: ~
+    date: ~
+    select2: ~
+    tinymce:
+      enabled: true
+      theme:   modern

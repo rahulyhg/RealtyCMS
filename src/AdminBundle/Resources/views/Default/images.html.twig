@@ -1,0 +1,113 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+
+{% block content %}
+    <h1>Фотографии - {{ item.title }}</h1>
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('alert') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+
+    <div id="reload">
+        <div class="clearfix" id="images">
+            {% if item.ObjectImagess | length %}
+                {% for image in item.ObjectImagess if image %}
+                  <div class="clearfix text-center thumbnail pull-left" id="{{ image.id }}" style="margin-right:5px;">
+                    <div class="sl_img"><img height="100" src="/images/objects/{{ image.path }}"></div>                    
+                    <a class="btn btn-default btn-xs del_img" data-id="{{ image.id }}" title="Удалить"><i class="fa fa-trash-o"></i> Удалить</a>
+                  </div>
+                {% endfor %}                
+            {% endif %}
+            <div class="clearfix">
+                <div class="clearfix text-center thumbnail">
+                    <form id="img_form" action="{{ path('admin_objects_imgadd', {'id': item.id}) }}" role="form" method="POST" enctype="multipart/form-data">
+                        <input type="file" hidden="hidden" id="objects_img_path" name="path">
+                        <div class="sl_img" onclick="$('#objects_img_path').click()"><img class="img-responsive" width="100" src="/images/add.png"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <a class="btn btn-default" href="{{ path('admin_objects_index') }}" title="Назад"><span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
+
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+    <script>
+        $(document).ready(function imm(e) {
+            $('#img_form').on('submit',(function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type:'POST',
+                    url: $(this).attr('action'),
+                    data:formData,
+                    cache:false,
+                    contentType: false,
+                    processData: false,
+                    success:function(data){
+                        $('#reload').html($(data).find('#images'));
+                        imm(e);
+                        $('.loading').hide();
+                    }
+                });
+            }));
+
+            $("#objects_img_path").on("change", function() {
+                $('.loading').show();
+                $("#img_form").submit();
+            });
+
+            $(".del_img").on("click", function() {
+                $('.loading').show();
+                var id = $(this).data('id');
+                $.ajax({
+                    type: "POST",
+                    url: "{{ path('admin_objects_delimg') }}",
+                    data: {id: id},
+                    success: function (data) {
+                        $('#reload').html($(data).find('#images'));
+                        imm(e);
+                        $('.loading').hide();
+                    }
+                });
+            });
+
+            $('.sort', '#images').each(function () {
+                var cell = $(this);
+                cell.width(cell.width());
+            });
+
+            $('#images').sortable({
+                items: '> .sort',
+                stop: function (event, ui) {
+                    $('.loading').show();
+                    var sortedIDs = $("#images").sortable("toArray");
+                    $.ajax({
+                        type: "POST",
+                        url: "sort/{{ item.id }}",
+                        data: {
+                            array: sortedIDs
+                        },
+                        success: function (data) {
+                            $('#reload').html($(data).find('#images'));
+                            imm(e);
+                            $('.loading').hide();
+                        }
+                    });
+                }
+            }).disableSelection();
+        });
+    </script>
+{% endblock %}

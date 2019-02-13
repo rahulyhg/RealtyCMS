@@ -1,0 +1,283 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+
+{% block title %}{{ settings.title }} | {{ settings.name }}{% endblock %}
+{% block metatitle %}{{ settings.title }}{% endblock %}
+{% block description %}{{ settings.description }}{% endblock %}
+{% block keywords %}{{ settings.keywords }}{% endblock %}
+{% block content %}
+    {# Слайдер #}
+	{# 
+    {% if sliders['Верхний'] is defined %}
+      <div id="owl-first" class="owl-carousel visible-lg">
+          {% for item in sliders['Верхний'].SliderImagess if item %}
+              {% if item.link %}<a href="{{ item.link }}">{% endif %}
+                  <div class="item text-center">
+                      <img class="img-slide lazyOwl" src="/images/slider/{{ item.path }}" alt="{{ item.alt }}">
+                      <div class="container">
+                          <div class="carousel-caption">
+                              {{ item.caption | raw }}
+                          </div>
+                      </div>
+					  <div class="back"></div>
+                  </div>
+              {% if item.link %}</a>{% endif %}
+          {% endfor %}
+      </div>
+    {% endif %}
+	#}
+	{# 
+    <div class="pay clearfix">
+		<div class="container text-center clearfix">
+			<a href="{{ path('site_catalog_index', {'type':1}) }}">
+				<div class="col-xs-6 col-sm-2">
+					<img src="/images/p-1.png" alt="Купить">
+					<h2>Купить</h2>
+				</div>
+			</a>
+			<a href="{{ path('site_default_page', {'alias':'prodat'}) }}">
+				<div class="col-xs-6 col-sm-2 padding-5">
+					<img src="/images/p-2.png" alt="Продать">
+					<h2>Продать</h2>
+				</div>
+			</a>
+			<a href="{{ path('site_catalog_index', {'type':2}) }}">
+				<div class="col-xs-6 col-sm-2 padding-5">
+					<img src="/images/p-3.png" alt="Снять">
+					<h2>Снять</h2>
+				</div>
+			</a>
+			<a href="{{ path('site_default_page', {'alias':'sdat'}) }}">
+				<div class="col-xs-6 col-sm-2 padding-5">
+					<img src="/images/p-4.png" alt="Сдать">
+					<h2>Сдать</h2>
+				</div>
+			</a>
+			<a href="{{ path('site_default_page', {'alias':'ocenka'}) }}">
+				<div class="col-xs-12 col-sm-4 padding-5">
+					<img src="/images/p-5.png" alt="Оценка объектов">
+					<h2 class="green">Оценка объектов</h2>
+				</div>
+			</a>
+		</div>
+	</div>
+	#}
+	{# 
+    <div class="search_objects">
+        {% if search_form %}{% embed "SiteBundle:Form:search_form.html.twig" %}{% endembed %}{% endif %}
+    </div>
+	#}
+	<div class="container clearfix"><h1 class="tect-left">Панорама Недвижимость</h1></div>
+	<div class="cates clearfix">
+		<div class="container text-center clearfix">
+			{% for cat in categories if cat %}
+				<div class="col-md-3 padding-0 clearfix">
+					<a class="tile img-box" href="{{ path('site_catalog_index', {'alias':cat.alias})}}">
+						<div class="tile_bg" style="background-image:url('/images/cates/{{ cat.image }}');"></div>
+						{% if cat.min_price %}<h4><b>от {{ cat.min_price|number_format(0,'.',' ') }} <i class="fa fa-rub fa-fw"></i></b></h4>{% endif %}	
+						<div class="tile-o">
+							<div class="tile-t">
+							  <h3>{{ cat.title }}</h3> 							  					  
+							</div>                                                        
+						</div>
+					</a>
+				</div>
+			{% endfor %}
+			<div class="col-md-3 padding-0 clearfix">
+				<a class="tile img-box" href="/catalog?type=2">
+					<div class="tile_bg" style="background-image:url('/images/cates/arenda.jpg');"></div>						
+					<div class="tile-o">
+						<div class="tile-t">
+						  <h3>Аренда</h3> 							  					  
+						</div>                                                        
+					</div>
+				</a>
+			</div>
+		</div>
+	</div>
+
+    <div class="container">
+        <div class="investments_top">            
+			<h2>Мы предлагаем услуги по продаже и аренде помещений в Екатеринбурге.</h2>
+            <p>Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге. Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге. Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге.</p>
+            <p>Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге. Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге.</p>
+        </div>
+    </div>
+
+    {# Почему мы #}
+    <div class="why">
+		<div class="container clearfix">
+			<h2 class="text-center">Почему мы?</h2>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">1</div>
+				<div class="descr">
+					<h4>Оперативность</h4>
+					<p>Мы проводим быструю сдачу/продажу помещений Собственников по оптимальной рыночной цене, а так же быстрый подбор необходимых площадей для аренды/покупки федеральным и региональным сетям.</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">2</div>
+				<div class="descr">
+					<h4>Экономим время</h4>
+					<p>У нас всегда только актуальная база объектов. Обращаясь к нам Вы сокращаете время простоя/поиска объектов на 50-70%. От обращения в компанию до подписания договора проходит не более 5 дней.</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">3</div>
+				<div class="descr">
+					<h4>Высокая экспертность</h4>
+					<p>Наша специализация - коммерческая недвижимость, поэтому Вы всегда получите профессиональную консультацию по любому вопросу: от простой аренды до покупки готового бизнеса.</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">4</div>
+				<div class="descr">
+					<h4>Индивидуальный подход</h4>
+					<p>Для решения Вашей задачи будет трудиться команда именно с тем набором компетенций, который позволит решить ее максимально эффективно.</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">5</div>
+				<div class="descr">
+					<h4>Безопасность</h4>
+					<p>Мы всегда тщательно проверяем юридическую чистоту сделок на всех этапах.</p>
+				</div>
+			</div>
+			<div class="col-sm-6 col-md-4 clearfix">
+				<div class="number">6</div>
+				<div class="descr">
+					<h4>Конфиденциальность</h4>
+					<p>Нам важно Ваше доверие, поэтому будьте уверены, что подробности сделки будем знать только мы с Вами.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	{#
+	<div class="container">
+        <div class="investments_top">
+            <h2 class="text-center">Наши услуги</h2>
+            <p>Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге. Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге. Агентство недвижимости Панорама осуществляет весь комплекс профессиональных услуг в сфере коммерческой недвижимости Екатеринбурга и области, включая юридическое сопровождение сделок по аренде и продаже офисных и торговых помещений в Екатеринбурге.</p>
+        </div>
+    </div>
+	#}
+    {# Заявка #}
+    <div class="text-center feddback_margin">
+		<div class="container text-center feedback_f">
+			<div class="col-sm-8 padding-0 tect-left">
+				<h3>НЕ НАШЛИ ПОДХОДЯЩЕГО ВАРИАНТА?</h3>
+			</div>
+			<div class="col-sm-4 padding-0 text-right">
+				<a class="btn btn-lg btn-default-o" href="#" data-toggle="modal" data-target="#feedback">Свяжитесь с нами</a>
+			</div>				
+		</div>
+	</div>
+
+    {# Слайдер консультанты #}
+	{#
+    {% if consultants|length %}
+    <div class="agents">
+        <div class="container">
+            <h2 class="text-center">Выберите консультанта</h2>
+            <div id="owl-agents" class="owl-carousel">
+                {% for consultant in consultants if consultant %}
+                    <div class="item text-center">
+                        <a href="#" data-toggle="modal" data-target="#feedback_c" data-agent="{{ consultant.id }}"><img class="img-circle lazyOwl" data-src="/images/photo/{{ consultant.photo }}" width="200" alt="{{ consultant.username }}"></a>
+                        <h4>{{ consultant.username }}</h4>
+                        Email: <a href="mailto:{{ consultant.email }}">{{ consultant.email }}</a>
+                        {% if consultant.phone %}<br>Телефон: <b>{{ consultant.phone }}</b>{% endif %}
+                        {% if consultant.position %}<br>Должность: {{ consultant.position }}{% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+	#}
+    {# Слайдер документы #}
+	{#
+    {% if sliders['Рекомендательные письма'] is defined %}
+      <div class="docs">
+          <div class="container">
+              <h2 class="text-center">Рекомендательные письма</h2>
+              <div id="owl-docs" class="owl-carousel">
+                  {% for item in sliders['Рекомендательные письма'].SliderImagess if item %}
+                      {% if item.link %}<a href="{{ item.link }}">
+                      {% else %}<a class="fancybox" href="/images/slider/{{ item.path }}" rel="gallery_{{ sliders['Рекомендательные письма'].id }}">{% endif %}
+                          <div class="item"><img class="img-responsive lazyOwl" data-src="/images/slider/{{ item.path }}" alt="{{ item.alt }}"></div>
+                      </a>
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+    {% endif %}
+	#}
+    {# Слайдер партнеры #} 
+	{#	
+    {% if sliders['Наши партнеры'] is defined %}
+      <div class="clients">
+          <div class="container">
+              <h2 class="text-center">Наши партнеры</h2>
+              <div id="owl-clients" class="owl-carousel">
+                  {% for item in sliders['Наши партнеры'].SliderImagess if item %}
+                      {% if item.link %}<a href="{{ item.link }}">{% endif %}
+                          <div class="item text-center"><div style="background-image: url('/images/slider/{{ item.path }}');width:100%;height:100%" title="{{ item.title }}"></div></div>
+                      {% if item.link %}</a>{% endif %}
+                  {% endfor %}
+              </div>
+          </div>
+      </div>
+    {% endif %}    
+	#}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("#owl-first").owlCarousel({
+                items : 1,
+                autoHeight : false,
+                lazyLoad : true,
+                navigation : true,
+                responsive: false,
+                navigationText : false
+            });
+            $("#owl-agents").owlCarousel({                
+                lazyLoad : true,
+                navigation : true,                
+                itemsCustom : [
+                  [0, 1],                  
+                  [400, 2],
+                  [800, 3]
+                ],
+                navigationText : false
+            });
+            $("#owl-docs").owlCarousel({
+                items : 4,
+                itemsCustom : [
+                  [0, 1],                  
+                  [400, 2],
+                  [600, 3],
+                  [800, 4]
+                ],
+                lazyLoad : true,
+                navigation : true,                
+                navigationText : false
+            });
+            $("#owl-clients").owlCarousel({
+                items : 6,
+                itemsCustom : [
+                  [0, 2],                  
+                  [400, 3],                  
+                  [800, 6]
+                ],
+                lazyLoad : true,
+                navigation : true,
+                navigationText : false
+            });
+            $(".fancybox").fancybox({
+                openEffect	: 'none',
+                closeEffect	: 'none'
+            });
+        });
+    </script>    
+{% endblock %}

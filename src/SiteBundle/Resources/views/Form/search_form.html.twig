@@ -1,0 +1,41 @@
+{% form_theme search_form 'SiteBundle:Form:fields.html.twig' %}
+
+<div class="container" id="search_form">
+    {% if search_form %}
+        <form class="form-horizontal clearfix" role="form" action="{{ path('site_catalog_index') }}" method="GET" {{ form_enctype(search_form) }} onSubmit="form_revision()">
+            <div class="col-sm-3 padding-0">
+                <div class="padding-5 group">
+                    {{ form_row(search_form.type) }}
+                    {{ form_row(search_form.type_object) }}
+                </div>
+            </div>
+            <div class="col-sm-3 padding-0">
+                <div class="padding-5 group">
+                    {{ form_row(search_form.town_id) }}
+                    {{ form_row(search_form.area_id) }}
+                </div>
+            </div>
+            <div class="col-sm-3 padding-0">
+                <div class="padding-5 group">
+                    <div>{{ form_label(search_form.price_from) }}</div>
+                    <div class="clearfix input-group">
+                        {{ form_widget(search_form.price_from) }}
+                        {{ form_widget(search_form.price_to) }}
+                    </div>
+                    {{ form_row(search_form.period_id) }}   
+                </div>
+            </div>
+            <div class="col-sm-3 padding-0">
+                <div class="padding-5 group">                    
+					<div>{{ form_label(search_form.square_from) }}</div>
+                    <div class="clearfix input-group">
+                        {{ form_widget(search_form.square_from) }}
+                        {{ form_widget(search_form.square_to) }}
+                    </div>					
+                    <label>&nbsp;</label>
+                    {{ form_row(search_form.save) }}
+                </div>
+            </div>
+        </form>
+    {% endif %}
+</div>

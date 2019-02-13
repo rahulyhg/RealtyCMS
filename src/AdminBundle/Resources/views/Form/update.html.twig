@@ -1,0 +1,8 @@
+{% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.html.twig' %}{% endif %}
+{% if form is defined %}
+    {% if form %}
+        <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+        </form>
+    {% endif %}
+{% endif %}

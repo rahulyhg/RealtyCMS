@@ -1,0 +1,87 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+{% block content %}
+    <h1>Каталог</h1>
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('alert') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+
+    <div class="clearfix">
+        <a href="{{ path('admin_objects_add') }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить</a>
+    </div><br>
+
+    <div class="clearfix">
+        <div class="highlight">
+            <table class="table table-striped table-hover">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Название</th>
+                    <th>Город</th>
+                    <th>Цена</th>
+                    <th>Опубликовано</th>
+                    <th>Видно всем</th>
+                    <th>Одобрено</th>
+                    <th><i class="fa fa-picture-o"></i></th>
+                    <th class="action">Действия</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in pagination if item %}
+                    <tr{% if not item.Published %} class="info"{% elseif not item.Modered %} class="warning"{% endif %}>
+                        <td>{{ item.id }}</td>
+                        <td><a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
+                        <td>{{ item.Towns.title }}</td>
+                        <td>{{ item.price|number_format(0,'.',' ') }}</td>
+                        <td>{% if item.Published %}<i class="fa fa-check"></i>{% endif %}</td>
+                        <td>{% if item.forAll %}<i class="fa fa-check"></i>{% endif %}</td>
+                        <td>{% if item.modered %}<i class="fa fa-check"></i>{% endif %}</td>
+                        <td><a href="{{ path('admin_objects_images', {'id': item.id}) }}" title="Перейти к фотографиям">Фотографий: {{ item.ObjectImagess|length }}</a></td>
+                        <td class="action">
+                            <a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                            <a href="{{ path('admin_objects_copy', {'id': item.id}) }}" title="Копировать"><i class="fa fa-files-o"></i></a>
+                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objects_delete', {'id': item.id}) }}" title="Удалить">
+                                <i class="fa fa-trash-o"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td colspan="6">Нет элементов</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            {# Modal #}
+            <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title" id="deleteModalLabel"><i class="fa fa-fw fa-trash-o"></i> Удаление</h3>
+                        </div>
+                        <div class="modal-body">
+                            Вы действительно хотите удалить элемент?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" id="btnYes">Удалить</button>
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-offset-7">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+
+    </div>
+    <a class="btn btn-default" href="{{ path('admin_default_index') }}" title="Назад"><span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
+
+{% endblock %}

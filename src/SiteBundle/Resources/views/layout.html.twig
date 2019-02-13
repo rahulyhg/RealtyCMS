@@ -1,0 +1,204 @@
+{% extends '::base.html.twig' %}
+{% block head %}
+
+    {% block stylesheets %}
+        {{ parent() }}
+        {% stylesheets '@bootstrap_css' '@SiteBundle/Resources/public/css/*'  %}
+            <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
+        {% endstylesheets %}
+        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    {% endblock %}
+
+{% endblock %}
+
+{% block body %}
+
+        {# Шапка #}
+        <div class="container">
+            <div class="masthead">
+                <div class="clearfix text-center">
+                    <div class="col-sm-3 padding-5"><a href="{{ path('site_default_index') }}"><img class="img-responsive" src="/images/logo-pan.png" alt="{{ settings.name }}"></a></div>
+                    <div class="col-sm-5 padding-5"><div class="address">{{ settings.address|raw }}</div></div>
+                    <div class="col-sm-4 padding-5 text-right">
+                        <div class="phone">{{ settings.phone }}</div>
+                        <a href="#" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw"></i> Заказать звонок</a>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="menu">
+            <div class="container masthead">
+                <nav class="navbar">                    
+                    <div class="navbar-header text-center">
+						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						  <span class="sr-only">Меню</span>
+						  <span class="icon-bar"></span>
+						  <span class="icon-bar"></span>
+						  <span class="icon-bar"></span>            
+						</button>
+						<a class="navbar-brand" href="{{ path('site_default_index') }}"><img src="/images/logo-pan.png" alt="{{ settings.name }}"></a>
+					</div>
+					<div id="navbar" class="navbar-collapse collapse padding-0">                        
+                        <ul class="nav navbar-nav nav-non-fixed">
+                            <li{% if app.request.attributes.get('_route') == 'site_default_index' %} class="active"{% endif %}><a href="{{ path('site_default_index') }}"><i class="fa fa-fw fa-home"></i></a></li>
+                            <li class="dropdown{% if app.request.attributes.get('_route') in ['site_catalog_index','site_catalog_object'] %} active{% endif %}">
+							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Каталог <span class="caret"></span></a>
+							  <ul class="dropdown-menu">
+								{% for cat in categories if cat %}
+								<li><a href="{{ path('site_catalog_index', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
+								{% endfor %}								
+							  </ul>
+							</li>
+							{#<li{% if app.request.attributes.get('_route') in ['site_catalog_index','site_catalog_object'] %} class="active"{% endif %}><a href="{{ path('site_catalog_index') }}">Каталог</a></li>#}
+                            {% for menu in menus if menu %}
+                                <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+                            {% endfor %}
+                        </ul>
+						<ul class="nav navbar-nav nav-fixed">
+                            <li class="dropdown">
+							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Меню <span class="caret"></span></a>
+							  <ul class="dropdown-menu">								
+								<li><a href="{{ path('site_catalog_index') }}">Каталог</a></li>
+								{% for menu in menus if menu %}
+									<li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+								{% endfor %}								
+							  </ul>
+							</li>
+                        </ul>
+						<form class="navbar-form navbar-right">
+							<div class="input-group">
+							  <input type="text" class="form-control" placeholder="Поиск...">
+							  <span class="input-group-btn">
+								<button class="btn btn-primary-o" type="button">Найти</button>
+							  </span>
+							</div>							
+							<span class="phone">{{ settings.phone }}</span>					
+					    </form>
+                    </div>                    
+                </nav>
+            </div>
+        </div>
+
+        {# Содержимое #}
+        <div class="content">{% block content %}{% endblock %}</div>
+
+        {# Подвал #}
+        <footer class="footer">
+            <div class="container clearfix">
+                <div class="col-sm-5 padding-0 clearfix text-right">
+                    <img src="/images/logo-top.png" class="pull-left">
+					<h4>{{ settings.name }}</h4>
+					{{ settings.address|striptags('<br>') }}<br>
+					<a class="phone" href="tel:{{ settings.phone }}">{{ settings.phone }}</a><br>
+					<a href="mailto:{{ settings.email }}">{{ settings.email }}</a>					
+                </div>
+                <div class="col-sm-7 clearfix text-right">                    
+					<div class="col-sm-6 padding-5 clearfix hidden-xs">
+						<ul class="nav navbar-nav">
+							{% for cat in categories if cat %}
+								<li><a href="{{ path('site_catalog_index', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
+							{% endfor %}								
+						</ul>
+					</div>
+					<div class="col-sm-6 padding-5 clearfix">
+						<ul class="nav navbar-nav  hidden-xs">
+							{% for menu in menus if menu %}
+								<li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+							{% endfor %}
+						</ul>
+						<div class="social-icon clearfix text-right">
+						<ul class="social-network">
+							{% if settings.facebook %}
+								<li><a href="{{ settings.facebook }}" class="fb tool-tip" title="Facebook" target="_blank"><i
+											class="fa fa-fw fa-facebook"></i></a></li>{% endif %}
+							{% if settings.twitter %}
+								<li><a href="{{ settings.twitter }}" class="twitter tool-tip" title="Twitter" target="_blank"><i
+											class="fa fa-fw fa-twitter"></i></a></li>{% endif %}
+							{% if settings.google %}
+								<li><a href="{{ settings.google }}" class="gplus tool-tip" title="Google Plus" target="_blank"><i
+											class="fa fa-fw fa-google-plus"></i></a></li>{% endif %}
+							{% if settings.vk %}
+								<li><a href="{{ settings.vk }}" class="vk tool-tip" title="ВКонтакте" target="_blank"><i
+											class="fa fa-fw fa-vk"></i></a></li>{% endif %}
+							{% if settings.instagram %}
+								<li><a href="{{ settings.instagram }}" class="instagram tool-tip" title="Instagram" target="_blank"><i
+											class="fa fa-fw fa-instagram"></i></a></li>{% endif %}
+							{% if settings.linkedin %}
+								<li><a href="{{ settings.linkedin }}" class="linkedin tool-tip" title="Linkedin" target="_blank"><i
+											class="fa fa-fw fa-linkedin"></i></a></li>{% endif %}
+							{% if settings.youtube %}
+								<li><a href="{{ settings.youtube }}" class="ytube tool-tip" title="You Tube" target="_blank"><i
+											class="fa fa-fw fa-youtube-play"></i></a></li>{% endif %}
+						</ul>
+					</div>
+					</div>
+                </div>
+            </div>
+        </footer>
+
+        {# Модальное окно #}
+        <div class="modal fade" id="feedback" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <form class="feedback_form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
+                            <h3 class="modal-title text-center"><i class="fa fa-phone-square"></i> Обратный звонок</h3>
+                        </div>
+                        <div class="modal-body fb_reload">
+                            <div class="form-group">
+                                <label>Ваше имя:</label>
+								<input type="text" name="name" class="form-control input-lg" required="required">
+                            </div>
+                            <div class="form-group">
+                                <label>Телефон:</label>
+								<input type="text" name="phone" class="form-control phone input-lg" required="required">
+                            </div>
+							<div class="checkbox">
+								<label>
+								  <input type="checkbox" checked> Я согласен на обработку персональных данных
+								</label>
+							</div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-lg antibtn">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        {# Модальное окно #}
+        <div class="modal fade" id="feedback_c" tabindex="-1" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <form class="feedback_form">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title text-center">Получить консультацию</h4>
+                        </div>
+                        <div class="modal-body fb_reload">
+                            <div class="photo text-center"></div>
+                            <div class="form-group">
+                                <input type="text" name="name" class="form-control input-lg" placeholder="Имя" required="required">
+                            </div>
+                            <div class="form-group">
+                                <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger btn-lg antibtn">Отправить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% javascripts '@jquery_js' '@bootstrap_js' '@SiteBundle/Resources/public/js/*'  %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+{% endblock %}

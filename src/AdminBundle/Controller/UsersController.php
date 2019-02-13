@@ -1,0 +1,162 @@
+<?php
+
+namespace AdminBundle\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use FOS\UserBundle\Propel\UserQuery;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+
+class UsersController extends Controller
+{
+
+    /**
+     * @Route("/users")
+     */
+    public function indexAction()
+    {
+        $items = UserQuery::create()
+            ->find();
+        if (!$items) {
+            throw $this->createNotFoundException(
+                'Нет доступных элементов'
+            );
+        }
+
+        $paginator  = $this->get('knp_paginator');
+        $pagination = $paginator->paginate(
+            $items,
+            $this->get('request')->query->get('page', 1),
+            20
+        );
+
+        return $this->render('AdminBundle:Default:users.html.twig',array(
+            'pagination' 		=> $pagination
+        ));
+    }
+
+    /**
+ * @Route("/users/add")
+ */
+    public function addAction(Request $request)
+    {
+        $item = $this->container->get('fos_user.user_manager')->createUser();
+
+        $formFactory = $this->container->get('fos_user.profile.form.factory');
+
+        $form = $formFactory->createForm();
+        $form->setData($item);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            if ($form['photo']->getData()) {
+                $dir = 'images/photo';
+                $file_type = $form['photo']->getData()->getMimeType();
+                switch($file_type) {
+                    case 'image/png': $Filename = uniqid().'.png'; break;
+                    case 'image/jpeg': $Filename = uniqid().'.jpg'; break;
+                    case 'image/gif': $Filename = uniqid().'.gif'; break;
+                    default: $Filename = NULL;
+                }
+                if ($Filename) {
+                    $form['photo']->getData()->move($dir, $Filename);
+                    $item->setPhoto($Filename);
+                    $image = new Image($dir.'/'.$Filename);
+                    $image->fit_to_width(300);
+                    $image->save($dir.'/'.$Filename);
+                }
+            }
+            $this->container->get('fos_user.user_manager')->updateUser($item);
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Успешно добавлено!'
+            );
+            return $this->redirect($this->generateUrl('admin_users_index'));
+        }
+
+        return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'form' 		=> $form->createView()
+        ));
+    }
+
+    /**
+     * @Route("/users/edit/{id}")
+     */
+    public function editAction($id, Request $request)
+    {
+        $item = $this->container->get('fos_user.user_manager')->findUserBy(array('id' => $id));
+        $photo = $item->getPhoto();
+        $item->setPhoto(NULL);
+        $formFactory = $this->container->get('fos_user.profile.form.factory');
+        $form = $formFactory->createForm();
+        $form->setData($item);
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            if ($form['photo']->getData()) {
+                $dir = 'images/photo';
+                $file_type = $form['photo']->getData()->getMimeType();
+                switch($file_type) {
+                    case 'image/png': $Filename = uniqid().'.png'; break;
+                    case 'image/jpeg': $Filename = uniqid().'.jpg'; break;
+                    case 'image/gif': $Filename = uniqid().'.gif'; break;
+                    default: $Filename = NULL;
+                }
+                if ($Filename) {
+                    $form['photo']->getData()->move($dir, $Filename);
+                    $item->setPhoto($Filename);
+                    $image = new Image($dir.'/'.$Filename);
+                    $image->fit_to_width(300);
+                    $image->save($dir.'/'.$Filename);
+                    if ($photo) {
+                        $fs = new Filesystem();
+                        try {
+                            $fs->remove( $dir.'/'.$photo );
+                        } catch (IOExceptionInterface $e) {
+                            echo "Ошибка удаления изображения";
+                        }
+                    }
+                }
+            } else {
+                $item->setPhoto($photo);
+            }
+            $this->container->get('fos_user.user_manager')->updateUser($item);
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Успешно сохранено!'
+            );
+            return $this->redirect($this->generateUrl('admin_users_index'));
+        }
+
+        return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'form' 		=> $form->createView(),
+            'photo'     => '/images/photo/'.$photo
+        ));
+    }
+
+    /**
+     * @Route("/users/delete/{id}")
+     */
+    public function deleteAction($id)
+    {
+        $item = $this->container->get('fos_user.user_manager')->findUserBy(array('id' => $id));
+
+        if ($item) {
+            if ($item->getPhoto()) {
+                $fs = new Filesystem();
+                try {
+                    $fs->remove( 'images/photo/'.$item->getPhoto() );
+                } catch (IOExceptionInterface $e) {
+                    echo "Ошибка удаления изображения";
+                }
+            }
+            $this->container->get('fos_user.user_manager')->deleteUser($item);
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Успешно удалено!'
+            );
+        }
+        return $this->redirect($this->generateUrl('admin_users_index'));
+    }
+}

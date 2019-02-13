@@ -1,0 +1,152 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+{% block title %}{{ object.title }} | {{ settings.name }}{% endblock %}
+{% block metatitle %}{{ object.title }}{% endblock %}
+{% block content %}
+
+    <div class="container object clearfix">
+        <div class="clearfix">            
+            <div class="col-sm-6">
+                <h1>{{ object.title }}</h1>
+                {% set type = ['-','Продажа','Аренда'] %}                
+                <table class="table table-hover">
+                    <tr><td>Тип сделки</td><td><b>{{ type[object.type] }}</b></td></tr>
+                    <tr><td>Тип недвижимости</td><td><b>{{ object.ObjectTypes.title }}</b></td></tr>
+                    <tr><td>Город</td><td><b>{{ object.Towns.title }}</b></td></tr>
+                    {% if object.Areas %}<tr><td>Район</td><td><b>{{ object.Areas.title }}</b></td></tr>{% endif %}
+                    {% if object.address %}<tr><td>Адрес</td><td><b>{{ object.address }}</b></td></tr>{% endif %}
+					{% if object.periodId %}<tr><td>Срок сдачи</td><td><b>{{ period[object.periodId] }}</b></td></tr>{% endif %}
+                    <tr><td>Площадь</td><td><b>{{ object.square }} м²</b></td></tr>
+                    <tr><td>Цена объекта</td><td class="red"><b>{{ object.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
+                    <tr><td>Цена за м²</td><td><b>{{ object.sqPrice|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
+                </table>                
+            </div>
+			<div class="col-sm-6">
+                <div id="owl-imgs" class="owl-carousel">
+                    {% for item in object.ObjectImagess if item %}
+                        <a class="fancybox" href="/images/objects/{{ item.path }}" rel="gallery_{{ object.id }}">
+                            <div class="item text-center"><img class="img-responsive lazyOwl" data-src="/images/objects/{{ item.path }}" alt="{{ object.title }}"></div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="clearfix">
+            {% if object.description %}
+                <div class="col-sm-6">
+                    {{ object.description | raw }}
+                </div>
+            {% endif %}
+            {% if object.address %}
+                <div class="col-sm-6 text-center">
+                    <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
+                </div>
+            {% endif %}
+			{% if object.userId %}
+                <div class="col-sm-3 text-center">
+                    <div id="owl-agents">
+                        <div class="item text-center">
+                            <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
+                            <h4>{{ object.User.username }}{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
+							{% if object.User.phone %}<h4>{{ object.User.phone }}</h4>{% endif %}
+                            <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}">{{ object.User.email }}</a>
+                        </div>
+                    </div>
+                </div>
+				<div class="col-sm-3 text-center">
+					<h3 class="text-center">Есть вопросы?</h3>
+					<form class="feedback_form">
+						<div class="fb_reload">
+							<div class="form-group">
+								<input type="hidden" name="object" value="{{ object.id }}">
+								<input type="hidden" name="agent" value="{{ object.User.id }}">
+								<input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+							</div>
+							<div class="form-group">
+								<input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary-o btn-lg antibtn">Получить консультацию</button>
+								<h4>Это Бесплатно!</h4>
+							</div>
+						</div>							
+					</form>					
+				</div>
+            {% endif %}
+            
+        </div>
+		{% if catalog|length > 0 %}
+			<div class="clearfix catalog">
+				<h3 class="padding-5">Вас также может заинтересовать:</h3>
+			{% for item in catalog if item %}
+					<div class="col-sm-6 col-md-4 col-lg-3 padding-5">
+						<div class="thumbnail">
+							<div class="sl_img">
+								<a href="{{ path('site_catalog_object', {'id':item.id}) }}">
+									<img class="img-responsive" src="{% if item.ObjectImagess[0] is defined %}/images/objects/{{ item.ObjectImagess[0].path }}{% else %}/images/no-photo.jpg{% endif %}"></div>
+								</a>
+							<div class="caption">
+								<h4>{{ item.title }}</h4>
+								<table class="table">
+									<tr><td colspan="2">{{ item.ObjectTypes.title }}</td></tr>
+									<tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+									<tr><td><b>{{ item.square }}</b> м²</td><td>{% if item.periodId %}<b>{{ period[item.periodId] }}</b>{% endif %}</td></tr>
+									<tr><td colspan="2" class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
+								</table>
+								<div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		{% endif %}	
+    </div>
+
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $("#owl-imgs").owlCarousel({
+                items : 1,
+                autoHeight : false,
+                lazyLoad : true,
+                navigation : true,
+                responsive: false,
+                navigationText : false
+            });
+            $(".fancybox").fancybox({
+                openEffect	: 'none',
+                closeEffect	: 'none'
+            });
+        });
+    </script>
+    {% if object.address %}
+        <script src="//api-maps.yandex.ru/2.1/?lang=ru-RU&load=package.full" type="text/javascript"></script>
+        <script>
+            ymaps.ready(init);
+            function init() {
+                var myMap;
+				if ($('#map').data('coordinate')) {
+					coords = $('#map').data('coordinate').split(",");
+					var coord = [];
+					coord[0] = parseFloat(coords[1]);
+					coord[1] = parseFloat(coords[0]);
+					myMap = new ymaps.Map('map', {
+						center: coord,
+						zoom: 15,
+						controls: ['zoomControl', 'fullscreenControl']
+					}, {
+						suppressMapOpenBlock: true
+					});
+					myMap.geoObjects.add(new ymaps.Placemark(coord, {}, {
+						iconLayout: 'default#image',
+						iconImageHref: '/images/placemark.png',
+						iconImageSize: [50, 50],
+						iconImageOffset: [-25, -50]
+					}));					
+				}
+            }
+        </script>
+    {% endif %}
+{% endblock %}

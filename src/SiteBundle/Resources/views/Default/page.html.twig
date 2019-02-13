@@ -1,0 +1,13 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+{% block title %}{{ page.title }} | {{ settings.name }}{% endblock %}
+{% block metatitle %}{{ page.title }}{% endblock %}
+{% block description %}{{ page.description }}{% endblock %}
+{% block keywords %}{{ page.keywords }}{% endblock %}
+{% block content %}
+    <div class="container">
+        <h1>{{ page.title }}</h1>
+        <div class="clearfix">
+            {{ page.content | raw }}
+        </div>
+    </div>
+{% endblock %}

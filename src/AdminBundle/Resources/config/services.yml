@@ -1,0 +1,6 @@
+parameters:
+    mail_helper.class: SiteBundle\Controller\MailHelper
+services:
+    mail_helper:
+                class: "%mail_helper.class%"
+                arguments: [@mailer]

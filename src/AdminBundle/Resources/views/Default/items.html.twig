@@ -1,0 +1,140 @@
+{% extends 'AdminBundle::layout.html.twig' %}
+{% block title %}{{ title }} - Панель управления | CMS{% endblock %}
+
+{% block content %}
+  <h1>Слайдеры изображений</h1>
+    {% for flashMessage in app.session.flashbag.get('notice') %}
+        <div class="alert alert-success">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    {% for flashMessage in app.session.flashbag.get('alert') %}
+        <div class="alert alert-danger">
+            {{ flashMessage }}
+        </div>
+    {% endfor %}
+    
+    <div class="row">        
+      <div class="col-xs-12">
+        <div class="box box-primary">        
+          <div class="box-header with-border">                  
+            <a href="{{ add_url }}" class="btn btn-success"><i class="fa fa-plus"></i> Добавить</a>
+            {% if upload_url is defined %}<a href="{{ upload_url }}" class="btn btn-default"><i class="fa fa-upload"></i> Загрузить</a>{% endif %}
+          </div>
+          <div class="box-body">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  {% if data[0].item is defined %}
+                    {% for column, item in data[0].item if column %}
+                      <th>{{ column | raw }}</th>
+                    {% endfor %}
+                    <th class="pull-right">Действия</th>
+                  {% endif %}
+                </tr>
+              </thead>        
+              <tbody>              
+              {% for item in data if item %}
+                <tr>
+                  {% for key, column in item.item if column %}
+                    {% if column.images is defined %}
+                      <td>                        
+                        <div class="clearfix sortFixed" data-slider="{{ item.item.ID.value }}">
+                          {% if column.images | length %}
+                              {% for image in column.images if image %}
+                                <div class="clearfix text-center thumbnail pull-left" id="{{ image.id }}" data-sort="{{ image.sort }}" style="margin-right:5px;">
+                                  <div class="sl_img"><img height="50" src="{{ column.path }}{{ image.path }}"></div>
+                                  <a class="btn btn-default btn-xs" href="{{ path( column.edit, {'id': image.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                                  <a class="btn btn-default btn-xs" href="{{ path( column.delete, {'id': image.id}) }}" title="Удалить"><i class="fa fa-trash-o"></i></a>
+                                </div>
+                              {% endfor %}
+                          {% endif %}                          
+                          <a href="{{ column.add }}" title="Добавить">
+                            <div class="clearfix text-center pull-left">
+                              <div class="sl_img"><img height="100" src="/images/add.png"></div>
+                            </div>
+                          </a>                        
+                        </div>
+                      </td>                                             
+                    {% elseif column.value.timestamp is defined %}
+                      <td>
+                        {% if column.actions is defined %}<a href="{{ column.actions }}" title="Перейти">{% endif %}
+                          <small>{{ column.value|date('d.m.y') }}</small>
+                        {% if column.actions is defined %}</a>{% endif %}
+                      </td>
+                    {% else %}
+                      <td>
+                        {% if column.action is defined %}<a href="{{ column.action }}" title="Перейти">{% endif %}
+                          {{ column.value|raw }}
+                        {% if column.action is defined %}</a>{% endif %}
+                      </td>                    
+                    {% endif %}
+                  {% endfor %}
+                  <td class="action">
+                    {% if item.actions.view %}<a href="{{ item.actions.view }}" title="Посмотреть"><i class="fa fa-fw fa-eye"></i></a>{% endif %}
+                    {% if item.actions.edit %}<a href="{{ item.actions.edit }}" title="Редактировать"><i class="fa fa-fw fa-pencil"></i></a>{% endif %}
+                    {% if item.actions.delete %}
+                      <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ item.actions.delete }}" title="Удалить">
+                        <i class="fa fa-fw fa-trash-o"></i>
+                      </a>
+                    {% endif %}
+                  </td>
+                </tr>
+              {% else %}
+                <tr><td>Нет элементов</td></tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="box-footer">
+            <a class="btn btn-default" href="{{ back_url }}" title="Назад"><i class="fa fa-reply"></i> Назад</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  {# Modal #}
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h3 class="modal-title" id="deleteModalLabel"><i class="fa fa-fw fa-trash-o"></i> Удаление</h3>
+        </div>
+        <div class="modal-body">Вы действительно хотите удалить элемент?</div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-danger" id="btnYes">Удалить</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+        </div>
+      </div>
+    </div>
+  </div>           
+  
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script type="text/javascript" src="//code.jquery.com/ui/1.10.1/jquery-ui.js"></script>
+    <script>
+      $('.sortFixed').sortable({
+          items: '> div.thumbnail',
+          stop: function (event, ui) {					
+            $('body').css('cursor','wait');
+            var sortedIDs = $(this).sortable( "toArray" );										
+            $.ajax({
+              type : "POST",
+              url : "/admin/sliders/sort",
+              data : {
+                array : sortedIDs,
+                slider : $(this).data('slider')
+              },
+              success : function (data) {
+                location.reload();
+              }
+            });
+            //console.log(sortedIDs);
+          }
+			}).disableSelection();		
+    </script>
+{% endblock %}

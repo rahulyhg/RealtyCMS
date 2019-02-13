@@ -228,20 +228,21 @@ h1 {
 }
 .why .number {
     position: absolute;
-    left:0;
-    font-size: 120px;
+    left:10px;
+    font-size: 150px;
+    line-height: 100px;
     color:#00a0e4;
     z-index: 1;
     opacity: .1;
 	font-weight:900;
 }
-.why .number:hover {
+.why > .container > div:hover .number {
     opacity: .5;
 }
 .why .descr {
     padding: 30px 10px 10px 60px;
     z-index: 2;
-    min-height: 220px;
+    min-height: 250px;
 }
 .why .descr h4 {
     text-transform: uppercase;
@@ -353,6 +354,9 @@ h1 {
 .catalog .thumbnail:hover {
     border-color: #999;
 	box-shadow: 0 0 10px #999;
+}
+.catalog .thumbnail:hover img {
+    transition: 1s;
 }
 .catalog .thumbnail:hover img {
     transform: scale(1.2);
@@ -763,7 +767,7 @@ ul.social-network li a {
 	}
 	
 	.footer img {
-		height: 100px;
+		height: 50px;
 	}
 }
 .tile h4 {

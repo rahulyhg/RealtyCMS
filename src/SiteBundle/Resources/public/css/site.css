@@ -354,14 +354,8 @@ h1 {
     border-color: #999;
 	box-shadow: 0 0 10px #999;
 }
-.catalog .thumbnail img {
-	transition: -webkit-transform 1s cubic-bezier(.215,.61,.355,1);
-    transition: transform 1s cubic-bezier(.215,.61,.355,1);
-    transition: transform 1s cubic-bezier(.215,.61,.355,1),-webkit-transform 1s cubic-bezier(.215,.61,.355,1);
-    transform-style: preserve-3d;
-}
 .catalog .thumbnail:hover img {
-transform: scale(1.02);
+    transform: scale(1.2);
 }
 .catalog .thumbnail .caption {
     padding: 10px;
@@ -601,8 +595,6 @@ ul.social-network li a {
     background-position: top;
     background-repeat: no-repeat;
     transition: -webkit-transform 1s cubic-bezier(.215,.61,.355,1);
-    transition: transform 1s cubic-bezier(.215,.61,.355,1);
-    transition: transform 1s cubic-bezier(.215,.61,.355,1),-webkit-transform 1s cubic-bezier(.215,.61,.355,1);
     transform-style: preserve-3d;
 }
 

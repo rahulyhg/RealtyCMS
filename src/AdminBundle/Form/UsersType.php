@@ -9,7 +9,7 @@
 namespace AdminBundle\Form;
 
 use Symfony\Component\Form\AbstractType;
-use FOS\UserBundle\Util\LegacyFormHelper;
+use Braincrafted\Bundle\BootstrapBundle\Util\LegacyFormHelper;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Security\Core\Validator\Constraints\UserPassword as OldUserPassword;

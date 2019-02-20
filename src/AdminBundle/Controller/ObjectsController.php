@@ -395,10 +395,11 @@ class ObjectsController extends Controller
         if ($request->files->get('path')) {
             $dir = 'images/objects';
             $file_type = $request->files->get('path')->getMimeType();
+            $uniqid = uniqid();
             switch($file_type) {
-                case 'image/png': $Filename = uniqid().'.png'; break;
-                case 'image/jpeg': $Filename = uniqid().'.jpg'; break;
-                case 'image/gif': $Filename = uniqid().'.gif'; break;
+                case 'image/png': $Filename = $uniqid.'.png';$Thumb = $uniqid.'_thumb.png'; break;
+                case 'image/jpeg': $Filename = $uniqid.'.jpg';$Thumb = $uniqid.'_thumb.jpg'; break;
+                case 'image/gif': $Filename = $uniqid.'.gif';$Thumb = $uniqid.'_thumb.gif'; break;
                 default: $Filename = NULL;
             }
             if ($Filename) {
@@ -409,6 +410,11 @@ class ObjectsController extends Controller
                 $nimage->setObjectId($id);
                 $nimage->setAlt($item->getTitle());
                 $nimage->setTitle(@$request->request->get('title')?:$item->getTitle());
+                if ($Thumb) {
+                    $image->fit_to_width(400);
+                    $image->save($dir . '/' . $Thumb);
+                    $nimage->setThumb($Thumb);
+                }
                 $nimage->save();
             }
         }

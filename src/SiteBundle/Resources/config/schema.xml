@@ -12,9 +12,12 @@
         <column name="title" type="varchar" size="255" required="true"/>
         <column name="keywords" type="varchar" size="255" required="true"/>
         <column name="description" type="varchar" size="255" required="true"/>
-        <column name="address" type="varchar" size="1000" required="true"/>
-        <column name="phone" type="varchar" size="255" required="true"/>
-		<column name="counters" type="longvarchar" required="false"/>
+        <column name="city" type="varchar" size="255" required="false"/>
+        <column name="address" type="varchar" size="255" required="false"/>
+        <column name="phone" type="varchar" size="255" required="false"/>
+        <column name="phone_two" type="varchar" size="255" required="false"/>
+		<column name="content" type="longvarchar" required="false"/>
+        <column name="counters" type="longvarchar" required="false"/>
         <column name="robots" type="longvarchar" required="false"/>
         <column name="facebook" type="varchar" size="255" required="false"/>
         <column name="twitter" type="varchar" size="255" required="false"/>
@@ -182,6 +185,7 @@
         </vendor>
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="path" type="varchar" size="255" required="true"/>
+        <column name="thumb" type="varchar" size="255" required="true"/>
         <column name="title" type="varchar" size="255" required="false"/>
         <column name="alt" type="varchar" size="255" required="false"/>
         <column name="object_id" type="integer" required="true"/>

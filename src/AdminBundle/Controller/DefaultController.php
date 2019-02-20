@@ -11,6 +11,7 @@ use SiteBundle\Model\PagesQuery;
 use SiteBundle\Model\ObjectsQuery;
 use SiteBundle\Model\MessagesQuery;
 use AdminBundle\Form\SettingsType;
+use AdminBundle\Controller\Image;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,6 +48,43 @@ class DefaultController extends Controller
         $form = $this->createForm(new SettingsType(), $settings);
         $form->handleRequest($request);
         if ($form->isValid()) {
+            if ($form['favicon']->getData()) {
+                $file_type = $form['favicon']->getData()->getMimeType();
+                if ($file_type == 'image/x-icon') {
+                    $form['favicon']->getData()->move($this->getParameter('assetic.write_to'), 'favicon.ico');
+                }
+            }
+            if ($form['logo_top']->getData()) {
+                $dir = 'images';
+                $file_type = $form['logo_top']->getData()->getMimeType();
+                switch($file_type) {
+                    case 'image/png': $Filename = 'logo_top.png'; break;
+                    default: $Filename = NULL;
+                }
+                if ($Filename) {
+                    $form['logo_top']->getData()->move($dir, $Filename);
+                    $logo_image = new Image($dir . '/' . $Filename);
+                    $watermark = new Image($dir . '/' . $Filename);
+                    $logo_image->fit_to_width(200);
+                    $logo_image->save($dir . '/' . $Filename);
+                    $watermark->fit_to_width(100);
+                    $watermark->save($dir . '/watermark.png');
+                }
+            }
+            if ($form['logo_bottom']->getData()) {
+                $dir = 'images';
+                $file_type = $form['logo_bottom']->getData()->getMimeType();
+                switch($file_type) {
+                    case 'image/png': $Filename = 'logo_bottom.png'; break;
+                    default: $Filename = NULL;
+                }
+                if ($Filename) {
+                    $form['logo_bottom']->getData()->move($dir, $Filename);
+                    $logo_image = new Image($dir . '/' . $Filename);
+                    $logo_image->fit_to_width(300);
+                    $logo_image->save($dir . '/' . $Filename);
+                }
+            }
             $settings->save();
             $this->get('session')->getFlashBag()->add(
                 'notice',

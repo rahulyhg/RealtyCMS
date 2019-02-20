@@ -21,7 +21,7 @@
 			<ul class="dropdown-menu">
 			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'price' })) }}">Цена{% if sort == 'price' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
 			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'title' })) }}">Название{% if sort == 'title' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
-			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'period_id' })) }}">Срок сдачи{% if sort == 'period_id' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
+			  {#<li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'period_id' })) }}">Срок сдачи{% if sort == 'period_id' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>#}
 			</ul>
 		  </div>
 		</div>
@@ -34,7 +34,7 @@
                     <div class="thumbnail">
                         <div class="sl_img">
                             <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
-                                <img class="img-responsive" src="{% if item.ObjectImagess[0] is defined %}/images/objects/{{ item.ObjectImagess[0].path }}{% else %}/images/no-photo.jpg{% endif %}"></div>
+                                <img src="{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}" alt="{{ item.title }}"></div>
                             </a>
                         <div class="caption">
                             <h3 class="text-center">{{ item.title }}</h3>
@@ -50,7 +50,7 @@
                 </div>
             {% endfor %}
             {% if catalog|length == 0 %}
-                <div class="alert alert-default" role="alert">Нет объектов недвижимости удовлетворяющих Вашему запросу</div>
+                <div class="alert alert-default" role="alert">Нет объектов удовлетворяющих Вашему запросу</div>
             {% endif %}
         </div>
         {{ knp_pagination_render(catalog) }}        
@@ -67,8 +67,6 @@
 			</div>				
 		</div>
 	</div>
-
-
 
 {% endblock %}
 

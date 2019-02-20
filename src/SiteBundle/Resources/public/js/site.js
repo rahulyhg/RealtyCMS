@@ -26,7 +26,7 @@ $(document).ready(function() {
     });
     $('.selectpicker').selectpicker();
     form_number();	
-	var menu_pos = $(".menu").offset().top;
+	var menu_pos = $(".menu").offset().top+50;
 	$(window).scroll(function () {		
 		if ($(this).scrollTop() >= menu_pos) {
 			$(".menu").addClass("fixed");
@@ -112,3 +112,13 @@ $(document).on('click', '[data-toggle="modal"]', function () {
         }
     }
 });
+(function($){
+    $(document).ready(function(){
+        $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $(this).parent().siblings().removeClass('open');
+            $(this).parent().toggleClass('open');
+        });
+    });
+})(jQuery);

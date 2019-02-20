@@ -24,7 +24,7 @@ class SettingsType extends AbstractType
             ->add('description', 'textarea', array('label'  => 'Описание','attr' => array('rows' => 3)))
             ->add('keywords', 'text', array('label'  => 'Ключевые слова',))
             ->add('email', 'text', array('label'  => 'Email проекта',))
-            ->add('address', 'genemu_tinymce', array(
+            ->add('content', 'genemu_tinymce', array(
                     'label'     => 'Контент',
                     'required'  => false,
                     'configs'   => array(
@@ -46,10 +46,15 @@ class SettingsType extends AbstractType
                     )
                 )
             )
-            ->add('phone', 'text', array('label'  => 'Телефон', 'required' => TRUE))
+            ->add('city', 'text', array('label'  => 'Город', 'required' => FALSE))
+            ->add('address', 'text', array('label'  => 'Адрес', 'required' => FALSE))
+            ->add('phone', 'text', array('label'  => 'Телефон 1', 'required' => TRUE))
+            ->add('phone_two', 'text', array('label'  => 'Телефон 2', 'required' => TRUE))
 			->add('counters', 'textarea', array('label'  => 'Счетчики (код)', 'required' => FALSE, 'attr' => array('rows' => 10)))
             ->add('robots', 'textarea', array('label'  => 'Robots.txt', 'required' => true, 'attr' => array('rows' => 10)))
             ->add('favicon', 'file', array('label'  => 'Иконка', 'required' => FALSE, 'mapped' => false))
+            ->add('logo_top', 'file', array('label'  => 'Логотип верхний', 'required' => FALSE, 'mapped' => false))
+            ->add('logo_bottom', 'file', array('label'  => 'Логотип нижний', 'required' => FALSE, 'mapped' => false))
             ->add('facebook', 'text', array('label'  => 'Страница Facebook', 'required' => FALSE))
             ->add('twitter', 'text', array('label'  => 'Страница Twitter', 'required' => FALSE))
             ->add('vk', 'text', array('label'  => 'Страница ВКонтакте', 'required' => FALSE))

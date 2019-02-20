@@ -18,7 +18,7 @@
         <div class="clearfix" id="images">
             {% if item.ObjectImagess | length %}
                 {% for image in item.ObjectImagess if image %}
-                  <div class="clearfix text-center thumbnail pull-left" id="{{ image.id }}" style="margin-right:5px;">
+                  <div class="clearfix text-center thumbnail pull-left" id="{{ image.id }}" style="margin:5px;">
                     <div class="sl_img"><img height="100" src="/images/objects/{{ image.path }}"></div>                    
                     <a class="btn btn-default btn-xs del_img" data-id="{{ image.id }}" title="Удалить"><i class="fa fa-trash-o"></i> Удалить</a>
                   </div>

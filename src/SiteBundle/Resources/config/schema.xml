@@ -155,7 +155,7 @@
         <column name="user_id" type="integer" required="true"/>
         <column name="town_id" type="integer" required="true"/>
         <column name="area_id" type="integer" required="false"/>
-		<column name="period_id" type="varchar" size="255" required="true"/>
+		<column name="period_id" type="varchar" size="255" required="false"/>
         <column name="price" type="integer" required="true"/>
         <column name="square" type="integer" required="false"/>
         <column name="sq_price" type="integer" required="false"/>

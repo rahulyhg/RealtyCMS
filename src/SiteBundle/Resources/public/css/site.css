@@ -829,6 +829,13 @@ ul.social-network li a {
         right: 10px;
         font-size: 110px;
     }
+    #owl-images .item {
+        height: 200px;
+    }
+
+    #owl-thumbs .item {
+        height: 50px;
+    }
 }
 .btn-feedback {
     margin-top: 10px;
@@ -902,7 +909,7 @@ ul.social-network li a {
     color: #FFF;
     text-align: center;
     cursor: pointer;
-    height: 50px;
+    height: 80px;
     background-size: cover;
 }
 #owl-thumbs .current{
@@ -935,4 +942,9 @@ ul.social-network li a {
 }
 #owl-images.owl-theme .owl-next {
     right: 0;
+}
+.nobreak {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

@@ -789,6 +789,7 @@ ul.social-network li a {
     }
     .navbar-toggle {
         margin-top: 16px;
+        border-radius: 0;
     }
     .address {
         font-size: 14px;
@@ -947,4 +948,7 @@ ul.social-network li a {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+.fixed + .content {
+    margin-top: 54px;
 }

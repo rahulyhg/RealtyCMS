@@ -35,7 +35,8 @@ class PagesType extends AbstractType
             ->add('menus_id', 'choice', array(
                 'choices'   => $array_menu,
                 'label'  => 'Привязать к меню',
-                'required' => FALSE
+                'required' => FALSE,
+                'attr' => array('class' => 'form-control'),
             ))
             ->add('content', 'genemu_tinymce', array(
                     'label'     => 'Контент',
@@ -59,7 +60,7 @@ class PagesType extends AbstractType
                     )
                 )
             )
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

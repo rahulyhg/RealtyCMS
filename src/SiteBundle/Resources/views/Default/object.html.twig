@@ -3,7 +3,7 @@
 {% block metatitle %}{{ object.title }}{% endblock %}
 {% block content %}
 
-    <div class="container object clearfix">
+    <div class="container object clearfix padding-0">
         <div class="clearfix">            
             <div class="col-sm-6">
                 <h1>{{ object.title }}</h1>
@@ -14,10 +14,7 @@
                     <tr><td>Город</td><td><b>{{ object.Towns.title }}</b></td></tr>
                     {% if object.Areas %}<tr><td>Район</td><td><b>{{ object.Areas.title }}</b></td></tr>{% endif %}
                     {% if object.address %}<tr><td>Адрес</td><td><b>{{ object.address }}</b></td></tr>{% endif %}
-					{% if object.periodId %}<tr><td>Срок сдачи</td><td><b>{{ period[object.periodId] }}</b></td></tr>{% endif %}
-                    <tr><td>Площадь</td><td><b>{{ object.square }} м²</b></td></tr>
                     <tr><td>Цена объекта</td><td class="red"><b>{{ object.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
-                    <tr><td>Цена за м²</td><td><b>{{ object.sqPrice|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
                 </table>                
             </div>
 			<div class="col-sm-6">
@@ -95,7 +92,6 @@
 								<table class="table">
 									<tr><td colspan="2">{{ item.ObjectTypes.title }}</td></tr>
 									<tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
-									<tr><td><b>{{ item.square }}</b> м²</td><td>{% if item.periodId %}<b>{{ period[item.periodId] }}</b>{% endif %}</td></tr>
 									<tr><td colspan="2" class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
 								</table>
 								<div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>

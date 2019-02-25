@@ -62,7 +62,7 @@ class SettingsType extends AbstractType
             ->add('google', 'text', array('label'  => 'Страница Google+', 'required' => FALSE))
             ->add('instagram', 'text', array('label'  => 'Страница Instagram', 'required' => FALSE))
             ->add('linkedin', 'text', array('label'  => 'Страница Linkedin', 'required' => FALSE))            
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

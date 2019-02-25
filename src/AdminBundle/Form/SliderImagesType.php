@@ -57,7 +57,7 @@ class SliderImagesType extends AbstractType
                     )
                 )
             )
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

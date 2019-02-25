@@ -24,8 +24,8 @@ h1 {
     padding: 0;
 }
 .logo {
-    width: 100px;
-    padding-top: 10px;
+    max-height: 50px;
+    max-width: 100%;
 }
 .navbar {
     min-height: 0;
@@ -427,10 +427,10 @@ h1 {
 }
 .red {
     color: #222 !important;
-    font-size: 200%;
+    font-size: 140%;
 }
 .fa-rub {
-    font-size: 70% !important;
+    font-size: 80% !important;
 }
 .feddback_margin {
     padding-top:50px;

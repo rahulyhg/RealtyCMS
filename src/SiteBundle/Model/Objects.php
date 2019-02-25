@@ -15,4 +15,10 @@ class Objects extends BaseObjects
         }
         return $image ? $image : NULL;
     }
+
+    public function getParams($id, $normalized = false)
+    {
+        $params = $this->getObjectParamss()->toKeyValue('FieldId',($normalized?'ValueNormalized':'Value'));
+        return @$params[$id]?:'';
+    }
 }

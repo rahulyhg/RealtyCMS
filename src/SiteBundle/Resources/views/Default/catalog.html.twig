@@ -21,7 +21,6 @@
 			<ul class="dropdown-menu">
 			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'price' })) }}">Цена{% if sort == 'price' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
 			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'title' })) }}">Название{% if sort == 'title' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
-			  {#<li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'period_id' })) }}">Срок сдачи{% if sort == 'period_id' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>#}
 			</ul>
 		  </div>
 		</div>
@@ -42,7 +41,6 @@
                             <table class="table">
 									<tr><td colspan="2" class="text-center">{{ item.ObjectTypes.title }}</td></tr>
 									<tr><td class="text-center">{{ item.Towns.title }}</td><td class="text-center">{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
-									<tr><td class="text-center">{{ item.square }} м²</td><td class="text-center">{% if item.periodId %}{{ period[item.periodId] }}{% endif %}</td></tr>
 									<tr><td colspan="2" class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
 								</table>
                             <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>

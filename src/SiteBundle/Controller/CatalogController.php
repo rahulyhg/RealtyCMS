@@ -14,6 +14,7 @@ use \Criteria;
 use SiteBundle\Model\SlidersQuery;
 use SiteBundle\Model\PagesQuery;
 use FOS\UserBundle\Propel\UserQuery;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 
 class CatalogController extends Controller
@@ -71,7 +72,7 @@ class CatalogController extends Controller
         $search_form->submit($request);
 
         $catalog_query = ObjectsQuery::create();
-        $catalog_query->filterByForAll(true);
+        //$catalog_query->filterByForAll(true);
         $catalog_query->filterByPublished(true);
         $catalog_query->filterByModered(true);
         if ($agent_id) $catalog_query->filterByUserId($agent_id);
@@ -125,18 +126,22 @@ class CatalogController extends Controller
 			'4_2020' => 'IV кв. 2020'
         );
 
-        return $this->render('SiteBundle:Default:catalog.html.twig', array(
+        $response = $this->render('SiteBundle:Default:catalog.html.twig', array(
             'settings'      => $settings,
             'menus'         => $menus,
             'catalog'       => $pagination,
-			'category'		=> $category,
-			'categories' 	=> $categories,
+            'category'		=> $category,
+            'categories' 	=> $categories,
             'search_form'   => $search_form->createView(),
-			'period'		=> $array_period,
-			'dir' 			=> $dir,
+            'period'		=> $array_period,
+            'dir' 			=> $dir,
             'sort' 			=> $sort,
             'on_page' 		=> $on_page
         ));
+        $response->headers->setCookie(new Cookie('dir', $dir, time() + 3600 * 24 * 7, $this->generateUrl('site_catalog_index')));
+        $response->headers->setCookie(new Cookie('sort', $sort, time() + 3600 * 24 * 7, $this->generateUrl('site_catalog_index')));
+        $response->headers->setCookie(new Cookie('on_page', $on_page, time() + 3600 * 24 * 7, $this->generateUrl('site_catalog_index')));
+        return $response;
     }
 
     /**

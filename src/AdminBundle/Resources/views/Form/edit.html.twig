@@ -2,7 +2,7 @@
 {% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.html.twig' %}{% endif %}
 
 {% block content %}
-    <h1>Добавление / Редактирование</h1>
+    <h1>{% if title is defined %}{{ title }}{% else %}Добавление / Редактирование{% endif %}</h1>
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="alert alert-success">
             {{ flashMessage }}
@@ -17,7 +17,7 @@
     {% if photo is defined and photo %}
         <div class="clearfix">
             <div class="col-sm-offset-3 col-sm-2">
-                <img width="400" src="{{ photo }}"><br><br>
+                <img height="200" src="{{ photo }}"><br><br>
             </div>
         </div>
     {% endif %}
@@ -27,10 +27,19 @@
             <div id="form">
                 <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
                     {{ form_widget(form) }}
+                    <div class="form-group clearfix">
+                        <div class="col-sm-3 clearfix"></div>
+                        <div class="col-sm-9 clearfix">
+                            <button type="submit" class="btn btn-success">Сохранить</button>
+                        </div>
+                    </div>
                 </form>
             </div>
         {% endif %}
     {% endif %}
+
+    {% embed "@Admin/Form/ex.fields.html.twig" %}{% endembed %}
+    {% embed "@Admin/Form/ex.values.html.twig" %}{% endembed %}
 
 {% endblock %}
 

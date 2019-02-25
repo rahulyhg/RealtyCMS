@@ -1,0 +1,129 @@
+{% block form_row %}
+    {% spaceless %}
+        <div class="col-sm-4 col-md-3 col-lg-2 padding-5">
+            <div class="clearfix">
+                {{ form_label(form) }}
+                {{ form_widget(form) }}
+            </div>
+        </div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block text_widget %}
+    {% spaceless %}
+        <input type="text"
+               class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+    {% endspaceless %}
+{% endblock text_widget %}
+
+{% block checkbox_widget %}
+    {% spaceless %}
+        <input type="checkbox" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}{% if checked %} checked="checked"{% endif %} />
+    {% endspaceless %}
+{% endblock checkbox_widget %}
+
+{% block choice_widget %}
+    {% spaceless %}
+        {% if expanded %}
+            {{ block('choice_widget_expanded') }}
+        {% else %}
+            {{ block('choice_widget_collapsed') }}
+        {% endif %}
+    {% endspaceless %}
+{% endblock choice_widget %}
+
+{% block choice_widget_expanded %}
+    {% spaceless %}
+        <div {{ block('widget_container_attributes') }}>
+            {% for child in form %}
+                <div class="clearfix">
+                    {{ form_widget(child) }}
+                    {{ form_label(child) }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endspaceless %}
+{% endblock choice_widget_expanded %}
+
+{% block choice_widget_collapsed %}
+    {% spaceless %}
+        {% if required and empty_value is none and not empty_value_in_choices %}
+            {% set required = false %}
+        {% endif %}
+        <select {{ block('widget_attributes') }}class="form-control"{% if multiple %} multiple="multiple"{% endif %}{% if choices|length > 10 %} data-live-search="true" data-size="10"{% endif %}>
+            {% if empty_value is not none %}
+                <option value=""{% if required and value is empty %} selected="selected"{% endif %}>{{ empty_value }}</option>
+            {% endif %}
+            {% if preferred_choices|length > 0 %}
+                {% set options = preferred_choices %}
+                {{ block('choice_widget_options') }}
+                {% if choices|length > 0 and separator is not none %}
+                    <option disabled="disabled">{{ separator }}</option>
+                {% endif %}
+            {% endif %}
+            {% set options = choices %}
+            {{ block('choice_widget_options') }}
+        </select>
+    {% endspaceless %}
+{% endblock choice_widget_collapsed %}
+
+{% block choice_widget_options %}
+    {% spaceless %}
+        {% for group_label, choice in options %}
+            {% if choice is iterable %}
+                <optgroup label="{{ group_label }}">
+                    {% set options = choice %}
+                    {{ block('choice_widget_options') }}
+                </optgroup>
+            {% else %}
+                <option value="{{ choice.value }}"{% if choice is selectedchoice(value) %} selected="selected"{% endif %}>{{ choice.label }}</option>
+            {% endif %}
+        {% endfor %}
+    {% endspaceless %}
+{% endblock choice_widget_options %}
+
+{% block submit_widget %}
+    {% spaceless %}
+        {% if label is empty %}
+            {% set label = name|humanize %}
+        {% endif %}
+        <div class="col-sm-offset-3 col-sm-9">
+            <button type="{{ type|default('submit') }}" {{ block('button_attributes') }}
+                    class="btn btn-success btn-flat">{{ label }}</button>
+        </div>
+    {% endspaceless %}
+{% endblock submit_widget %}
+
+{% block datetime_widget %}
+    {% spaceless %}
+        {% if widget == 'single_text' %}
+            {% set type = type|default('text') %}
+            <input type="{{ type }}"
+                    {{ block('widget_attributes') }} {% if value is not empty %}value="{{ value }}" {% endif %}/>
+        {% elseif widget == 'text' %}
+            {% set type = type|default('text') %}
+            <div class="clearfix datas">
+                <input type="{{ type }}" id="{{ id }}_min" name="filter[{{ name }}][min]" class="form-control datepicker date_min"{% if attr['data-value']['min'] is defined %} value="{{ attr['data-value']['min'] }}"{% endif %} placeholder="с"/>
+                <input type="{{ type }}" id="{{ id }}_max" name="filter[{{ name }}][max]" class="form-control datepicker date_max"{% if attr['data-value']['max'] is defined %} value="{{ attr['data-value']['max'] }}"{% endif %} placeholder="по"/>
+                <select class="form-control date_select selectpicker" data-reload="true">
+                    <option data-icon="glyphicon-calendar"></option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="0" data-max="0">Очистить</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date('d.m.Y') }}" data-max="{{ "now"|date('d.m.Y') }}">Сегодня</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("-1 day")|date('d.m.Y') }}" data-max="{{ "now"|date_modify("-1 day")|date('d.m.Y') }}">Вчера</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("-7 day")|date('d.m.Y') }}" data-max="{{ "now"|date('d.m.Y') }}">Последняя неделя</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("first day of this month")|date('d.m.Y') }}" data-max="{{ "now"|date_modify("last day of this month")|date('d.m.Y') }}">Этот месяц</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("-1 month")|date_modify("first day of this month")|date('d.m.Y') }}" data-max="{{ "now"|date_modify("-1 month")|date_modify("last day of this month")|date('d.m.Y') }}">Прошлый месяц</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("first day of this year")|date('d.m.Y') }}" data-max="{{ "now"|date_modify("last day of this year")|date('d.m.Y') }}">Этот год</option>
+                    <option title="<i class='glyphicon glyphicon-calendar'></i>" data-min="{{ "now"|date_modify("-1 year")|date_modify("first day of this year")|date('d.m.Y') }}" data-max="{{ "now"|date_modify("-1 year")|date_modify("last day of this year")|date('d.m.Y') }}">Прошлый год</option>
+                </select>
+            </div>
+        {% else %}
+            <div {{ block('widget_container_attributes') }}>
+                {{ form_errors(form.date) }}
+                {{ form_errors(form.time) }}
+                {{ form_widget(form.date) }}
+                {{ form_widget(form.time) }}
+            </div>
+        {% endif %}
+    {% endspaceless %}
+{% endblock datetime_widget %}

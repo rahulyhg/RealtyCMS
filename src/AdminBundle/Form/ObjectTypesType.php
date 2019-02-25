@@ -16,7 +16,8 @@ class ObjectTypesType extends AbstractType
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
 			->add('alias', 'text', array('label'  => 'Алиас', 'required' => TRUE))
 			->add('image', 'file', array('label'  => 'Изображение', 'required' => FALSE))
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            ->add('generator', 'text', array('label'  => 'Генератор Названий', 'required' => false))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

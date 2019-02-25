@@ -51,30 +51,143 @@ $('.confirm-delete').on('click', function (e) {
 $('#btnYes').click(function () {
     location.href = $('#deleteModal').data('path');
 });
-$(document).on("change", "#objects_town_id", function () {
-    $('.loading').show();
-    $('#objects_area_id').val('');
+function reload_form(obj) {
+    console.log($(obj));
+    loading_show();
     $.ajax({
-        url  : "/admin/objects/update",
+        url  : "/app_dev.php/admin/objects/update",
         type : "POST",
-        data : $(this).closest('form').serialize(),
+        data : $(obj).closest('form').serialize(),
         success : function (data) {
-            $('#objects_area_id').closest('div').html($(data).find('#objects_area_id'));
-            $('.loading').hide();
+            $('#form').html(data);
+            loading_hide();
+        }
+    });
+}
+$(document).on("change", ".changeable", function () { reload_form(this)});
+
+$(document).on("click", ".input-group-addon", function () {
+    loading_show();
+    var id = $(this).closest('div').data('id');
+    var title = $(this).closest('div').find('.im_title').val();
+    $.ajax({
+        url  : "/admin/objects/imgedit",
+        type : "POST",
+        data : {'id':id, 'title':title},
+        success : function () {
+            loading_hide();
         }
     });
 });
 
-$(document).on("click", ".input-group-addon", function () {
-    $('.loading').show();  
-    var id = $(this).closest('div').data('id');
-    var title = $(this).closest('div').find('.im_title').val();
+$(document).on("change", "select:not([multiple]).filter_change", function (e) {
+    loading_show();
+    e.preventDefault();
+    var form = $(this).closest('form');
     $.ajax({
-        url  : "/app_dev.php/admin/objects/imgedit",
-        type : "POST",
-        data : {'id':id, 'title':title},
-        success : function (data) {            
-            $('.loading').hide();
+        url: window.location.href.split('?')[0],
+        type: "POST",
+        data: $(form).serialize(),
+        success: function (data) {
+            $('#page-wrapper').html($(data).find('#page-wrapper').children());
+            loading_hide();
+        },
+        error: function () {
+            loading_hide();
         }
     });
 });
+$(document).on("change", "select[multiple].filter_change", function (e) {
+    loading_show();
+    e.preventDefault();
+    var form = $(this).closest('form');
+    $.ajax({
+        url: window.location.href.split('?')[0],
+        type: "POST",
+        data: $(form).serialize(),
+        success: function (data) {
+            $('#page-wrapper').html($(data).find('#page-wrapper').children());
+            loading_hide();
+        },
+        error: function () {
+            loading_hide();
+        }
+    });
+});
+$(document).on("change", ".select-change-form", function (e) {
+    loading_show();
+    e.preventDefault();
+    var select = $(this);
+    var value = select.val();
+    var key = select.data('key');
+    var data = {};
+    data[key] = value;
+    if (value) {
+        $.ajax({
+            url: select.data('path'),
+            type: "GET",
+            data: data,
+            success: function (data) {
+                $('#page-wrapper').html($(data).find('#page-wrapper').children());
+                loading_hide();
+            },
+            error: function () {
+                loading_hide();
+            }
+        });
+    }
+});
+$(document).on("change", "#on_page", function (e) {
+    $('body,html').animate({scrollTop: 0}, 200);
+    loading_show();
+    e.preventDefault();
+    var form = $('#filter').closest('form');
+    $.ajax({
+        url: window.location.href.split('?')[0] + '?on_page=' + $(this).val(),
+        type: "POST",
+        data: $(form).serialize(),
+        success: function (data) {
+            $('#page-wrapper').html($(data).find('#page-wrapper').children());
+            loading_hide();
+        },
+        error: function () {
+            loading_hide();
+        }
+    });
+});
+$(document).on("click", ".asc, .desc, .knp-pagination a, .sortable", function (e) {
+    $('body,html').animate({scrollTop: 0}, 200);
+    loading_show();
+    e.preventDefault();
+    var form = $('#filter').closest('form');
+    $.ajax({
+        url: $(this).attr('href'),
+        type: "POST",
+        data: $(form).serialize(),
+        success: function (data) {
+            $('#page-wrapper').html($(data).find('#page-wrapper').children());
+            loading_hide();
+        },
+        error: function () {
+            loading_hide();
+        }
+    });
+});
+$(document).on("keypress", ".items_search", function (e) {
+    if (e.which === 13) {
+        $('#items_search').click();
+        return false;
+    }
+});
+$(document).on("click", "#items_search", function (e) {
+    loading_show();
+    e.preventDefault();
+    location.href = window.location.href.split('?')[0] + '?query=' + $('.items_search').val();
+    loading_hide();
+});
+function loading_show() {
+    $('.loading').show();
+}
+function loading_hide() {
+    $('.loading').hide();
+}

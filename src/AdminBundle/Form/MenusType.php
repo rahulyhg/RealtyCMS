@@ -30,10 +30,11 @@ class MenusType extends AbstractType
             ->add('parent_id', 'choice', array(
                 'choices'   => $array_menu,
                 'label'  => 'Родитель',
-                'required' => FALSE
+                'required' => FALSE,
+                'attr' => array('class' => 'form-control'),
             ))
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

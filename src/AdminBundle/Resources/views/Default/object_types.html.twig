@@ -13,7 +13,7 @@
     {% endfor %}
 
     <div class="clearfix">
-        <a href="{{ path('admin_objects_addtypes') }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить</a>
+        <a href="{{ path('admin_objectstypes_addtypes') }}" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> Добавить</a>
     </div><br>
 
     <div class="clearfix">
@@ -32,12 +32,12 @@
                 {% for item in pagination if item %}
                     <tr>
                         <td>{{ item.id }}</td>
-                        <td><a href="{{ path('admin_objects_edittypes', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
-                        <td><a href="{{ path('admin_objects_edittypes', {'id': item.id}) }}" title="Редактировать">{{ item.alias }}</a></td>
+                        <td><a href="{{ path('admin_objectstypes_edittypes', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
+                        <td><a href="{{ path('admin_objectstypes_edittypes', {'id': item.id}) }}" title="Редактировать">{{ item.alias }}</a></td>
 						<td>{% if item.image %}<i class="fa fa-check fa-fw green"></i>{% endif %}</td>
                         <td class="action">
-                            <a href="{{ path('admin_objects_edittypes', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
-                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objects_deletetypes', {'id': item.id}) }}" title="Удалить">
+                            <a href="{{ path('admin_objectstypes_edittypes', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objectstypes_deletetypes', {'id': item.id}) }}" title="Удалить">
                                 <i class="fa fa-trash-o"></i>
                             </a>
                         </td>

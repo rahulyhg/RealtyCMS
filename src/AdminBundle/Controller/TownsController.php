@@ -45,6 +45,7 @@ class TownsController extends Controller
     public function addAction(Request $request)
     {
         $item = new Towns();
+        $cnt = 0;
 
         $form = $this->createForm(new TownsType(), $item);
         $form->handleRequest($request);
@@ -81,6 +82,7 @@ class TownsController extends Controller
         $item = TownsQuery::create()
             ->filterById($id)
             ->findOne();
+        $cnt = 0;
 
         $form = $this->createForm(new TownsType(), $item);
         $form->handleRequest($request);
@@ -128,7 +130,7 @@ class TownsController extends Controller
                 'Успешно удалено!'
             );
         }
-        return $this->redirect($this->generateUrl('admin_menus_index'));
+        return $this->redirect($this->generateUrl('admin_towns_index'));
     }
 
 

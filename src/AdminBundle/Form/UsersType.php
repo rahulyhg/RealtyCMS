@@ -47,7 +47,7 @@ class UsersType extends AbstractType
             ->add('photo', 'file', array('label'  => 'Фотография', 'required' => FALSE))
             ->add('phone', 'text', array('label'  => 'Номер телефона', 'required' => FALSE))
             ->add('position', 'text', array('label'  => 'Должность', 'required' => FALSE))
-            ->add('save', 'submit', array('label'  => 'Сохранить',))
+            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

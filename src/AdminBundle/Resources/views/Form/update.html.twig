@@ -1,8 +1,16 @@
-{% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.html.twig' %}{% endif %}
+{% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.update.html.twig' %}{% endif %}
 {% if form is defined %}
     {% if form %}
         <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+            <div class="form-group clearfix">
+                <div class="col-sm-3 clearfix"></div>
+                <div class="col-sm-9 clearfix">
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
         </form>
+        <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
+        {{ form_javascript(form) }}
     {% endif %}
 {% endif %}

@@ -2,8 +2,13 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\FilterType;
+use FOS\UserBundle\Propel\UserQuery;
 use SiteBundle\Model\ObjectImages;
 use SiteBundle\Model\ObjectImagesQuery;
+use SiteBundle\Model\ObjectParams;
+use SiteBundle\Model\ObjectParamsQuery;
+use SiteBundle\Model\ObjectTypesFieldsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use SiteBundle\Model\Objects;
@@ -15,187 +20,79 @@ use AdminBundle\Form\ObjectTypesType;
 use AdminBundle\Form\ObjectsType;
 use AdminBundle\Form\ObjectsAdminType;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
 
 class ObjectsController extends Controller
 {
 
-    /**
-     * @Route("/object_types")
-     */
-    public function indexTypesAction()
-    {
-        $items = ObjectTypesQuery::create()            
-            ->find();
-        if (!$items) {
-            throw $this->createNotFoundException(
-                'Нет доступных элементов'
-            );
-        }
-
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $items,
-            $this->get('request')->query->get('page', 1),
-            20
-        );
-
-        return $this->render('AdminBundle:Default:object_types.html.twig',array(
-            'pagination' 		=> $pagination
-        ));
-    }
-
-    /**
- * @Route("/object_types/add")
- */
-    public function addTypesAction(Request $request)
-    {
-        $item = new ObjectTypes();
-
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
-            $form = $this->createForm(new ObjectTypesType(), $item);
-        }
-        $form->handleRequest($request);
-        if ($form->isValid()) {
-            if ($form['image']->getData()) {
-                $dir = 'images/cates';
-                $file_type = $form['image']->getData()->getMimeType();
-                switch($file_type) {
-                    case 'image/png': $Filename = uniqid().'.png'; break;
-                    case 'image/jpeg': $Filename = uniqid().'.jpg'; break;
-                    case 'image/gif': $Filename = uniqid().'.gif'; break;
-                    default: $Filename = NULL;
-                }
-                if ($Filename) {
-                    $form['image']->getData()->move($dir, $Filename);
-                    $item->setImage($Filename);
-                    $image = new Image($dir.'/'.$Filename);
-                    $image->save($dir.'/'.$Filename);
-                }
-            }
-			$item->save();
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Успешно добавлено!'
-            );
-            return $this->redirect($this->generateUrl('admin_objects_indextypes'));
-        }
-
-        return $this->render('AdminBundle:Form:edit.html.twig',array(
-            'form' 		=> $form->createView()
-        ));
-    }
-
-    /**
-     * @Route("/object_types/edit/{id}")
-     */
-    public function editTypesAction($id, Request $request)
-    {
-        $item = ObjectTypesQuery::create()
-            ->filterById($id)
-            ->findOne();
-			
-		$dir = 'images/cates';
-		$oldimage = $item->getImage();
-        $item->setImage(NULL);
-
-        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {            
-            $form = $this->createForm(new ObjectTypesType(), $item);
-        }
-        $form->handleRequest($request);
-        if ($form->isValid()) {            
-            if ($form['image']->getData()) {                
-                $file_type = $form['image']->getData()->getMimeType();
-                switch($file_type) {
-                    case 'image/png': $Filename = uniqid().'.png'; break;
-                    case 'image/jpeg': $Filename = uniqid().'.jpg'; break;
-                    case 'image/gif': $Filename = uniqid().'.gif'; break;
-                    default: $Filename = NULL;
-                }
-                if ($Filename) {
-                    $form['image']->getData()->move($dir, $Filename);
-                    $item->setImage($Filename);
-                    $image = new Image($dir.'/'.$Filename);
-                    $image->save($dir.'/'.$Filename);
-					if ($oldimage) {
-                        $fs = new Filesystem();
-                        try {
-                            $fs->remove( $dir.'/'.$oldimage );
-                        } catch (IOExceptionInterface $e) {
-                            echo "Ошибка удаления изображения";
-                        }
-                    }
-                }
-            } else {
-                $item->setImage($oldimage);
-            }			
-			$item->save();
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Успешно сохранено!'
-            );
-            return $this->redirect($this->generateUrl('admin_objects_indextypes'));
-        }
-
-        return $this->render('AdminBundle:Form:edit.html.twig',array(
-            'form' 		=> $form->createView(),
-			'photo'     => $oldimage ? '/'.$dir.'/'.$oldimage : null
-        ));
-    }
-	
-	/**
-     * @Route("/object_types/delete/{id}")
-     */
-    public function deleteTypesAction($id)
-    {
-        $item = ObjectTypesQuery::create()
-            ->filterById($id)
-            ->findOne();
-
-        if ($item) {
-            if ($item->getImage()) {
-                $fs = new Filesystem();
-                try {
-                    $fs->remove( 'images/cates/'.$item->getImage() );
-                } catch (IOExceptionInterface $e) {
-                    echo "Ошибка удаления изображения";
-                }
-            }
-			$item->delete();
-            $this->get('session')->getFlashBag()->add(
-                'notice',
-                'Успешно удалено!'
-            );
-        }
-        return $this->redirect($this->generateUrl('admin_objects_indextypes'));
-    }
-	
 	/**
      * @Route("/objects")
      */
-    public function indexAction()
+    public function indexAction(Request $request)
     {
-        $items = ObjectsQuery::create()
-            ->orderByPublished('desc')
-            ->orderByModered()            
-            ->find();
-        if (!$items) {
-            throw $this->createNotFoundException(
-                'Нет доступных элементов'
-            );
+
+        $items_query = ObjectsQuery::create();
+
+        // Сортировка
+        $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
+        $sort = @$request->query->get('sort') ?: (@$request->cookies->get('sort') ?: 'id');
+        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '2');
+        $items_query->orderBy($sort, $dir);
+
+        // Поиск
+        if (@$request->query->get('query')) $items_query->filterByTitle('%' . $request->query->get('query') . '%');
+
+        // Фильтр
+        $filter_form = $this->createForm(new FilterType());
+        $object_types = ObjectTypesQuery::create()->find()->toKeyValue('Id','Title');
+        $users = UserQuery::create()->find()->toKeyValue('id', 'Username');
+        $filter_form
+            ->add('TypeObject', 'choice', array(
+                'empty_value' => '- все -',
+                'choices' => $object_types,
+                'label' => 'Тип объекта',
+                'attr' => array('class' => 'form-control filter_change'),
+                'multiple' => false,
+                'required' => false
+            ))
+            ->add('UserId', 'choice', array(
+                'empty_value' => '- все -',
+                'choices' => $users,
+                'label' => 'Консультант',
+                'attr' => array('class' => 'form-control filter_change'),
+                'multiple' => false,
+                'required' => false
+            ));
+        $filter_form->handleRequest($request);
+        if ($filter_form->isValid()) {
+            $filter_fields = $filter_form->getData();
+            $filter_array = array();
+            foreach ($filter_fields as $name => $filter_field) {
+                if ($filter_field) $filter_array[$name] = $filter_field;
+            }
+            $items_query->filterByArray($filter_array);
         }
 
-        $paginator  = $this->get('knp_paginator');
-        $pagination = $paginator->paginate(
-            $items,
+        $paginator = $this->get('knp_paginator');
+        $items = $paginator->paginate(
+            $items_query,
             $this->get('request')->query->get('page', 1),
-            20
+            $on_page
         );
 
-        return $this->render('AdminBundle:Default:objects.html.twig',array(
-            'pagination' 		=> $pagination
+        $response = $this->render('AdminBundle:Default:objects.html.twig', array(
+            'items' => $items,
+            'dir' => $dir,
+            'sort' => $sort,
+            'on_page' => $on_page,
+            'filter_form' => $filter_form->createView(),
         ));
+        $response->headers->setCookie(new Cookie('dir', $dir, time() + 3600 * 24 * 7, $this->generateUrl('admin_objects_index')));
+        $response->headers->setCookie(new Cookie('sort', $sort, time() + 3600 * 24 * 7, $this->generateUrl('admin_objects_index')));
+        $response->headers->setCookie(new Cookie('on_page', $on_page, time() + 3600 * 24 * 7, $this->generateUrl('admin_objects_index')));
+        return $response;
     }
 
     /**
@@ -214,10 +111,46 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            # Считаем цену за м²
-            $item->setSqPrice((int)$item->getPrice()/$item->getSquare());
             if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
 			$item->save();
+            if ($item->getTypeObject()) {
+                $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();
+                foreach ($fields as $field) {
+                    if ($form['params_'. $field->getId()]->getData()) {
+                        $param = ObjectParamsQuery::create()->filterByObjectId($item->getId())->filterByFieldId($field->getId())->findOne();
+                        if (!$param) {
+                            $param = new ObjectParams();
+                            $param->setObjectId($item->getId());
+                            $param->setFieldId($field->getId());
+                        }
+                        if ($field->getType() == 2 || $field->getType() == 4) {
+                            $param->setValueId($form['params_'. $field->getId()]->getData());
+                            $param->setTextValue(null);
+                        } else {
+                            $param->setTextValue($form['params_'. $field->getId()]->getData());
+                            $param->setValueId(null);
+                        }
+                        $param->save();
+                    }
+                }
+                # генерируем Название
+                $type_objects = $item->getObjectTypes();
+                if ($type_objects->getGenerator()) {
+                    $generator = $type_objects->getGenerator();
+                    preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
+                    foreach ($out[1] as $gvalue) {
+                        $new_value = null;
+                        $gid = (int)$gvalue;
+                        $new_value = $item->getParams($gid, true);
+                        $gpattern = "/{" . $gvalue . "\}/ix";
+                        if ($new_value) {
+                            $generator = preg_replace($gpattern, $new_value, $generator);
+                        }
+                    }
+                    $item->setTitle($generator);
+                    $item->save();
+                }
+            }
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'Успешно добавлено!'
@@ -226,6 +159,7 @@ class ObjectsController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Создание',
             'form' 		=> $form->createView()
         ));
     }
@@ -246,10 +180,46 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            # Считаем цену за м²
-            $item->setSqPrice((int)$item->getPrice()/$item->getSquare());
             if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
 			$item->save();
+            if ($item->getTypeObject()) {
+                $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();
+                foreach ($fields as $field) {
+                    if ($form['params_'. $field->getId()]->getData()) {
+                        $param = ObjectParamsQuery::create()->filterByObjectId($item->getId())->filterByFieldId($field->getId())->findOne();
+                        if (!$param) {
+                            $param = new ObjectParams();
+                            $param->setObjectId($item->getId());
+                            $param->setFieldId($field->getId());
+                        }
+                        if ($field->getType() == 2 || $field->getType() == 4) {
+                            $param->setValueId($form['params_'. $field->getId()]->getData());
+                            $param->setTextValue(null);
+                        } else {
+                            $param->setTextValue($form['params_'. $field->getId()]->getData());
+                            $param->setValueId(null);
+                        }
+                        $param->save();
+                    }
+                }
+                # генерируем Название
+                $type_objects = $item->getObjectTypes();
+                if ($type_objects->getGenerator()) {
+                    $generator = $type_objects->getGenerator();
+                    preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
+                    foreach ($out[1] as $gvalue) {
+                        $new_value = null;
+                        $gid = (int)$gvalue;
+                        $new_value = $item->getParams($gid, true);
+                        $gpattern = "/{" . $gvalue . "\}/ix";
+                        if ($new_value) {
+                            $generator = preg_replace($gpattern, $new_value, $generator);
+                        }
+                    }
+                    $item->setTitle($generator);
+                    $item->save();
+                }
+            }
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'Успешно сохранено!'
@@ -258,6 +228,7 @@ class ObjectsController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Редактирование',
             'form' 		=> $form->createView()
         ));
     }
@@ -268,29 +239,83 @@ class ObjectsController extends Controller
     public function copyAction($id, Request $request)
     {
         $user = $this->container->get('security.context')->getToken()->getUser();
-        $item = ObjectsQuery::create()
+        $old_item = ObjectsQuery::create()
             ->filterById($id)
             ->findOne();
-        $new_item = new Objects();        
-        $new_item->setTitle($item->getTitle().'_копия');
-        $new_item->setDescription($item->getDescription());
-        $new_item->setTownId($item->getTownId());
-        $new_item->setAreaId($item->getAreaId());
-        $new_item->setAddress($item->getAddress());
-		$new_item->setCoordinates($item->getCoordinates());
-        $new_item->setType($item->getType());
-        $new_item->setTypeObject($item->getTypeObject());
-        $new_item->setPrice($item->getPrice());
-        $new_item->setSquare($item->getSquare());
-        $new_item->setSqPrice($item->getSqPrice());        
-        $new_item->setPublished(false);
-        $new_item->setModered(false);
-        $new_item->setForAll(false);
-        $new_item->setXml(false);
-        $new_item->setUserId($user->getId());
-        $new_item->save();        
+        $item = new Objects();
+        $item->setDescription($old_item->getDescription());
+        $item->setTownId($old_item->getTownId());
+        $item->setAreaId($old_item->getAreaId());
+        $item->setAddress($old_item->getAddress());
+		$item->setCoordinates($old_item->getCoordinates());
+        $item->setType($old_item->getType());
+        $item->setTypeObject($old_item->getTypeObject());
+        $item->setPrice($old_item->getPrice());
+        $item->setPublished(false);
+        $item->setModered(false);
+        $item->setForAll(false);
+        $item->setXml(false);
+        $item->setUserId($user->getId());
+        $item->setObjectParamss($old_item->getObjectParamss());
 
-        return $this->redirect($this->generateUrl('admin_objects_edit', array('id'=>$new_item->getId())));
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(new ObjectsAdminType(), $item);
+        } else {
+            $form = $this->createForm(new ObjectsType(), $item);
+        }
+        $form->handleRequest($request);
+        if ($form->isValid()) {
+            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
+            $item->save();
+            if ($item->getTypeObject()) {
+                $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();
+                foreach ($fields as $field) {
+                    if ($form['params_'. $field->getId()]->getData()) {
+                        $param = ObjectParamsQuery::create()->filterByObjectId($item->getId())->filterByFieldId($field->getId())->findOne();
+                        if (!$param) {
+                            $param = new ObjectParams();
+                            $param->setObjectId($item->getId());
+                            $param->setFieldId($field->getId());
+                        }
+                        if ($field->getType() == 2 || $field->getType() == 4) {
+                            $param->setValueId($form['params_'. $field->getId()]->getData());
+                            $param->setTextValue(null);
+                        } else {
+                            $param->setTextValue($form['params_'. $field->getId()]->getData());
+                            $param->setValueId(null);
+                        }
+                        $param->save();
+                    }
+                }
+                # генерируем Название
+                $type_objects = $item->getObjectTypes();
+                if ($type_objects->getGenerator()) {
+                    $generator = $type_objects->getGenerator();
+                    preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
+                    foreach ($out[1] as $gvalue) {
+                        $new_value = null;
+                        $gid = (int)$gvalue;
+                        $new_value = $item->getParams($gid, true);
+                        $gpattern = "/{" . $gvalue . "\}/ix";
+                        if ($new_value) {
+                            $generator = preg_replace($gpattern, $new_value, $generator);
+                        }
+                    }
+                    $item->setTitle($generator);
+                    $item->save();
+                }
+            }
+            $this->get('session')->getFlashBag()->add(
+                'notice',
+                'Успешно сохранено!'
+            );
+            return $this->redirect($this->generateUrl('admin_objects_index'));
+        }
+
+        return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Копирование',
+            'form' 		=> $form->createView()
+        ));
     }
 
     /**

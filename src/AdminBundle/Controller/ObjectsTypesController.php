@@ -90,6 +90,7 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Создание',
             'form' 		=> $form->createView()
         ));
     }
@@ -146,6 +147,7 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Редактирование',
             'item'      => $item,
             'form' 		=> $form->createView(),
 			'photo'     => $oldimage ? '/'.$dir.'/'.$oldimage : null,
@@ -195,6 +197,11 @@ class ObjectsTypesController extends Controller
 
         if ($form->isValid()) {
 
+            if (!$field->getSort()) {
+                $all_cnt = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($id)->count();
+                $field->setSort(++$all_cnt);
+            }
+
             $field->save();
 
             $this->get('session')->getFlashBag()->add(
@@ -205,6 +212,7 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Создание',
             'form' 		=> $form->createView()
         ));
     }
@@ -233,10 +241,27 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title' => 'Редактирование',
             'item' => $field,
             'form' 		=> $form->createView(),
             'type_field' => $field->getType()
         ));
+    }
+
+    /**
+     * @Route("/object_types/fileds/sort")
+     */
+    public function sortFieldsAction(Request $request)
+    {
+
+        $array = $request->request->get('array');
+        $cnt=1;
+        foreach ($array as $item) {
+            $field = ObjectTypesFieldsQuery::create()->findPk($item);
+            $field->setSort($cnt++);
+            $field->save();
+        }
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
@@ -272,6 +297,11 @@ class ObjectsTypesController extends Controller
 
         if ($form->isValid()) {
 
+            if (!$value->getSort()) {
+                $all_cnt = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($id)->count();
+                $value->setSort(++$all_cnt);
+            }
+
             $value->save();
 
             $this->get('session')->getFlashBag()->add(
@@ -282,6 +312,7 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title'     => 'Добавление значения',
             'form' 		=> $form->createView()
         ));
     }
@@ -302,12 +333,14 @@ class ObjectsTypesController extends Controller
         if ($form->isValid()) {
 
             if (@$value->getName()) {
+                $all_cnt = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($id)->count();
                 $cnt=0;
                 $names = explode(';',$value->getName());
                 foreach ($names as $name) {
                     $value = new ObjectTypesFieldsValues();
                     $value->setFieldId($id);
                     $value->setName($name);
+                    $value->setSort(++$all_cnt);
                     $value->save();
                     $cnt++;
                 }
@@ -321,6 +354,7 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title'     => 'Добавление нескольких значений',
             'form' 		=> $form->createView()
         ));
     }
@@ -349,8 +383,25 @@ class ObjectsTypesController extends Controller
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'title'     => 'Редактирование',
             'form' 		=> $form->createView()
         ));
+    }
+
+    /**
+     * @Route("/object_types/values/sort")
+     */
+    public function sortValuesAction(Request $request)
+    {
+
+        $array = $request->request->get('array');
+        $cnt=1;
+        foreach ($array as $item) {
+            $field = ObjectTypesFieldsValuesQuery::create()->findPk($item);
+            $field->setSort($cnt++);
+            $field->save();
+        }
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

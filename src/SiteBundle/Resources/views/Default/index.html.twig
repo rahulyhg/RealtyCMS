@@ -71,7 +71,7 @@
 		<div class="container text-center clearfix">
 			{% for cat in categories if cat %}
 				<div class="col-md-3 padding-0 clearfix">
-					<a class="tile img-box" href="{{ path('site_catalog_index', {'alias':cat.alias})}}">
+					<a class="tile img-box" href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">
 						<div class="tile_bg" style="background-image:url('/images/cates/{{ cat.image }}');"></div>
 						{% if cat.min_price %}<h4>от {{ cat.min_price|number_format(0,'.',' ') }} <i class="fa fa-rub fa-fw"></i></h4>{% endif %}
 						<div class="tile-o">
@@ -83,7 +83,7 @@
 				</div>
 			{% endfor %}
 			<div class="col-md-3 padding-0 clearfix">
-				<a class="tile img-box" href="/catalog?type=2">
+				<a class="tile img-box" href="{{ path('site_catalog_index', {'type':2})}}">
 					<div class="tile_bg" style="background-image:url('/images/cates/arenda.jpg');"></div>						
 					<div class="tile-o">
 						<div class="tile-t">

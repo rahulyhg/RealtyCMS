@@ -8,6 +8,8 @@
 
 namespace SiteBundle\Form;
 
+use SiteBundle\Model\ObjectTypesFieldsQuery;
+use SiteBundle\Model\ObjectTypesFieldsValuesQuery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,49 +23,22 @@ class SearchType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $towns = TownsQuery::create()
-            ->find();
-        $array_towns = [];
-        $first_town = NULL;
-        foreach ($towns as $town) {
-            if (!$first_town) $first_town = $town->getId();
-            $array_towns[$town->getId()] = $town->getTitle();
-        }
+            ->find()->toKeyValue('id','title');
 
         $array_areas = [];
 
-        if (@$options['data']) {
+        if (@$options['data']['town_id']) {
             $areas = AreasQuery::create()
-                ->filterByTownId($options['data'])
+                ->filterByTownId($options['data']['town_id'])
                 ->orderByTitle()
                 ->find();
             foreach ($areas as $area) {
                 $array_areas[$area->getId()] = $area->getTitle();
             }
-        }/* elseif ($first_town) {
-            $areas = AreasQuery::create()
-                ->filterByTownId($first_town)
-                ->find();
-            foreach ($areas as $area) {
-                $array_areas[$area->getId()] = $area->getTitle();
-            }
-        }*/
+        }
         $array_types = array(
             1 => 'Продажа',
             2 => 'Аренда'
-        );
-		$array_period = array(
-            '1_2018' => 'I кв. 2018',
-            '2_2018' => 'II кв. 2018',
-			'3_2018' => 'III кв. 2018',
-			'4_2018' => 'IV кв. 2018',
-			'1_2019' => 'I кв. 2019',
-            '2_2019' => 'II кв. 2019',
-			'3_2019' => 'III кв. 2019',
-			'4_2019' => 'IV кв. 2019',
-			'1_2020' => 'I кв. 2020',
-            '2_2020' => 'II кв. 2020',
-			'3_2020' => 'III кв. 2020',
-			'4_2020' => 'IV кв. 2020'
         );
         $array_object_types = ObjectTypesQuery::create()
             ->find()->toKeyValue('id','title');
@@ -72,85 +47,101 @@ class SearchType extends AbstractType
             ->add('agent_id', 'hidden', array(            
                 'required'  => FALSE
             ))
-            ->add('type_object', 'choice', array(
-                'choices'   => $array_object_types,
-                'label'     => 'Тип объекта',
-                'attr'      => array('class'=>'form-control selectpicker','title'=>'Выберите тип объекта'),
+            ->add('town_id', 'choice', array(
+                'choices'   => $towns,
+                'label'     => 'Город',
+                'attr'      => array('class'=>'form-control changeable selectpicker','title'=>'Выберите город'),
                 'empty_value' => '- любой -',
-				'multiple' => false,
-				'required'  => FALSE
+                'multiple' => false,
+                'required'  => FALSE
+            ))
+            ->add('area_id', 'choice', array(
+                'choices'   => $array_areas,
+                'label'     => 'Район',
+                'attr'      => array(
+                    'class'=>'form-control selectpicker',
+                    'title'=>'Выберите район',
+                    'data-actions-box'=>'false',
+                    'disabled' => $array_areas?false:true
+                ),
+                'required'  => FALSE,
+                'multiple'  => TRUE
             ))
             ->add('type', 'choice', array(
                 'choices'   => $array_types,
                 'label'     => 'Тип сделки',
                 'attr'      => array('class'=>'form-control selectpicker','title'=>'Выберите тип сделки'),
                 'empty_value' => '- любой -',
-				'multiple' => false,
-				'required'  => FALSE
+                'multiple' => false,
+                'required'  => FALSE
             ))
-            ->add('town_id', 'choice', array(
-                'choices'   => $array_towns,
-                'label'     => 'Город',
-                'attr'      => array('class'=>'form-control changeable selectpicker','title'=>'Выберите город'),
+            ->add('type_object', 'choice', array(
+                'choices'   => $array_object_types,
+                'label'     => 'Тип объекта',
+                'attr'      => array('class'=>'form-control selectpicker changeable','title'=>'Выберите тип объекта'),
                 'empty_value' => '- любой -',
 				'multiple' => false,
 				'required'  => FALSE
             ))
-            ->add('area_id', 'choice', array(
-                'choices'   => $array_areas,
-                'label'     => 'Район',                
-                'attr'      => array(
-                  'class'=>'form-control selectpicker',
-                  'title'=>'Выберите район',
-                  'data-actions-box'=>'false',
-                  'disabled' => $array_areas?false:true
-                  ),
-                'required'  => FALSE,
-                'multiple'  => TRUE
-            ))
-            ->add('price_from', 'money', array(
+            ->add('price', 'search', array(
                 'label'     => 'Цена',
-                'precision' => 0,
                 'required'  => FALSE,
-                'attr'      => array('placeholder' => 'от')
-            ))
-            ->add('price_to', 'money', array(
-                'precision' => 0,
-                'required'  => FALSE,
-                'attr'      => array('placeholder' => 'до')
-            ))
-			/*
-            ->add('sqprice_from', 'money', array(
-                'label'     => 'Цена/м²',
-                'precision' => 0,
-                'required'  => FALSE,
-                'attr'      => array('placeholder' => 'от')
-            ))
-            ->add('sqprice_to', 'money', array(
-                'precision' => 0,
-                'required'  => FALSE,
-                'attr'      => array('placeholder' => 'до')
-            ))
-			*/
-			->add('period_id', 'choice', array(
-                'choices'   => $array_period,
-                'label'     => 'Срок сдачи',
-                'attr'      => array('class'=>'form-control changeable selectpicker','title'=>'Выберите срок сдачи'),
-                'empty_value' => '- любой -',
-				'multiple' => false,
-				'required'  => FALSE
-            ))
-            ->add('square_from', 'money', array(
-                'label'     => 'Площадь (м²)',
-                'precision' => 0,
-                'required'  => FALSE,
-                'attr'      => array('placeholder' => 'от')
-            ))
-            ->add('square_to', 'money', array(
-                'precision' => 0,
-                'required'  => FALSE,
-                'attr'      => array('placeholder' => 'до')
-            ))            
+            ));
+
+		# Дополнительные поля
+        if (@$options['data']) {
+            if (@$options['data']['type_object']) {
+
+                # Добавление полей типа объекта
+                $fields = ObjectTypesFieldsQuery::create()
+                    ->filterByObjectTypeId($options['data']['type_object'])
+                    ->filterByShowInFilter(true)
+                    ->orderBySort()
+                    ->find();
+                if ($fields) {
+                    foreach ($fields as $field) {
+
+                        /* @var $field \SiteBundle\Model\ObjectTypesFields */
+                        # Типы полей: 1-текст; 2-список; 3-число; 4-числовой список; 5-флажок
+                        if ($field->getType() == 5) {
+                            $builder->add('params_' . $field->getId(), 'checkbox', array(
+                                'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
+                                'required' => false,
+                                'mapped' => false));
+                        } elseif ($field->getType() == 2 || $field->getType() == 4) {
+                            $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->find()->toKeyValue('Id', 'Name');
+                            asort($values);
+                            if ($values)
+                                $builder->add('params_' . $field->getId(), 'choice', array(
+                                        'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
+                                        'empty_value' => 'выбрать',
+                                        'choices' => $values,
+                                        'attr' => array('class' => 'form-control selectpicker'),
+                                        'required' => false,
+                                        'multiple' => true,
+                                        'mapped' => false)
+                                );
+                        } elseif ($field->getType() == 3) {
+                            $builder->add('params_' . $field->getId(), 'search', array(
+                                    'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
+                                    'attr' => array('class' => 'form-control'),
+                                    'required' => false,
+                                    'mapped' => false)
+                            );
+                        } else {
+                            $builder->add('params_' . $field->getId(), 'text', array(
+                                    'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
+                                    'attr' => array('class' => 'form-control','data-inputmask' => $field->getMask() ?: ''),
+                                    'required' => false,
+                                    'mapped' => false)
+                            );
+                        }
+                    }
+                }
+
+            }
+        }
+        $builder
             ->add('save', 'submit', array(
               'label' => 'Подобрать',
               'attr'  => array(

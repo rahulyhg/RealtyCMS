@@ -68,7 +68,7 @@ $config = array(
 	| with start and final /
 	|
 	*/
-	'upload_dir' => '/images/',
+	'upload_dir' => '/images/files/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -78,7 +78,7 @@ $config = array(
 	| with final /
 	|
 	*/
-	'current_path' => '../../images/',
+	'current_path' => '../../images/files/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -89,7 +89,7 @@ $config = array(
 	| DO NOT put inside upload folder
 	|
 	*/
-	'thumbs_base_path' => '../../images/',
+	'thumbs_base_path' => '../../images/files/thumbs/',
 
 	/*
 	|--------------------------------------------------------------------------
@@ -131,7 +131,7 @@ $config = array(
 	| in Megabytes
 	|
 	*/
-	'MaxSizeUpload' => 1,
+	'MaxSizeUpload' => 5,
 
 
 	/*
@@ -139,7 +139,7 @@ $config = array(
 	| default language file name
 	|--------------------------------------------------------------------------
 	*/
-	'default_language' => "ru_RU",
+	'default_language' => "en_EN",
 
 	/*
 	|--------------------------------------------------------------------------

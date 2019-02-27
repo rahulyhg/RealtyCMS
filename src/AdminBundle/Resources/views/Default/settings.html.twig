@@ -17,6 +17,12 @@
     {% if form %}
         <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
             {{ form_widget(form) }}
+            <div class="form-group clearfix">
+                <div class="col-sm-3 clearfix"></div>
+                <div class="col-sm-9 clearfix">
+                    <button type="submit" class="btn btn-success">Сохранить</button>
+                </div>
+            </div>
         </form>
     {% endif %}
 

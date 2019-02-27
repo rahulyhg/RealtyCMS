@@ -137,6 +137,7 @@
         <column name="title" type="varchar" size="255" required="true"/>
         <column name="alias" type="varchar" size="255" required="true"/>
 		<column name="image" type="varchar" size="255" required="false"/>
+        <column name="description" type="longvarchar" />
         <column name="generator" type="varchar" size="255" required="false"/>
 		<column name="srt" type="integer" required="false"/>		
     </table>

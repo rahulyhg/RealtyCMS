@@ -102,13 +102,10 @@ class ObjectsType extends AbstractType
         # Дополнительные поля
         if ($options['data']->getTypeObject()) {
 
-            $object_type = ObjectTypesQuery::create()->findPk($options['data']->getTypeObject());
-
-            # Добавление полей категорий (подкатегорий)
+            # Добавление полей типа объекта
             $fields = ObjectTypesFieldsQuery::create()
-                ->leftJoinObjectTypesFieldsValues()
-                ->filterByObjectTypeId($object_type->getId())
-                ->orderByRequired()->orderByObjectTypeId()->orderByName()
+                ->filterByObjectTypeId($options['data']->getTypeObject())
+                ->orderBySort()
                 ->find();
             if ($fields) {
                 foreach ($fields as $field) {
@@ -151,7 +148,7 @@ class ObjectsType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
-            # Если тип пользователя компания
+            # Если указали город
             if (@$data['town_id']) {
                 $areas = AreasQuery::create()
                     ->filterByTownId($data['town_id'])
@@ -167,13 +164,10 @@ class ObjectsType extends AbstractType
             # Дополнительные поля
             if (@$data['type_object']) {
 
-                $object_type = ObjectTypesQuery::create()->findPk($data['type_object']);
-
-                # Добавление полей категорий (подкатегорий)
+                # Добавление полей типа объекта
                 $fields = ObjectTypesFieldsQuery::create()
-                    ->leftJoinObjectTypesFieldsValues()
-                    ->filterByObjectTypeId($object_type->getId())
-                    ->orderByRequired()->orderByObjectTypeId()->orderByName()
+                    ->filterByObjectTypeId($data['type_object'])
+                    ->orderBySort()
                     ->find();
                 if ($fields) {
                     foreach ($fields as $field) {

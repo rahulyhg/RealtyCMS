@@ -2,11 +2,12 @@
  * Created by NNovi on 19.03.2016.
  */
 $(document).on("change", ".changeable", function () {
-    var form_data = $(this).closest('form').serialize();
-    $(this).closest('form').find('input').attr('disabled','disabled');
-    $(this).closest('form').find('select').attr('disabled','disabled');
+    var form = $(this).closest('form');
+    var form_data = form.serialize();
+    form.find('input').attr('disabled','disabled');
+    form.find('select').attr('disabled','disabled');
     $.ajax({
-        url  : "/catalog/update",
+        url  : form.data('update'),
         type : "GET",
         data : form_data,
         success : function (data) {
@@ -17,7 +18,8 @@ $(document).on("change", ".changeable", function () {
     });
 });
 $(document).ready(function() {
-    $('.phone').mask('+7(999)999-9999');
+    $('.phone').inputmask('+7(999)999-9999');
+    $(":input").inputmask();
     $('.from').keyup(function(){
       $(this).val($(this).val().toString().replace(/\s/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, " "));
     });
@@ -35,6 +37,12 @@ $(document).ready(function() {
 		}
 	});
 	$('.antibtn').antibtn();
+	console.log($(window).height());
+    if ($(window).width() > 990) {
+        (function ($) {
+            $.lockfixed(".search_objects", { offset: { top: 80, bottom: 450 } });
+        })(jQuery);
+    }
 });
 function form_revision(){
   $('.from').each(function(){    

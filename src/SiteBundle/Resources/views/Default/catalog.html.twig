@@ -5,55 +5,73 @@
 {% block keywords %}{{ settings.keywords }}{% endblock %}
 {% block content %}
 
-    <div class="search_objects">
-        {% if search_form %}{% embed "SiteBundle:Form:search_form.html.twig" %}{% endembed %}{% endif %}
-    </div>
-
-    <div class="container catalog clearfix">
-        <div class="btn-group pull-right padding-5" role="group" aria-label="...">
-		  {% if dir == 'asc' %}{% set ndir = 'desc' %}{% else %}{% set ndir = 'asc' %}{% endif %}
-		  <a class="btn btn-primary" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ dir : ndir })) }}">
-				<i class="fa fa-fw fa-sort-amount-{{ dir }}"></i></a>
-		  <div class="btn-group" role="group">
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			  Сортировка <span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'price' })) }}">Цена{% if sort == 'price' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
-			  <li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'title' })) }}">Название{% if sort == 'title' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
-			</ul>
-		  </div>
+	<div class="container clearfix">
+		<div class="col-md-3">
+			<div class="search_objects">
+				{% if search_form %}{% embed "SiteBundle:Form:search_form.html.twig" %}{% endembed %}{% endif %}
+			</div>
 		</div>
-		<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% endif %}</h1>        
-		{#<h3>Обращаем Ваше внимание, что не все объекты находятся в открытом доступе.</h3>#}
-        <div class="clearfix">
-            {% set type = ['-','Продажа','Аренда'] %}            
-            {% for item in catalog if item %}
-                <div class="col-sm-6 col-md-4 col-lg-3 padding-5">
-                    <div class="thumbnail">
-                        <div class="sl_img">
-                            <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
-                                <img src="{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}" alt="{{ item.title }}">
-                            </a>
+		<div class="col-md-9 catalog clearfix">
+			<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% endif %}</h1>
+			<div class="clearfix">
+				<div class="col-md-6 clearfix padding-0 padding-top-5">
+					<div class="btn-group padding-5" role="group" aria-label="...">
+						{% if dir == 'asc' %}{% set ndir = 'desc' %}{% else %}{% set ndir = 'asc' %}{% endif %}
+						<a class="btn btn-primary" href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ dir : ndir })) }}">
+							<i class="fa fa-fw fa-sort-amount-{{ dir }}"></i></a>
+						<div class="btn-group" role="group">
+							<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								{% if sort == 'price' %}Цена{% elseif sort == 'title' %}Название{% else %}Сортировка{% endif %} <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'price' })) }}">Цена{% if sort == 'price' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
+								<li><a href="{{ path(app.request.attributes.get('_route'), app.request.query.all|merge({ sorting : 'title' })) }}">Название{% if sort == 'title' %}<i class="fa fa-check fa-fw pull-right"></i>{% endif %}</a></li>
+							</ul>
 						</div>
-                        <div class="caption">
-                            <h3 class="text-center nobreak">{{ item.title }}</h3>
-                            <table class="table">
-									<tr><td colspan="2" class="text-center">{{ item.ObjectTypes.title }}</td></tr>
-									<tr><td class="text-center">{{ item.Towns.title }}</td><td class="text-center">{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
-									<tr><td colspan="2" class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
-								</table>
-                            <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-            {% if catalog|length == 0 %}
-                <div class="alert alert-default" role="alert">Нет объектов удовлетворяющих Вашему запросу</div>
-            {% endif %}
-        </div>
-        {{ knp_pagination_render(catalog) }}        
-    </div>
+					</div>
+				</div>
+				<div class="col-md-6 clearfix padding-0 text-right padding-top-5">{{ knp_pagination_render(catalog) }}</div>
+			</div>
+			{#<h3>Обращаем Ваше внимание, что не все объекты находятся в открытом доступе.</h3>#}
+			<div class="clearfix padding-top-5">
+				{% for item in catalog if item %}
+					<div class="col-sm-6 col-md-4 padding-5">
+						<div class="thumbnail">
+							<a href="{{ path('site_catalog_object', {'id':item.id}) }}">
+								<div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}');"></div>
+							</a>
+							<div class="caption">
+								<h4 class="text-center nobreak">{{ item.title }}</h4>
+								<h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
+								<div class="plan_desc"><table class="table">
+									<tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+									<tr><td colspan="2">{{ item.address }}</td></tr>
+									{% for param in item.ObjectParamssForTable() if param %}
+										{% if loop.index is odd %}<tr>{% endif %}
+											<td>{{ param.ObjectTypesFields.filterName }}: <b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td>
+										{% if loop.index is even %}</tr>{% endif %}
+									{% endfor %}
+								</table></div>
+								<div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+				{% if catalog|length == 0 %}
+					<div class="alert alert-default" role="alert">Нет объектов удовлетворяющих Вашему запросу</div>
+				{% endif %}
+			</div>
+			<div class="clearfix">
+				<div class="col-md-6 clearfix padding-5 padding-top-5"><span class="btn btn-primary">Всего объектов: <b>{{ catalog.getTotalItemCount }}</b></span></div>
+				<div class="col-md-6 clearfix padding-0 text-right padding-top-5">{{ knp_pagination_render(catalog) }}</div>
+			</div>
+			{% if category %}
+				{% if category.description %}
+					<hr><div class="clearfix">{{ category.description|raw }}</div>
+				{% endif %}
+			{% endif %}
+		</div>
+	</div>
 
     {# Заявка #}
     <div class="text-center feddback_margin">

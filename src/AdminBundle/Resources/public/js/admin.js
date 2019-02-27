@@ -52,7 +52,6 @@ $('#btnYes').click(function () {
     location.href = $('#deleteModal').data('path');
 });
 function reload_form(obj) {
-    console.log($(obj));
     loading_show();
     $.ajax({
         url  : "/app_dev.php/admin/objects/update",
@@ -191,3 +190,6 @@ function loading_show() {
 function loading_hide() {
     $('.loading').hide();
 }
+$(document).ready(function() {
+    $(":input").inputmask();
+});

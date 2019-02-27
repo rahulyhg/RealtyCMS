@@ -41,6 +41,25 @@
     {% embed "@Admin/Form/ex.fields.html.twig" %}{% endembed %}
     {% embed "@Admin/Form/ex.values.html.twig" %}{% endembed %}
 
+    <!-- Modal -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title" id="deleteModalLabel"><i class="fa fa-fw fa-trash-o"></i> Удаление</h3>
+                </div>
+                <div class="modal-body">
+                    Вы действительно хотите удалить элемент?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" id="btnYes">Удалить</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}
 
 {% block javascripts %}
@@ -48,5 +67,31 @@
     {% if form %}
         <script src="{{ asset('tinymce/tinymce.min.js') }}"></script>
         {{ form_javascript(form) }}
+        <script>
+            $('td, th', '#sortFixed').each(function () {
+                var cell = $(this);
+                cell.width(cell.width());
+            });
+
+            $('#sortFixed tbody').sortable({
+                items: '> tr',
+                handle: '.handle',
+                stop: function (event, ui) {
+                    $('body').css('cursor','wait');
+                    var sortedIDs = $( "#sortFixed tbody" ).sortable( "toArray" );
+                    $.ajax({
+                        type : "POST",
+                        url : $('#sortFixed').data('sort'),
+                        data : {
+                            array : sortedIDs
+                        },
+                        success : function () {
+                            location.reload();
+                        }
+                    });
+                    console.log(sortedIDs);
+                }
+            }).disableSelection();
+        </script>
     {% endif %}
 {% endblock %}

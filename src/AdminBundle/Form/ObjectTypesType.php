@@ -16,6 +16,25 @@ class ObjectTypesType extends AbstractType
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
 			->add('alias', 'text', array('label'  => 'Алиас', 'required' => TRUE))
 			->add('image', 'file', array('label'  => 'Изображение', 'required' => FALSE))
+            ->add('description', 'genemu_tinymce', array(
+                    'label' => 'Описание',
+                    'required' => false,
+                    'configs' => array(
+                        'language' => 'ru',
+                        'height' => 200,
+                        'plugins' => array(
+                            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+                            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking",
+                            "save table contextmenu directionality emoticons template paste textcolor responsivefilemanager"
+                        ),
+                        'theme_advanced_buttons1' => 'bold,italic,underline,undo,redo,link,unlink,forecolor,styleselect,removeformat,cleanup,code',
+                        'relative_urls' => true,
+                        'filemanager_title' => "Файловый менеджер",
+                        'external_filemanager_path' => "/tinymce/filemanager/",
+                        'external_plugins' => array("filemanager" => "/tinymce/filemanager/plugin.min.js")
+                    )
+                )
+            )
             ->add('generator', 'text', array('label'  => 'Генератор Названий', 'required' => false))
             //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();

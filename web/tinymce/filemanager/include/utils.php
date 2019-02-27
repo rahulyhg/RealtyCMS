@@ -350,11 +350,11 @@ function create_folder($path = null, $path_thumbs = null)
 	$oldumask = umask(0);
 	if ($path && ! file_exists($path))
 	{
-		mkdir($path, 0766, true);
+		mkdir($path, 01777, true);
 	} // or even 01777 so you get the sticky bit set
 	if ($path_thumbs && ! file_exists($path_thumbs))
 	{
-		mkdir($path_thumbs, 0766, true) or die("$path_thumbs cannot be found");
+		mkdir($path_thumbs, 01777, true) or die("$path_thumbs cannot be found");
 	} // or even 01777 so you get the sticky bit set
 	umask($oldumask);
 }

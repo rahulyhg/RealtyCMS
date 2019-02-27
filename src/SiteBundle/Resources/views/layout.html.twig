@@ -19,7 +19,7 @@
                 <div class="clearfix text-center">
                     <div class="col-xs-5 col-sm-3 padding-0 text-left"><a href="{{ path('site_default_index') }}"><img class="logo" src="/images/logo_top.png" alt="{{ settings.name }}" title="{{ settings.name }}"></a></div>
                     <div class="col-xs-7 col-sm-3 padding-5 text-right"><div class="address"><b>{{ settings.city }}</b><br>{{ settings.address }}</div></div>
-                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="phone">{{ settings.phone }}<br>{{ settings.phoneTwo }}</div></div>
+                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="our_phones">{{ settings.phone }}<br>{{ settings.phoneTwo }}</div></div>
                     <div class="col-xs-6 col-sm-3 padding-0 text-right">
                         <a class="btn btn-primary btn-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
                     </div>
@@ -45,8 +45,9 @@
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Каталог <span class="caret"></span></a>
 							  <ul class="dropdown-menu">
 								{% for cat in categories if cat %}
-								<li><a href="{{ path('site_catalog_index', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
-								{% endfor %}								
+								    <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
+								{% endfor %}
+                                <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда</a></li>
 							  </ul>
 							</li>
 							{% for menu in menus if menu %}
@@ -60,8 +61,9 @@
                                   <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог</a>
                                       <ul class="dropdown-menu">
                                           {% for cat in categories if cat %}
-                                              <li><a href="{{ path('site_catalog_index', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
+                                              <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
                                           {% endfor %}
+                                          <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда</a></li>
                                       </ul>
                                   </li>
                                   <li class="divider"></li>
@@ -80,14 +82,14 @@
 							</div>
 					    </form>
                         <a class="btn btn-primary navbar-right navbar-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
-                        {% if settings.phone %}
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="tel:{{ settings.phone }}" class="phone">{{ settings.phone }}</a></li>
+                        {% if settings.phoneTwo %}
+                            <ul class="nav navbar-nav navbar-right hidden-sm hidden-md">
+                                <li><a href="tel:{{ settings.phoneTwo }}" class="our_phones">{{ settings.phoneTwo }}</a></li>
                             </ul>
                         {% endif %}
-                        {% if settings.phoneTwo %}
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="tel:{{ settings.phoneTwo }}" class="phone">{{ settings.phoneTwo }}</a></li>
+                        {% if settings.phone %}
+                            <ul class="nav navbar-nav navbar-right hidden-sm">
+                                <li><a href="tel:{{ settings.phone }}" class="our_phones">{{ settings.phone }}</a></li>
                             </ul>
                         {% endif %}
                     </div>                    
@@ -159,7 +161,7 @@
                     <form class="feedback_form">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть"><span aria-hidden="true">&times;</span></button>
-                            <h3 class="modal-title text-center"><i class="fa fa-phone-square"></i> Обратный звонок</h3>
+                            <h3 class="modal-title text-center"><i class="fa fa-phone"></i> Обратный звонок</h3>
                         </div>
                         <div class="modal-body fb_reload">
                             <div class="form-group">

@@ -4,7 +4,26 @@
 {% block content %}
 
     <div class="container object clearfix padding-0">
-        <div class="clearfix">            
+        {# Хлебные крошки #}
+        <div class="clearfix">
+            <ol class="breadcrumb" itemscope itemtype="http://schema.org/BreadcrumbList">
+                <li>
+                    <a href="{{ path('site_catalog_index')}}"
+                       title="Главная"
+                       rel="v:url"
+                       property="v:title">Каталог недвижимости</a>
+                </li>
+                <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                    <a itemscope itemtype="http://schema.org/Thing" itemprop="item"
+                       href="{{ path('site_catalog_alias', {'alias':object.ObjectTypes.alias})}}"
+                       title="{{ object.ObjectTypes.title }}">
+                        <span itemprop="name">{{ object.ObjectTypes.title }}</span>
+                    </a>
+                    <meta itemprop="position" content="3" />
+                </li>
+            </ol>
+        </div>
+        <div class="clearfix">
             <div class="col-sm-6">
                 <h1>{{ object.title }}</h1>
                 {% set type = ['-','Продажа','Аренда'] %}                
@@ -14,18 +33,21 @@
                     <tr><td>Город</td><td><b>{{ object.Towns.title }}</b></td></tr>
                     {% if object.Areas %}<tr><td>Район</td><td><b>{{ object.Areas.title }}</b></td></tr>{% endif %}
                     {% if object.address %}<tr><td>Адрес</td><td><b>{{ object.address }}</b></td></tr>{% endif %}
+                    {% for param in object.ObjectParamss() if param %}
+                        <tr><td>{{ param.ObjectTypesFields.name }}</td><td><b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td></tr>
+                    {% endfor %}
                     <tr><td>Цена объекта</td><td class="red"><b>{{ object.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
                 </table>                
             </div>
 			<div class="col-sm-6">
                 <div id="owl-images" class="owl-carousel owl-theme">
                     {% for item in object.ObjectImagess if item %}
-                        <a class="fancybox" href="/images/objects/{{ item.path }}" rel="gallery_{{ object.id }}">
+                        <a class="imagelightbox" href="/images/objects/{{ item.path }}" data-exthumbimage="/images/objects/{{ item.path }}" data-sub-html="<h4>{{ object.title }}</h4><b>{{ object.price|number_format(0,'.',' ') }}</b><i class='fa fa-rub fa-fw'></i>">
                             <div class="item text-center" style="background-image:url('/images/objects/{{ item.path }}')"></div>
                         </a>
                     {% endfor %}
                 </div>
-                <div id="owl-thumbs" class="owl-carousel">
+                <div id="owl-thumbs" class="owl-carousel owl-theme">
                     {% for item in object.ObjectImagess if item %}
                         <div class="item text-center" style="background-image:url('/images/objects/{{ item.thumb }}')"></div>
                     {% endfor %}
@@ -80,24 +102,27 @@
 			<div class="clearfix catalog">
 				<h3 class="padding-5">Вас также может заинтересовать:</h3>
 			{% for item in catalog if item %}
-					<div class="col-sm-6 col-md-4 col-lg-3 padding-5">
-						<div class="thumbnail">
-							<div class="sl_img">
-								<a href="{{ path('site_catalog_object', {'id':item.id}) }}">
-									<img class="img-responsive" src="{% if item.image %}/images/objects/{{ item.image.path }}{% else %}/images/no-photo.jpg{% endif %}" alt="{{ item.title }}">
-								</a>
-                            </div>
-							<div class="caption">
-								<h4>{{ item.title }}</h4>
-								<table class="table">
-									<tr><td colspan="2">{{ item.ObjectTypes.title }}</td></tr>
-									<tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
-									<tr><td colspan="2" class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
-								</table>
-								<div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
-							</div>
-						</div>
-					</div>
+                <div class="col-sm-6 col-md-4 padding-5">
+                    <div class="thumbnail">
+                        <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
+                            <div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}');"></div>
+                        </a>
+                        <div class="caption">
+                            <h4 class="text-center nobreak">{{ item.title }}</h4>
+                            <h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
+                            <div class="plan_desc"><table class="table">
+                                    <tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+                                    <tr><td colspan="2">{{ item.address }}</td></tr>
+                                    {% for param in item.ObjectParamssForTable() if param %}
+                                        {% if loop.index is odd %}<tr>{% endif %}
+                                        <td>{{ param.ObjectTypesFields.filterName }}: <b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td>
+                                        {% if loop.index is even %}</tr>{% endif %}
+                                    {% endfor %}
+                                </table></div>
+                            <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+                        </div>
+                    </div>
+                </div>
 				{% endfor %}
 			</div>
 		{% endif %}	
@@ -109,10 +134,9 @@
     {{ parent() }}
     <script>
         $(document).ready(function() {
-            $(".fancybox").fancybox({
-                openEffect	: 'none',
-                closeEffect	: 'none'
-            });
+            if ($("#owl-images").length) {
+                $("#owl-images").lightGallery({selector: '.imagelightbox', thumbnail: true, exThumbImage: 'data-exthumbimage', hash: false});
+            }
             var sync1 = $("#owl-images");
             var sync2 = $("#owl-thumbs");
             var slidesPerPage = 4;
@@ -136,11 +160,12 @@
                 .owlCarousel({
                     items: slidesPerPage,
                     dots: false,
-                    nav: false,
+                    nav: true,
                     smartSpeed: 200,
                     slideSpeed: 500,
                     slideBy: slidesPerPage,
-                    responsiveRefreshRate: 100
+                    responsiveRefreshRate: 100,
+                    navText: ['<svg width="100%" height="100%" viewBox="0 0 11 20"><path style="fill:none;stroke-width: 1px;stroke: #000;" d="M9.554,1.001l-8.607,8.607l8.607,8.606"/></svg>', '<svg width="100%" height="100%" viewBox="0 0 11 20" version="1.1"><path style="fill:none;stroke-width: 1px;stroke: #000;" d="M1.054,18.214l8.606,-8.606l-8.606,-8.607"/></svg>'],
                 }).on('changed.owl.carousel', syncPosition2);
 
             function syncPosition(el) {

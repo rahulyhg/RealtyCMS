@@ -38,6 +38,7 @@ class ObjectTypesFieldsType extends AbstractType
             ))
             ->add('required', 'checkbox', array('label'  => 'Обязательное поле', 'required' => false, 'data' => ($options['data']->getRequired() == 1) ? true : false))
             ->add('show_in_filter', 'checkbox', array('label'  => 'Показывать в фильтре', 'required' => false, 'data' => ($options['data']->getShowInFilter() == 1) ? true : false))
+            ->add('show_in_table', 'checkbox', array('label'  => 'Показывать в плашке', 'required' => false, 'data' => ($options['data']->getShowInTable() == 1) ? true : false))
             //->add('listing', 'checkbox', array('label'  => 'Списком под фильтром', 'required' => false, 'data' => ($options['data']->getListing() == 1) ? true : false))
             //->add('show_on_map', 'checkbox', array('label'  => 'Указывать на карте', 'required' => false, 'data' => ($options['data']->getShowOnMap() == 1) ? true : false))
             //->add('save', 'submit', array('label'  => 'Сохранить',))

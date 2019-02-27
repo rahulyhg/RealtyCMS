@@ -3,7 +3,7 @@
 
     {% block stylesheets %}
         {{ parent() }}
-        {% stylesheets '@bootstrap_css' '@AdminBundle/Resources/public/css/*' %}
+        {% stylesheets '@bootstrap_css' '@jquery_ui_css' '@AdminBundle/Resources/public/css/*' %}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />
         {% endstylesheets %}
         <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
@@ -82,7 +82,7 @@
 
 {% block javascripts %}
     {{ parent() }}
-    {% javascripts '@jquery_js' '@bootstrap_js' '@AdminBundle/Resources/public/js/*' %}
+    {% javascripts '@jquery_js' '@jquery_ui_js' '@bootstrap_js' '@AdminBundle/Resources/public/js/*' %}
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 {% endblock %}

@@ -1,3 +1,17 @@
+{% block form_row %}
+    {% spaceless %}
+        <div class="clearfix col-md-12 col-sm-6 col-xs-12 padding-5">{{ form_label(form) }}{{ form_widget(form) }}</div>
+    {% endspaceless %}
+{% endblock form_row %}
+
+{% block form_errors %}
+    {% spaceless %}
+        {% if errors|length > 0 %}
+
+        {% endif %}
+    {% endspaceless %}
+{% endblock form_errors %}
+
 {% block form_label %}
     {% spaceless %}
         {% if label is not sameas(false) %}
@@ -15,3 +29,20 @@
         <input class="form-control {{ nn[1] }}" type="text" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
     {% endspaceless %}
 {% endblock money_widget %}
+
+{% block search_widget %}
+    {% spaceless %}
+        <input type="hidden" hidden="true" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+        <div class="clearfix input-group">
+            <input type="text" class="form-control" data-inputmask="'alias':'numeric','digits': 0,'digitsOptional':false" placeholder="от" id="{{ id }}_f" onchange="$('#{{ id }}').val(($('#{{ id }}_f').val()+'-'+$('#{{ id }}_t').val()));"{% if value is defined %} value="{{ value|split('-')|first }}"{% endif %}>
+            <input type="text" class="form-control" data-inputmask="'alias':'numeric','digits': 0,'digitsOptional':false" placeholder="до" id="{{ id }}_t" onchange="$('#{{ id }}').val(($('#{{ id }}_f').val()+'-'+$('#{{ id }}_t').val()));"{% if value is defined %} value="{{ value|split('-')|last }}"{% endif %}>
+        </div>
+    {% endspaceless %}
+{% endblock search_widget %}
+
+{% block submit_widget %}
+    {% spaceless %}
+        {% if label is empty %}{% set label = name|humanize %}{% endif %}
+        <div class="padding-5"><button type="{{ type|default('submit') }}" {{ block('button_attributes') }}>{{ label }}</button></div>
+    {% endspaceless %}
+{% endblock submit_widget %}

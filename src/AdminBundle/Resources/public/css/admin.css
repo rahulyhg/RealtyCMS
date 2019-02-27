@@ -464,7 +464,7 @@ table.dataTable thead .sorting:after {
 .form-signin {
     max-width: 330px;
     padding: 15px;
-    margin: 0 auto;
+    margin: 10% auto;
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
@@ -508,3 +508,4 @@ select:required, input:required, textarea:required {
 .pagination {
     margin: 0;
 }
+.handle {cursor: move}

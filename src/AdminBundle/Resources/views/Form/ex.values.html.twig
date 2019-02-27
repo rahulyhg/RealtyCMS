@@ -1,26 +1,28 @@
 {% if type_field is defined %}
     {% if type_field == 2 or type_field == 4 %}
     <div class="clearfix">
-        <h2>Значения поля:</h2>
+        <h2>Возможные значения:</h2>
         <div class="clearfix"><a href="{{ path('admin_objectstypes_addvalue',{'id':item.id}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Добавить значение</a>
             <a href="{{ path('admin_objectstypes_addvalues',{'id':item.id}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Добавить несколько значений</a></div><br>
         <div class="highlight">
 
-            <table class="table table-striped table-hover" id="sortFixed">
+            <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_objectstypes_sortvalues') }}">
                 <thead>
                 <tr>
-                    <th>Значение</th>
                     <th>Порядок</th>
-                    <th colspan="2">Действия</th>
+                    <th>Значение</th>
+                    <th colspan="2" class="action">Действия</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% for value in item.ObjectTypesFieldsValuess if value %}
                     <tr id="{{ value.id }}" data-sort="{{ value.sort }}">
+                        <td><i class="fa fa-ellipsis-v fa-fw handle"></i> {{ value.sort }}</td>
                         <td><a href="{{ path('admin_objectstypes_editvalue',{'id':value.id}) }}">{{ value.name }}</a></td>
-                        <td>{{ value.sort }}</td>
-                        <td><a href="{{ path('admin_objectstypes_editvalue',{'id':value.id}) }}"><span class="glyphicon glyphicon-edit"></span></a></td>
-                        <td><a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objectstypes_deletevalue',{'id':value.id}) }}" title="Удалить"><span class="glyphicon glyphicon-trash"></span></a></td>
+                        <td colspan="2" class="action">
+                            <a href="{{ path('admin_objectstypes_editvalue',{'id':value.id}) }}" title="Редактировать"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objectstypes_deletevalue',{'id':value.id}) }}" title="Удалить"><span class="glyphicon glyphicon-trash"></span></a>
+                        </td>
                     </tr>
                 {% else %}
                     <tr><td colspan="4">Нет значений</td></tr>

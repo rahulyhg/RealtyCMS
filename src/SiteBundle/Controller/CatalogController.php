@@ -2,7 +2,10 @@
 
 namespace SiteBundle\Controller;
 
+use Propel\Bundle\PropelBundle\Util\PropelInflector;
 use SiteBundle\Form\SearchType;
+use SiteBundle\Model\ObjectParams;
+use SiteBundle\Model\ObjectParamsQuery;
 use SiteBundle\Model\ObjectsQuery;
 use SiteBundle\Model\TownsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -24,10 +27,9 @@ class CatalogController extends Controller
      */
     public function updateAction(Request $request)
     {
-        $town_id = @$request->query->get('town_id')?:NULL;        
 
-        $search_form = $this->createForm(new SearchType(),[$town_id]);
-        $search_form->submit($request);        
+        $search_form = $this->createForm(new SearchType(), $request->query->all());
+        $search_form->submit($request);
 
         return $this->render('SiteBundle:Form:search_form.html.twig', array(
             'search_form'   => $search_form->createView()
@@ -35,60 +37,138 @@ class CatalogController extends Controller
     }
 	
 	/**
-     * @Route("/catalog/{alias}")
+     * @Route("/catalog")
      */
-    public function indexAction($alias = null, Request $request)
+    public function indexAction(Request $request)
     {        
-		if ($alias) {
-			$cat = ObjectTypesQuery::create()            
-					->filterByAlias($alias)->findOne();		
-			if (!$cat) {
-				throw $this->createNotFoundException(
-					'Нет данного типа объектов'
-				);
-			}
-			return $this->redirect($this->generateUrl('site_catalog_index', array('type_object' => $cat->getId())));			
-		}		
-		
 		$settings = SettingsQuery::create()
             ->findOne();
         $menus = MenusQuery::create()
             ->find();
 
-        $agent_id = @$request->query->get('agent_id')?:NULL;
-        $town_id = @$request->query->get('town_id')?:NULL;
-        $area_id = @$request->query->get('area_id')?:NULL; 
-		$period_id = @$request->query->get('period_id')?:NULL;		
-        $type_object = @$request->query->get('type_object')?:NULL;
-		$type = @$request->query->get('type')?:NULL;
-        $price_from = @$request->query->get('price_from')?:NULL;
-        $price_to = @$request->query->get('price_to')?:NULL;
-        //$sqprice_from = @$request->query->get('sqprice_from')?:NULL;
-        //$sqprice_to = @$request->query->get('sqprice_to')?:NULL;
-        $square_from = @$request->query->get('square_from')?:NULL;
-        $square_to = @$request->query->get('square_to')?:NULL;
-
-        $search_form = $this->createForm(new SearchType(),array($town_id));        
+        $search_form = $this->createForm(new SearchType(),$request->query->all());
         $search_form->submit($request);
 
-        $catalog_query = ObjectsQuery::create();
+        # Фильтр
+        $price_where = '';
+        $filter_array = array();
+        $filter_array_id = array();
+        $filter_array_value = array();
+        $filter_array_between = array();
+
+
+        foreach ($search_form->all() as $item) {
+            if ($item->getData()) {
+                //var_dump($item->getName(),$item->getData(),gettype($item->getData()));
+                $item_name = $item->getName();
+                $item_data = $item->getData();
+                $var = @explode("_", $item_name);
+                if ($var[0] == 'params') {
+                    if (gettype($item_data)=='double') $price_array[$item_name] = $item_data;
+                    if (gettype($item_data)=='integer') {
+                        $var = @explode("_", $item_name);
+                        //var_dump($var);
+                        if (@$var[1]) {
+                            $filter_array_id[$var[1]] = $item_data;
+                        }
+                    }
+                    if (gettype($item_data)=='string') {
+                        $var = @explode("_", $item_name);
+                        $array = @explode("-", $item_data);
+                        if (@$array[0] && @$array[1]) {
+                            if (@$var[1]) {
+                                $filter_array_between[$var[1]] = $array;
+                            }
+                        } elseif (@$array[0]!="" && @$array[1]!="") {
+                            if (@$var[1]) {
+                                $filter_array_value[$var[1]] = $item_data;
+                            }
+                        }
+                    }
+                    if (gettype($item_data)=='array') {
+                        foreach ($item_data as $item_data_i) {
+                            if (gettype($item_data_i)=='integer') {
+                                $var = @explode("_", $item_name);
+                                if (@$var[1]) {
+                                    $filter_array_id[$var[1]][] = $item_data_i;
+                                }
+                            }
+                            if (gettype($item_data_i)=='string') {
+                                $var = @explode("_", $item_name);
+                                $array = @explode("-", $item_data_i);
+                                if (@$array[0] && @$array[1]) {
+                                    if (@$var[1]) {
+                                        $filter_array_between[$var[1]][] = $array;
+                                    }
+                                } elseif (@$array[0]!="" && @$array[1]!="") {
+                                    if (@$var[1]) {
+                                        $filter_array_value[$var[1]][] = $item_data_i;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (gettype($item_data)=='string') {
+                        $array = @explode("-", $item_data);
+                        if (@$array[0]) {
+                            $price_where = 'Objects.Price >= '. $array[0];
+                        }
+                        if (@$array[1]) {
+                            $price_where .= ($price_where ? ' AND ' : '') .'Objects.Price <= '. $array[1];
+                        }
+                    } else {
+                        $item_name = ucfirst(PropelInflector::camelize((string)$item_name));
+                        if (is_array($item_data)) {
+                            foreach ($item_data as $item_data_i) {
+                                $filter_array[$item_name] = $item_data_i;
+                            }
+                        } else {
+                            $filter_array[$item_name] = $item_data;
+                        }
+                    }
+                }
+            }
+        }
+
+        $catalog_query = ObjectsQuery::create('Objects');
         //$catalog_query->filterByForAll(true);
         $catalog_query->filterByPublished(true);
         $catalog_query->filterByModered(true);
-        if ($agent_id) $catalog_query->filterByUserId($agent_id);
-        if ($town_id) $catalog_query->filterByTownId($town_id);
-		if ($period_id) $catalog_query->filterByPeriodId($period_id);
-        if ($area_id) $catalog_query->filterByAreaId($area_id);
-        if ($type_object) $catalog_query->filterByTypeObject($type_object);
-        if ($type) $catalog_query->filterByType($type);
-        if ($price_from) $catalog_query->where('price >='.$price_from);
-        if ($price_to) $catalog_query->where('price <='.$price_to);
-        if ($square_from) $catalog_query->where('square >='.$square_from);
-        if ($square_to) $catalog_query->where('square <='.$square_to);        
-        //if ($sqprice_from) $catalog_query->where('sq_price >='.$sqprice_from);
-        //if ($sqprice_to) $catalog_query->where('sq_price <='.$sqprice_to);
+        $catalog_query->filterByArray($filter_array);
+        if ($price_where) $catalog_query->where($price_where);
 
-        $catalog_query->join('ObjectImages', Criteria::LEFT_JOIN);
+        $filterWhere = array();
+        if ($filter_array_id) {
+            foreach ($filter_array_id as $key => $filter_array_id_item) {
+                if (is_array($filter_array_id_item)) {
+                    $filterWhere[] = 'MAX(IF(Params.FieldId = '.$key.' AND Params.ValueId IN ('.implode(',', $filter_array_id_item).'), 1, 0)) = 1';
+                } else {
+                    $filterWhere[] = 'MAX(IF(Params.FieldId = '.$key.' AND Params.ValueId IN ('.$filter_array_id_item.'), 1, 0)) = 1';
+                }
+            }
+        }
+        if ($filter_array_value) {
+            foreach ($filter_array_value as $key => $filter_array_id_item) {
+                $filterWhere[] = 'MAX(IF(Params.FieldId = '.$key.' AND Params.TextValue IN ('.implode(',', $filter_array_value).'), 1, 0)) = 1';
+            }
+        }
+        if ($filter_array_between) {
+            foreach ($filter_array_between as $key => $filter_array_id_item) {
+                $filterWhere[] = '(MAX(IF(Params.FieldId = '.$key.' AND Params.TextValue between '.$filter_array_id_item[0].' and '.$filter_array_id_item[1].', 1, 0)) = 1 OR MAX(IF(Params.FieldId = '.$key.' AND Values.Name between '.$filter_array_id_item[0].' and '.$filter_array_id_item[1].', 1, 0)) = 1)';
+            }
+        }
+
+        if ($filterWhere){
+            $objects_where = ObjectParamsQuery::create('Params')
+                ->join('Params.ObjectTypesFieldsValues Values',Criteria::LEFT_JOIN)
+                ->select('object_id')
+                ->groupBy('object_id')
+                ->having(implode(' AND ', $filterWhere))
+                ->find();
+
+            $catalog_query->where('Objects.Id IN ?', $objects_where);
+        }
         
 		// Сортировка
         $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
@@ -100,31 +180,17 @@ class CatalogController extends Controller
         $pagination = $paginator->paginate(
             $catalog_query,
             $this->get('request')->query->get('page', 1),
-            20
+            $on_page
         );
 		
 		$categories = ObjectTypesQuery::create()            
             ->find();
 			
 		$category = null;
-		if ($type_object) {
+		if (@$request->query->get('type_object')) {
 			$category = ObjectTypesQuery::create()            
-            ->filterById($type_object)->findOne();
+            ->filterById(@$request->query->get('type_object'))->findOne();
 		}
-		$array_period = array(
-            '1_2018' => 'I кв. 2018',
-            '2_2018' => 'II кв. 2018',
-			'3_2018' => 'III кв. 2018',
-			'4_2018' => 'IV кв. 2018',
-			'1_2019' => 'I кв. 2019',
-            '2_2019' => 'II кв. 2019',
-			'3_2019' => 'III кв. 2019',
-			'4_2019' => 'IV кв. 2019',
-			'1_2020' => 'I кв. 2020',
-            '2_2020' => 'II кв. 2020',
-			'3_2020' => 'III кв. 2020',
-			'4_2020' => 'IV кв. 2020'
-        );
 
         $response = $this->render('SiteBundle:Default:catalog.html.twig', array(
             'settings'      => $settings,
@@ -133,7 +199,6 @@ class CatalogController extends Controller
             'category'		=> $category,
             'categories' 	=> $categories,
             'search_form'   => $search_form->createView(),
-            'period'		=> $array_period,
             'dir' 			=> $dir,
             'sort' 			=> $sort,
             'on_page' 		=> $on_page
@@ -142,6 +207,23 @@ class CatalogController extends Controller
         $response->headers->setCookie(new Cookie('sort', $sort, time() + 3600 * 24 * 7, $this->generateUrl('site_catalog_index')));
         $response->headers->setCookie(new Cookie('on_page', $on_page, time() + 3600 * 24 * 7, $this->generateUrl('site_catalog_index')));
         return $response;
+    }
+
+    /**
+     * @Route("/catalog/{alias}")
+     */
+    public function aliasAction($alias, Request $request)
+    {
+        if ($alias) {
+            $cat = ObjectTypesQuery::create()
+                ->filterByAlias($alias)->findOne();
+            if (!$cat) {
+                throw $this->createNotFoundException(
+                    'Нет данного типа объектов'
+                );
+            }
+            return $this->redirect($this->generateUrl('site_catalog_index', array('type_object' => $cat->getId())));
+        }
     }
 
     /**
@@ -166,7 +248,7 @@ class CatalogController extends Controller
 		$price_avg = 500000; // +- цена
 		$catalog_query = ObjectsQuery::create('Objects');
 		$catalog_query->where('Objects.Id NOT IN ?', array($object->getId()));
-        $catalog_query->filterByForAll(true);
+        //$catalog_query->filterByForAll(true);
         $catalog_query->filterByPublished(true);
         $catalog_query->filterByModered(true);        
         $catalog_query->filterByTownId($object->getTownId());

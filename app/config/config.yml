@@ -97,8 +97,18 @@ assetic:
         jquery_js:
             inputs:
                 - %kernel.root_dir%/Resources/public/js/jquery-1.12.1.min.js
+#           filters:
+#               - uglifyjs2
+        jquery_ui_js:
+            inputs:
+                - %kernel.root_dir%/Resources/public/js/jquery-ui.min.js
+#           filters:
+#               - uglifyjs2
+        jquery_ui_css:
+            inputs:
+                - %kernel.root_dir%/Resources/public/css/jquery-ui.min.css
  #           filters:                
- #               - uglifyjs2
+ #               - uglifycss
         bootstrap_js:
             inputs:
                 - %kernel.root_dir%/../vendor/twbs/bootstrap/js/transition.js

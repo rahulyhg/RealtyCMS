@@ -36,10 +36,13 @@
                         <td><a href="{{ path('admin_users_edit', {'id': item.id}) }}" title="Редактировать">{{ item.email }}</a></td>
                         <td>{% if item.photo %}<i class="fa fa-picture-o"></i>{% endif %}</td>
                         <td class="action">
-                            <a href="{{ path('admin_users_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
-                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_users_delete', {'id': item.id}) }}" title="Удалить">
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+                            {% if 'ROLE_SUPER_ADMIN' in app.user.Roles %}
+                                <a href="{{ path('admin_default_index', {'_to_be_user': item.email}) }}" title="Войти как пользователь"><i class="fa fa-share"></i></a>
+                                <a href="{{ path('admin_users_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
+                                <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_users_delete', {'id': item.id}) }}" title="Удалить">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}

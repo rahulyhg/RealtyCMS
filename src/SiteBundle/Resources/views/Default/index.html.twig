@@ -6,8 +6,7 @@
 {% block keywords %}{{ settings.keywords }}{% endblock %}
 {% block content %}
     {# Слайдер #}
-
-    {#{% if sliders['Верхний'] is defined %}
+    {% if sliders['Верхний'] is defined %}
 		{% if sliders['Верхний'].SliderImagess|length %}
 		  <div id="owl-first" class="owl-carousel visible-lg">
 			  {% for item in sliders['Верхний'].SliderImagess if item %}
@@ -25,8 +24,7 @@
 			  {% endfor %}
 		  </div>
 		{% endif %}
-	{% endif %}#}
-
+	{% endif %}
 	{# 
     <div class="pay clearfix">
 		<div class="container text-center clearfix">
@@ -158,17 +156,6 @@
         </div>
     </div>
 	#}
-    {# Заявка #}
-    <div class="text-center feddback_margin">
-		<div class="container text-center feedback_f">
-			<div class="col-sm-8 padding-0 tect-left">
-				<h3>НЕ НАШЛИ ПОДХОДЯЩЕГО ВАРИАНТА?</h3>
-			</div>
-			<div class="col-sm-4 padding-0 text-right">
-				<a class="btn btn-lg btn-default-o" href="#" data-toggle="modal" data-target="#feedback">Свяжитесь с нами</a>
-			</div>				
-		</div>
-	</div>
 
     {# Слайдер консультанты #}
 	{#
@@ -209,23 +196,34 @@
       </div>
     {% endif %}
 	#}
-    {# Слайдер партнеры #} 
-	{#	
-    {% if sliders['Наши партнеры'] is defined %}
-      <div class="clients">
-          <div class="container">
-              <h2 class="text-center">Наши партнеры</h2>
-              <div id="owl-clients" class="owl-carousel">
-                  {% for item in sliders['Наши партнеры'].SliderImagess if item %}
-                      {% if item.link %}<a href="{{ item.link }}">{% endif %}
-                          <div class="item text-center"><div style="background-image: url('/images/slider/{{ item.path }}');width:100%;height:100%" title="{{ item.title }}"></div></div>
-                      {% if item.link %}</a>{% endif %}
-                  {% endfor %}
-              </div>
-          </div>
-      </div>
-    {% endif %}    
-	#}
+    {# Слайдер партнеры #}
+    {% if sliders['Партнеры'] is defined %}
+    	{% if sliders['Партнеры'].SliderImagess|length %}
+		  <div class="clients">
+			  <div class="container">
+				  <div id="owl-clients" class="owl-carousel">
+					  {% for item in sliders['Партнеры'].SliderImagess if item %}
+						  {% if item.link %}<a href="{{ item.link }}">{% endif %}
+							  <div class="item text-center"><div style="background-image: url('/images/slider/{{ item.path }}');width:100%;height:100%"></div></div>
+						  {% if item.link %}</a>{% endif %}
+					  {% endfor %}
+				  </div>
+			  </div>
+		  </div>
+		{% endif %}
+    {% endif %}
+
+	{# Заявка #}
+	<div class="text-center feddback_margin">
+		<div class="container text-center feedback_f">
+			<div class="col-sm-8 padding-0 tect-left">
+				<h3>НЕ НАШЛИ ПОДХОДЯЩЕГО ВАРИАНТА?</h3>
+			</div>
+			<div class="col-sm-4 padding-0 text-right">
+				<a class="btn btn-lg btn-default-o" href="#" data-toggle="modal" data-target="#feedback">Свяжитесь с нами</a>
+			</div>
+		</div>
+	</div>
 {% endblock %}
 
 {% block javascripts %}

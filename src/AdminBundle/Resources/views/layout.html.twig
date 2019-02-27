@@ -44,10 +44,10 @@
                                 <li><a href="{{ path('admin_pages_index') }}"><i class="fa fa-fw fa-files-o"></i> Страницы</a></li>
                                 <li><a href="{{ path('admin_sliders_index') }}"><i class="fa fa-fw fa-film"></i> Слайдеры</a></li>
                                 <li><a href="{{ path('admin_towns_index') }}"><i class="fa fa-fw fa-map-marker"></i> Города</a></li>
+                                <li><a href="{{ path('admin_objectstypes_indextypes') }}"><i class="fa fa-fw fa-building-o"></i> Типы объектов</a></li>
                             {% endif %}
-                            <li><a href="{{ path('admin_objectstypes_indextypes') }}"><i class="fa fa-fw fa-building-o"></i> Типы объектов</a></li>
 							<li><a href="{{ path('admin_objects_index') }}"><i class="fa fa-fw fa-building-o"></i> Каталог</a></li>
-                            <li><a href="{{ url('admin_default_delivery') }}"><i class="fa fa-fw fa-envelope-o"></i> Коммерческое предложение</a></li>
+                            {#<li><a href="{{ url('admin_default_delivery') }}"><i class="fa fa-fw fa-envelope-o"></i> Коммерческое предложение</a></li>#}
                             {% if is_granted("ROLE_ADMIN") %}
                                 <li><a href="{{ path('admin_templates_index') }}"><i class="fa fa-fw fa-file-code-o"></i> Шаблоны писем</a></li>
                             {% endif %}

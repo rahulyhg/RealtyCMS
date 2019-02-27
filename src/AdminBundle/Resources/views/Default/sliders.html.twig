@@ -17,11 +17,11 @@
     </div><br>
 
     <div class="clearfix">
-        <div class="highlight">
+        <div class="highlight table-responsive">
             <table class="table table-striped table-hover">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>ID</th>
                     <th>Название</th>
                     <th>Изображения</th>
                     <th class="action">Действия</th>
@@ -46,10 +46,7 @@
                                 </div><br>
                             {% endif %}<a class="btn btn-default" href="{{ path('admin_sliders_image', {'id': item.id}) }}" title="Добавить изображение">Добавить изображение</a></td>
                         <td class="action">
-                            <a href="{{ path('admin_sliders_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
-                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_sliders_delete', {'id': item.id}) }}" title="Удалить">
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+
                         </td>
                     </tr>
                 {% else %}

@@ -47,6 +47,16 @@ class UsersController extends Controller
         $formFactory = $this->container->get('fos_user.profile.form.factory');
 
         $form = $formFactory->createForm();
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('roles', 'choice', array(
+                'choices' => $this->getExistingRoles(),
+                'data' => $item->getRoles(),
+                'label' => 'Группа',
+                'expanded' => true,
+                'multiple' => true,
+                'mapped' => true,
+            ));
+        }
         $form->setData($item);
         $form->handleRequest($request);
 
@@ -81,6 +91,17 @@ class UsersController extends Controller
         ));
     }
 
+    public function getExistingRoles()
+    {
+        $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
+        $roles = array_keys($roleHierarchy);
+
+        foreach ($roles as $role) {
+            $theRoles[$role] = $role;
+        }
+        return $theRoles;
+    }
+
     /**
      * @Route("/users/edit/{id}")
      */
@@ -91,6 +112,16 @@ class UsersController extends Controller
         $item->setPhoto(NULL);
         $formFactory = $this->container->get('fos_user.profile.form.factory');
         $form = $formFactory->createForm();
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
+            $form->add('roles', 'choice', array(
+                'choices' => $this->getExistingRoles(),
+                'data' => $item->getRoles(),
+                'label' => 'Группа',
+                'expanded' => true,
+                'multiple' => true,
+                'mapped' => true,
+            ));
+        }
         $form->setData($item);
         $form->handleRequest($request);
         if ($form->isValid()) {

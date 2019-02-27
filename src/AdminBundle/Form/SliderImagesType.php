@@ -20,16 +20,14 @@ class SliderImagesType extends AbstractType
     {
 
         $sliders = SlidersQuery::create()
-            ->find();
-        $array = [];
-        foreach ($sliders as $slider) {
-            $array[$slider->getId()] = $slider->getTitle();
-        }
+            ->find()->toKeyValue('Id','Title');
+
         $builder
             ->add('slider_id', 'choice', array(
-                'choices'   => $array,
+                'choices'   => $sliders,
                 'label'  => 'Слайдер',
-                'required' => FALSE
+                'attr'  => array('class' => 'form-control'),
+                'required' => TRUE
             ))
             ->add('title', 'text', array('label'  => 'Название'))
             ->add('alt', 'text', array('label'  => 'Alt'))

@@ -30,14 +30,13 @@ class SlidersController extends Controller
           $data[] = array( 
             'actions' => array(
                         'view'    => NULL,
-                        'edit'    => $this->generateUrl('admin_sliders_edit',array('id'=>$item->getId())),
-                        'delete'  => $this->generateUrl('admin_sliders_delete',array('id'=>$item->getId())),
+                        'edit'    => NULL, //$this->generateUrl('admin_sliders_edit',array('id'=>$item->getId())),
+                        'delete'  => NULL, //$this->generateUrl('admin_sliders_delete',array('id'=>$item->getId())),
                       ),
             'item'   => array(
                         'ID'            => array('value'=>$item->getId()),
                         'Название'  => array(
-                                            'value' =>$item->getTitle(),
-                                            'action'=>$this->generateUrl('admin_sliders_edit',array('id'=>$item->getId())),
+                                            'value' =>$item->getTitle()
                                           ),                        
                         'Изображения' => array(
                                             'images' => $item->getSliderImagess(),
@@ -52,7 +51,7 @@ class SlidersController extends Controller
 
         return $this->render('AdminBundle:Default:items.html.twig',array(
             'data' 		  => $data,
-            'title'     => 'Галереи',
+            'title'     => 'Слайдеры',
             'add_url'   => $this->generateUrl('admin_sliders_add'),
             'back_url'  => $this->generateUrl('admin_default_index'),
         ));
@@ -147,13 +146,13 @@ class SlidersController extends Controller
                 'Нет доступных элементов'
             );
         }
+        $dir = 'images/slider';
         $item = new SliderImages();
         $item->setSliderId($slider->getId());
         $form = $this->createForm(new SliderImagesType(), $item);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form['path']->getData()) {
-                $dir = 'images/slider';
                 $file_type = $form['path']->getData()->getMimeType();
                 switch($file_type) {
                     case 'image/png': $Filename = uniqid().'.png'; break;
@@ -177,8 +176,8 @@ class SlidersController extends Controller
         }
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'form' 		=> $form->createView(),
-            'title' 		=> 'Редактирование',
-            'parent' 		=> 'Изображения',
+            'title' 	=> 'Добавление',
+            'parent' 	=> 'Изображения',
             'back_url'  => $this->generateUrl('admin_sliders_index'),
         ));
     }
@@ -196,13 +195,13 @@ class SlidersController extends Controller
                 'Нет доступных элементов'
             );
         }
+        $dir = 'images/slider';
         $photo = $item->getPath();
         $item->setPath(NULL);
         $form = $this->createForm(new SliderImagesType(), $item);
         $form->handleRequest($request);
         if ($form->isValid()) {
             if ($form['path']->getData()) {
-                $dir = 'images/slider';
                 $file_type = $form['path']->getData()->getMimeType();
                 switch($file_type) {
                     case 'image/png': $Filename = uniqid().'.png'; break;
@@ -236,9 +235,9 @@ class SlidersController extends Controller
         }
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'form' 		=> $form->createView(),
-            'image'     => '/images/slider/'.$photo,
-            'title' 		=> 'Редактирование',
-            'parent' 		=> 'Изображения',
+            'title' 	=> 'Редактирование',
+            'parent' 	=> 'Изображения',
+            'photo'     => '/'.$dir.'/'.$photo,
             'back_url'  => $this->generateUrl('admin_sliders_index'),
         ));
     }

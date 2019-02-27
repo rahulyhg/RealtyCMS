@@ -2,7 +2,7 @@
 {% block title %}{{ title }} - Панель управления | CMS{% endblock %}
 
 {% block content %}
-  <h1>Слайдеры изображений</h1>
+  <h1>{{ title }}</h1>
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="alert alert-success">
             {{ flashMessage }}

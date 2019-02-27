@@ -47,7 +47,7 @@ class ObjectsController extends Controller
         // Фильтр
         $filter_form = $this->createForm(new FilterType());
         $object_types = ObjectTypesQuery::create()->find()->toKeyValue('Id','Title');
-        $users = UserQuery::create()->find()->toKeyValue('id', 'Username');
+
         $filter_form
             ->add('TypeObject', 'choice', array(
                 'empty_value' => '- все -',
@@ -56,8 +56,10 @@ class ObjectsController extends Controller
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
                 'required' => false
-            ))
-            ->add('UserId', 'choice', array(
+            ));
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+            $users = UserQuery::create()->find()->toKeyValue('id', 'Username');
+            $filter_form->add('UserId', 'choice', array(
                 'empty_value' => '- все -',
                 'choices' => $users,
                 'label' => 'Консультант',
@@ -65,6 +67,18 @@ class ObjectsController extends Controller
                 'multiple' => false,
                 'required' => false
             ));
+        } else {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $users = array($user->getId() => $user->getUsername());
+            $filter_form->add('UserId', 'choice', array(
+                'choices' => $users,
+                'label' => 'Консультант',
+                'attr' => array('class' => 'form-control'),
+                'multiple' => false,
+                'required' => true
+            ));
+        }
+
         $filter_form->handleRequest($request);
         if ($filter_form->isValid()) {
             $filter_fields = $filter_form->getData();
@@ -73,6 +87,9 @@ class ObjectsController extends Controller
                 if ($filter_field) $filter_array[$name] = $filter_field;
             }
             $items_query->filterByArray($filter_array);
+        }
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+            $items_query->filterByUserId($user->getId());
         }
 
         $paginator = $this->get('knp_paginator');

@@ -22,6 +22,7 @@ security:
 
             logout:       true
             anonymous:    true
+            switch_user: { role: ROLE_ADMIN, parameter: _to_be_user }
 
     access_control:
         - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }

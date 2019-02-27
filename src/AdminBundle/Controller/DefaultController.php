@@ -30,10 +30,18 @@ class DefaultController extends Controller
             $message = MessagesQuery::create()->findPk($id);
             if ($message) $message->setStatus(2)->save();
         }
+
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+            $messages = MessagesQuery::create()->filterByStatus(1)->find();
+        } else {
+            $user = $this->container->get('security.token_storage')->getToken()->getUser();
+            $messages = MessagesQuery::create()->filterByUserId($user->getId())->filterByStatus(1)->find();
+        }
+
         return $this->render('AdminBundle:Default:index.html.twig',array(
-            'pages' => PagesQuery::create()->find()->count(),            
+            'pages' => PagesQuery::create()->find()->count(),
             'objects' => ObjectsQuery::create()->find()->count(),
-            'messages' => MessagesQuery::create()->filterByStatus(1)->find()
+            'messages' => $messages
         ));		
     }
 

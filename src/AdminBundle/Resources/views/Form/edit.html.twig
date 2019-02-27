@@ -2,7 +2,7 @@
 {% if form is defined %}{% form_theme form 'AdminBundle:Form:fields.html.twig' %}{% endif %}
 
 {% block content %}
-    <h1>{% if title is defined %}{{ title }}{% else %}Добавление / Редактирование{% endif %}</h1>
+    <h1>{% if title is defined %}{{ title }}{% else %}Добавление / Редактирование{% endif %}{% if parent is defined %} <small>{{ parent }}</small>{% endif %}</h1>
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="alert alert-success">
             {{ flashMessage }}
@@ -17,7 +17,7 @@
     {% if photo is defined and photo %}
         <div class="clearfix">
             <div class="col-sm-offset-3 col-sm-2">
-                <img height="200" src="{{ photo }}"><br><br>
+                <img style="max-height: 100px" src="{{ photo }}"><br><br>
             </div>
         </div>
     {% endif %}

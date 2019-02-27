@@ -757,7 +757,7 @@ ul.social-network li a {
 }
 .navbar-brand > img {
     display: block;
-    width: 100px;
+    height: 34px;
     margin-top: -5px;
 }
 .fixed .navbar-brand {

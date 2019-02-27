@@ -8,22 +8,24 @@
     {# Слайдер #}
 
     {% if sliders['Верхний'] is defined %}
-      <div id="owl-first" class="owl-carousel visible-lg">
-          {% for item in sliders['Верхний'].SliderImagess if item %}
-              {% if item.link %}<a href="{{ item.link }}">{% endif %}
-                  <div class="item text-center">
-                      <img class="img-slide lazyOwl" src="/images/slider/{{ item.path }}" alt="{{ item.alt }}">
-                      <div class="container">
-                          <div class="carousel-caption">
-                              {{ item.caption | raw }}
-                          </div>
-                      </div>
-					  <div class="back"></div>
-                  </div>
-              {% if item.link %}</a>{% endif %}
-          {% endfor %}
-      </div>
-    {% endif %}
+		{% if sliders['Верхний'].SliderImagess|length %}
+		  <div id="owl-first" class="owl-carousel visible-lg">
+			  {% for item in sliders['Верхний'].SliderImagess if item %}
+				  {% if item.link %}<a href="{{ item.link }}">{% endif %}
+					  <div class="item text-center">
+						  <img class="img-slide lazyOwl" src="/images/slider/{{ item.path }}" alt="{{ item.alt }}">
+						  <div class="container">
+							  <div class="carousel-caption">
+								  {{ item.caption | raw }}
+							  </div>
+						  </div>
+						  <div class="back"></div>
+					  </div>
+				  {% if item.link %}</a>{% endif %}
+			  {% endfor %}
+		  </div>
+		{% endif %}
+	{% endif %}
 
 	{# 
     <div class="pay clearfix">
@@ -230,51 +232,55 @@
     {{ parent() }}
     <script>
         $(document).ready(function() {
-            $("#owl-first").owlCarousel({
-                items : 1,
-                autoHeight : false,
-                lazyLoad : true,
-                navigation : true,
-                responsive: false,
-                navigationText : false
-            });
-            $("#owl-agents").owlCarousel({                
-                lazyLoad : true,
-                navigation : true,                
-                itemsCustom : [
-                  [0, 1],                  
-                  [400, 2],
-                  [800, 3]
-                ],
-                navigationText : false
-            });
-            $("#owl-docs").owlCarousel({
-                items : 4,
-                itemsCustom : [
-                  [0, 1],                  
-                  [400, 2],
-                  [600, 3],
-                  [800, 4]
-                ],
-                lazyLoad : true,
-                navigation : true,                
-                navigationText : false
-            });
-            $("#owl-clients").owlCarousel({
-                items : 6,
-                itemsCustom : [
-                  [0, 2],                  
-                  [400, 3],                  
-                  [800, 6]
-                ],
-                lazyLoad : true,
-                navigation : true,
-                navigationText : false
-            });
-            $(".fancybox").fancybox({
-                openEffect	: 'none',
-                closeEffect	: 'none'
-            });
+        	if($("#owl-first").length) {
+				$("#owl-first").owlCarousel({
+					items: 1,
+					autoHeight: false,
+					lazyLoad: true,
+					navigation: true,
+					responsive: false,
+					navigationText: false
+				});
+			}
+			if($("#owl-agents").length) {
+				$("#owl-agents").owlCarousel({
+					lazyLoad: true,
+					navigation: true,
+					itemsCustom: [
+						[0, 1],
+						[400, 2],
+						[800, 3]
+					],
+					navigationText: false
+				});
+			}
+			if($("#owl-docs").length) {
+				$("#owl-docs").owlCarousel({
+					items: 4,
+					itemsCustom: [
+						[0, 1],
+						[400, 2],
+						[600, 3],
+						[800, 4]
+					],
+					lazyLoad: true,
+					navigation: true,
+					navigationText: false
+				});
+			}
+			if($("#owl-clients").length) {
+				$("#owl-clients").owlCarousel({
+					items: 6,
+					itemsCustom: [
+						[0, 2],
+						[400, 3],
+						[800, 6]
+					],
+					lazyLoad: true,
+					navigation: true,
+					navigationText: false
+				});
+			}
         });
     </script>    
 {% endblock %}

@@ -103,29 +103,34 @@ class DefaultController extends Controller
      */
     public function runAction($param = NULL)
     {
-        
+
+        $settings = SettingsQuery::create()
+            ->findOne();
+
+        $php_path = $settings->getPhpPath() ? : 'php';
+
         if ($param) {
-          if ($param == 'ver') $process = new Process('php -v');
-          if ($param == 'assets') $process = new Process('php '.$this->get('kernel')->getRootDir().'/console assetic:dump --env=prod');
-          if ($param == 'cache') $process = new Process('php '.$this->get('kernel')->getRootDir().'/console cache:clear --env=prod');
+          if ($param == 'ver') $process = new Process($php_path.' -v');
+          if ($param == 'assets') $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console assetic:dump --env=prod');
+          if ($param == 'cache') $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console cache:clear --env=prod');
 		  if ($param == 'clear') $process = new Process('rm -r '.$this->get('kernel')->getRootDir().'/cache/prod');
-          if ($param == 'sitemap') $process = new Process('php '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+          if ($param == 'sitemap') $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
           if ($param == 'propel') {
-            $process = new Process('php '.$this->get('kernel')->getRootDir().'/console propel:mi:ge');
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console propel:mi:ge');
             $process->run();
             if (!$process->getErrorOutput()) {
               if ($process->getOutput()) $this->get('session')->getFlashBag()->add(
                 'notice',
                 $process->getOutput()
               );
-              $process = new Process('php '.$this->get('kernel')->getRootDir().'/console propel:mi:mi');
+              $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console propel:mi:mi');
               $process->run();
               if (!$process->getErrorOutput()) {
                 if ($process->getOutput()) $this->get('session')->getFlashBag()->add(
                   'notice',
                   $process->getOutput()
                 );
-                $process = new Process('php '.$this->get('kernel')->getRootDir().'/console propel:bu');
+                $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console propel:bu');
                 $process->run();
               }
             }
@@ -150,6 +155,9 @@ class DefaultController extends Controller
      */
     public function deliveryAction(Request $request)
     {
+        $settings = SettingsQuery::create()
+            ->findOne();
+
         $items = TemplatesQuery::create()
             ->find();
         $array = [];
@@ -180,8 +188,8 @@ class DefaultController extends Controller
             $user = $this->container->get('security.context')->getToken()->getUser();
 
             $subject = 'Коммерческое предложение';
-            $from = 'Свои Метры <no-reply@svoi-metry.ru>';
-            $to = $query['email'];//'info@rr.ru';
+            $from = $settings->getName().' <'.$settings->getEmail().'>';
+            $to = $query['email'];
             $body = $this->renderView(
                 'AdminBundle:Form:mail.html.twig',
                 array('content' => $content, 'email' => $to, 'agent' => $user )

@@ -26,6 +26,7 @@
         <column name="google" type="varchar" size="255" required="false"/>
         <column name="instagram" type="varchar" size="255" required="false"/>
         <column name="linkedin" type="varchar" size="255" required="false"/>
+        <column name="php_path" type="varchar" size="255" required="true"/>
     </table>
 
     <table name="menus" phpName="Menus">

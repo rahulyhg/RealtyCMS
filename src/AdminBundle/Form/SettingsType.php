@@ -49,7 +49,7 @@ class SettingsType extends AbstractType
             ->add('city', 'text', array('label'  => 'Город', 'required' => FALSE))
             ->add('address', 'text', array('label'  => 'Адрес', 'required' => FALSE))
             ->add('phone', 'text', array('label'  => 'Телефон 1', 'attr' => array('data-inputmask' => "'mask': '+9(999)999-9999'"), 'required' => TRUE))
-            ->add('phone_two', 'text', array('label'  => 'Телефон 2', 'attr' => array('data-inputmask' => "'mask': '+9(999)999-9999'"), 'required' => TRUE))
+            ->add('phone_two', 'text', array('label'  => 'Телефон 2', 'attr' => array('data-inputmask' => "'mask': '+9(999)999-9999'"), 'required' => FALSE))
 			->add('counters', 'textarea', array('label'  => 'Счетчики (код)', 'required' => FALSE, 'attr' => array('rows' => 10)))
             ->add('robots', 'textarea', array('label'  => 'Robots.txt', 'required' => true, 'attr' => array('rows' => 10)))
             ->add('favicon', 'file', array('label'  => 'Иконка', 'required' => FALSE, 'mapped' => false))
@@ -61,7 +61,8 @@ class SettingsType extends AbstractType
             ->add('youtube', 'text', array('label'  => 'Страница Youtube', 'required' => FALSE))
             ->add('google', 'text', array('label'  => 'Страница Google+', 'required' => FALSE))
             ->add('instagram', 'text', array('label'  => 'Страница Instagram', 'required' => FALSE))
-            ->add('linkedin', 'text', array('label'  => 'Страница Linkedin', 'required' => FALSE))            
+            ->add('linkedin', 'text', array('label'  => 'Страница Linkedin', 'required' => FALSE))
+            ->add('php_path', 'text', array('label'  => 'Путь к PHP', 'required' => TRUE))
             //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 

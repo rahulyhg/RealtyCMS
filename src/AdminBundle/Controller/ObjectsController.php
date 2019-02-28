@@ -153,6 +153,7 @@ class ObjectsController extends Controller
                 # генерируем Название
                 $type_objects = $item->getObjectTypes();
                 if ($type_objects->getGenerator()) {
+                    $item = ObjectsQuery::create()->findPk($item->getId());
                     $generator = $type_objects->getGenerator();
                     preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
                     foreach ($out[1] as $gvalue) {
@@ -222,6 +223,7 @@ class ObjectsController extends Controller
                 # генерируем Название
                 $type_objects = $item->getObjectTypes();
                 if ($type_objects->getGenerator()) {
+                    $item = ObjectsQuery::create()->findPk($item->getId());
                     $generator = $type_objects->getGenerator();
                     preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
                     foreach ($out[1] as $gvalue) {
@@ -307,6 +309,7 @@ class ObjectsController extends Controller
                 # генерируем Название
                 $type_objects = $item->getObjectTypes();
                 if ($type_objects->getGenerator()) {
+                    $item = ObjectsQuery::create()->findPk($item->getId());
                     $generator = $type_objects->getGenerator();
                     preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
                     foreach ($out[1] as $gvalue) {

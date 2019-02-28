@@ -26,44 +26,46 @@
 			btn_onclick_event = $btn.attr("onclick");
 			$btn.attr("onclick","");
 			var timer = null;
-			$btn.mousedown(function(e) {            
-				e.preventDefault();
-				e.stopPropagation();
-				$btn.css("min-width",btn_width);
-				$btn.css("borderColor",settings.borderColor);
-				$btn.css("backgroundColor",settings.backgroundColor);
-				$btn.css("color",settings.color);
-				$btn.text(settings.waitTextBefore);
-				var time = Math.round(settings.timer/1000);
-				$btn.text(settings.waitTextBefore + ' ' + time + ' ' + settings.waitTextAfter);
-				time--;
-				var timer = setInterval(function() {
-				  if (time <= 0) {
-					clearInterval(timer);
-					$btn.css("borderColor",btn_borderColor);
-					$btn.css("backgroundColor",btn_backgroundColor);
-					$btn.css("color",btn_textColor);
-					$btn.text(btn_text);
-					time = Math.round(settings.timer/1000);                
-					if (btn_onclick_event === undefined) {
-						console.log('submit');
-						$($btn.closest('form')).submit();
-					} else {
-					  $btn.attr("onclick",btn_onclick_event);
-					}
-				  } else {
+			$btn.mousedown(function(e) {
+				if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+					e.preventDefault();
+					e.stopPropagation();
+					$btn.css("min-width", btn_width);
+					$btn.css("borderColor", settings.borderColor);
+					$btn.css("backgroundColor", settings.backgroundColor);
+					$btn.css("color", settings.color);
+					$btn.text(settings.waitTextBefore);
+					var time = Math.round(settings.timer / 1000);
 					$btn.text(settings.waitTextBefore + ' ' + time + ' ' + settings.waitTextAfter);
 					time--;
-				  }            
-				}, 1000);
-				$btn.mouseup(function(){
-				  clearInterval(timer);
-				  $btn.css("borderColor",btn_borderColor);
-				  $btn.css("backgroundColor",btn_backgroundColor);
-				  $btn.css("color",btn_textColor);
-				  $btn.text(btn_text);
-				  time = Math.round(settings.timer/1000);             
-				}); 
+					var timer = setInterval(function () {
+						if (time <= 0) {
+							clearInterval(timer);
+							$btn.css("borderColor", btn_borderColor);
+							$btn.css("backgroundColor", btn_backgroundColor);
+							$btn.css("color", btn_textColor);
+							$btn.text(btn_text);
+							time = Math.round(settings.timer / 1000);
+							if (btn_onclick_event === undefined) {
+								console.log('submit');
+								$($btn.closest('form')).submit();
+							} else {
+								$btn.attr("onclick", btn_onclick_event);
+							}
+						} else {
+							$btn.text(settings.waitTextBefore + ' ' + time + ' ' + settings.waitTextAfter);
+							time--;
+						}
+					}, 1000);
+					$btn.mouseup(function () {
+						clearInterval(timer);
+						$btn.css("borderColor", btn_borderColor);
+						$btn.css("backgroundColor", btn_backgroundColor);
+						$btn.css("color", btn_textColor);
+						$btn.text(btn_text);
+						time = Math.round(settings.timer / 1000);
+					});
+				}
 			});
 			if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
 				$btn.click(function (e) {

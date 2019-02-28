@@ -87,7 +87,7 @@
 					<div class="tile_bg" style="background-image:url('/images/cates/arenda.jpg');"></div>						
 					<div class="tile-o">
 						<div class="tile-t">
-						  <h3>Аренда</h3> 							  					  
+						  <h3>Аренда недвижимости</h3>
 						</div>                                                        
 					</div>
 				</a>
@@ -103,49 +103,19 @@
     {# Почему мы #}
     <div class="why">
 		<div class="container clearfix">
-			<h2 class="text-center">Почему мы?</h2>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">1</div>
-				<div class="descr">
-					<h4>Оперативность</h4>
-					<p>Мы проводим быструю сдачу/продажу помещений Собственников по оптимальной рыночной цене, а так же быстрый подбор необходимых площадей для аренды/покупки федеральным и региональным сетям.</p>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">2</div>
-				<div class="descr">
-					<h4>Экономим время</h4>
-					<p>У нас всегда только актуальная база объектов. Обращаясь к нам Вы сокращаете время простоя/поиска объектов на 50-70%. От обращения в компанию до подписания договора проходит не более 5 дней.</p>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">3</div>
-				<div class="descr">
-					<h4>Высокая экспертность</h4>
-					<p>Наша специализация - коммерческая недвижимость, поэтому Вы всегда получите профессиональную консультацию по любому вопросу: от простой аренды до покупки готового бизнеса.</p>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">4</div>
-				<div class="descr">
-					<h4>Индивидуальный подход</h4>
-					<p>Для решения Вашей задачи будет трудиться команда именно с тем набором компетенций, который позволит решить ее максимально эффективно.</p>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">5</div>
-				<div class="descr">
-					<h4>Безопасность</h4>
-					<p>Мы всегда тщательно проверяем юридическую чистоту сделок на всех этапах.</p>
-				</div>
-			</div>
-			<div class="col-sm-6 col-md-4 clearfix">
-				<div class="number">6</div>
-				<div class="descr">
-					<h4>Конфиденциальность</h4>
-					<p>Нам важно Ваше доверие, поэтому будьте уверены, что подробности сделки будем знать только мы с Вами.</p>
-				</div>
-			</div>
+			<h2 class="text-center">ПОЧЕМУ МЫ?</h2>
+			{% for i in 1..6 %}
+				{% set wtitle = 'why'~i~'Title' %}{% set wtext = 'why'~i~'Text' %}
+				{% if settings.wtitle(i) and settings.wtext(i) %}
+					<div class="col-sm-6 col-md-4 clearfix">
+						<div class="number">{{ i }}</div>
+						<div class="descr">
+							<h4>{{ settings.wtitle(i) }}</h4>
+							<p>{{ settings.wtext(i) }}</p>
+						</div>
+					</div>
+				{% endif %}
+			{% endfor %}
 		</div>
 	</div>
 	{#

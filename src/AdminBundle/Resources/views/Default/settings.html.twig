@@ -14,6 +14,15 @@
         </div>
     {% endfor %}
 
+    <div class="clearfix">
+        <div class="col-sm-offset-3 col-sm-2">
+            <img style="max-height: 100px" src="/images/logo_top.png">
+        </div>
+        <div class="col-sm-2">
+            <img style="max-height: 100px" src="/images/logo_bottom.png">
+        </div>
+    </div><br><br>
+
     {% if form %}
         <form class="form-horizontal" role="form" method="POST" {{ form_enctype(form) }}>
             {{ form_widget(form) }}

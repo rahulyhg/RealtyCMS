@@ -72,13 +72,13 @@ class DefaultController extends Controller
         } else $consultant = NULL;
 
         # Отсылаем сообщение
-        $subject = 'Новая заявка';
+        $subject = 'Заявка с сайта '.$_SERVER['SERVER_NAME'];
         $from = $settings->getName().' <no-reply@'.$_SERVER['SERVER_NAME'].'>';
 
         $to = $settings->getEmail();
         $body = $this->renderView(
             'SiteBundle:Default:mail.html.twig',
-            array('name' => $name, 'phone' => $phone, 'object' => $object, 'consultant' => $consultant)
+            array('name' => $name, 'phone' => $phone, 'site' => $_SERVER['SERVER_NAME'], 'object' => $object, 'consultant' => $consultant)
         );
         $this->get('mail_helper')->sendMailing($from, $to, $subject, $body);
 		if ($consultant) {
@@ -95,6 +95,23 @@ class DefaultController extends Controller
         return $this->render('SiteBundle:Default:post.html.twig', array(
             'name'  => $name
         ));
+    }
+
+    /**
+     * @Route("/search")
+     */
+    public function searchAction(Request $request)
+    {
+        $search = @$request->request->get('search')?:(@$request->query->get('search')?:NULL);
+
+        if ($search) {
+            $page = PagesQuery::create()
+                ->filterByTitle('%' . $search . '%')
+                ->findOne();
+            if ($page) return $this->redirect($this->generateUrl('site_default_page', array('alias' => $page->getAlias())));
+            return $this->redirect($this->generateUrl('site_catalog_index', array('search_query' => $search)));
+        }
+
     }
 
     /**

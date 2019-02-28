@@ -102,7 +102,7 @@
 			<div class="clearfix catalog">
 				<h3 class="padding-5">Вас также может заинтересовать:</h3>
 			{% for item in catalog if item %}
-                <div class="col-sm-6 col-md-4 padding-5">
+                <div class="col-sm-6 col-md-3 padding-5">
                     <div class="thumbnail">
                         <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
                             <div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}');"></div>

@@ -1,5 +1,5 @@
 body {
-    background-color: #f8f8f8;
+    background-color: #2196F3;
 }
 
 #wrapper {
@@ -12,7 +12,7 @@ h3 {
 #page-wrapper {
     padding: 0 5px;
     min-height: 568px;
-    background-color: #fff;
+    background-color: #e4f7ff;
     margin-top:50px;
 }
 
@@ -21,7 +21,7 @@ h3 {
         position: inherit;
         margin: 50px 0 0 250px;
         padding: 10px 20px;
-        border-left: 1px solid #e7e7e7;
+        border-left: 1px solid #1875c2;
         min-height:902px;
     }
 }
@@ -84,6 +84,7 @@ video {
     border: 1px solid #e1e1e8;
     border-radius: 5px;
     margin-bottom: 10px;
+    background: #fff;
 }
 .highlight i {
     font-size:18px;
@@ -182,11 +183,11 @@ video {
 }
 
 .sidebar ul li {
-    border-bottom: 1px solid #e7e7e7;
+    border-bottom: 1px solid #1875c2;
 }
 
 .sidebar ul li a.active {
-    background-color: #eee;
+    background-color: #1574c0;
 }
 
 .sidebar .arrow {
@@ -447,24 +448,12 @@ table.dataTable thead .sorting:after {
     vertical-align: middle;
     overflow: hidden;
 }
-.loading {
-    display: none;
-    position: fixed;
-    width: 100%;
-    height: 100%;
-    background: rgba(255,255,255,.5);
-}
-.loading img {
-    position: absolute;
-    top:40%;
-    width: 128px;
-    height: 128px;
-    margin: auto;
-}
 .form-signin {
     max-width: 330px;
     padding: 15px;
     margin: 10% auto;
+    background: #fff;
+    border-radius: 6px;
 }
 .form-signin .form-signin-heading,
 .form-signin .checkbox {
@@ -509,3 +498,16 @@ select:required, input:required, textarea:required {
     margin: 0;
 }
 .handle {cursor: move}
+.navbar-default {
+    background-color: #2196F3;
+    border-color: #1876c2;
+}
+.navbar-default .navbar-brand {
+    color: #ffffff;
+}
+.nav > li > a {
+    color: #ffffff;
+}
+.nav > li > a:hover, .nav > li > a:focus {
+    background-color: #1574c0;
+}

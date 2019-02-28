@@ -5,7 +5,7 @@
 {% block title 'Авторизация' %}
 {% block fos_user_content %}
     <form class="form-signin" action="{{ path("fos_user_security_check") }}" method="post">
-        <div class="text-center"><img height="100" src="/images/logo_top.png" alt="Авторизация"></div>
+        <div class="text-center"><img width="200" src="/images/logo_top.png" alt="Авторизация"></div><br>
         <h4 class="form-signin-heading text-center">Авторизация</h4>
         {% if error %}
             <div class="alert alert-danger alert-dismissible" role="alert">

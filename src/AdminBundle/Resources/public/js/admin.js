@@ -43,13 +43,45 @@ function translit(value) {
     }
     return to;
 }
+$('.confirm-complete').on('click', function (e) {
+    e.preventDefault();
+    var path = $(this).data('path');
+    $('#completeModal').data('path', path);
+});
 $('.confirm-delete').on('click', function (e) {
     e.preventDefault();
     var path = $(this).data('path');
     $('#deleteModal').data('path', path);
 });
-$('#btnYes').click(function () {
+$('#completeModal #btnYes').click(function () {
+    location.href = $('#completeModal').data('path');
+});
+$('#deleteModal #btnYes').click(function () {
     location.href = $('#deleteModal').data('path');
+});
+$('#completeModal #btnYesWithComment').click(function () {
+    loading_show();
+    $.ajax({
+        type: "POST",
+        url: $('#completeModal').data('path'),
+        data: {'comment': $('#completeModal .comment').val()},
+        success: function () {
+            location.href = $('#completeModal').data('path');
+            loading_hide();
+        }
+    });
+});
+$('#deleteModal #btnYesWithComment').click(function () {
+    loading_show();
+    $.ajax({
+        type: "POST",
+        url: $('#deleteModal').data('path'),
+        data: {'comment': $('#deleteModal .comment').val()},
+        success: function () {
+            location.href = $('#deleteModal').data('path');
+            loading_hide();
+        }
+    });
 });
 function reload_form(obj) {
     loading_show();
@@ -179,10 +211,22 @@ $(document).on("keypress", ".items_search", function (e) {
     }
 });
 $(document).on("click", "#items_search", function (e) {
+    $('body,html').animate({scrollTop: 0}, 200);
     loading_show();
     e.preventDefault();
-    location.href = window.location.href.split('?')[0] + '?query=' + $('.items_search').val();
-    loading_hide();
+    var form = $('#filter').closest('form');
+    $.ajax({
+        url: window.location.href.split('?')[0] + '?query=' + $('.items_search').val(),
+        type: "POST",
+        data: $(form).serialize(),
+        success: function (data) {
+            $('#page-wrapper').html($(data).find('#page-wrapper').children());
+            loading_hide();
+        },
+        error: function () {
+            loading_hide();
+        }
+    });
 });
 function loading_show() {
     $('.loading').show();

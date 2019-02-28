@@ -1,5 +1,5 @@
-<h3>С сайта пришла заявка:</h3>
-<p>Имя: {{ name }}</p>
-<p>Телефон: {{ phone }}</p>
-{% if object %}<p>Объект: #{{ object.id }} {{ object.title }}</p>{% endif %}
-{% if consultant %}<p>Консультант: {{ consultant.username }}</p>{% endif %}
+<h3>Принята новая заявка с сайта {{ site }}:</h3>
+<p>Имя: <b>{{ name }}</b></p>
+<p>Телефон: <b>{{ phone }}</b></p>
+{% if object %}<p>Объект: <b>#{{ object.id }} {{ object.title }}</b></p>{% endif %}
+{% if consultant %}<p>Консультант: <b>{{ consultant.username }}</b></p>{% endif %}

@@ -9,7 +9,7 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 h1 {
-	font-weight:900;
+    font-size: 34px;
 }
 .padding-0 {
     padding-left:0 !important;
@@ -177,6 +177,7 @@ h1 {
     background: #ccedfb;
     font-weight:bold;
     z-index: 999;
+    margin-top: 20px;
 }
 .investments_top {
     margin-bottom: 30px;
@@ -367,10 +368,10 @@ h1 {
   overflow: hidden;
 }
 .catalog .thumbnail:hover {
-    border-color: #999;
+    border-color: #00a0e5;
 	box-shadow: 0 0 10px #999;
 }
-.catalog .thumbnail:hover img {
+.catalog .thumbnail img {
     transition: 1s;
 }
 /*.catalog .thumbnail:hover img {
@@ -503,9 +504,6 @@ a:focus {
 .menu {
   margin-top: 5px;
   background: #00a0e4;
-  -webkit-transition: 0.5s all;
-    -o-transition: 0.5s all;
-    transition: 0.5s all;
 }
 .navbar-right .our_phones {
 	display:none !important;
@@ -800,9 +798,6 @@ ul.social-network li a {
 		margin-top: 0;
         min-height: 50px;
 	}
-	.masthead .btn-primary-o {
-		display:none;
-	}
     .navbar-header {
         min-height: 50px;
     }
@@ -856,6 +851,9 @@ ul.social-network li a {
 
     #owl-thumbs .item {
         height: 50px !important;
+    }
+    .logo {
+        padding-top: 10px;
     }
 }
 .btn-feedback {

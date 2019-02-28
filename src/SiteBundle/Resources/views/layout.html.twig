@@ -63,7 +63,7 @@
                                           {% for cat in categories if cat %}
                                               <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
                                           {% endfor %}
-                                          <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда</a></li>
+                                          <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда недвижимости</a></li>
                                       </ul>
                                   </li>
                                   <li class="divider"></li>
@@ -73,11 +73,11 @@
 							  </ul>
 							</li>
                         </ul>
-                        <form class="navbar-form navbar-right">
+                        <form class="navbar-form navbar-right" action="{{ path('site_default_search')}}">
 							<div class="input-group">
-							  <input type="text" class="form-control" placeholder="Поиск...">
+							  <input type="text" class="form-control" name="search" placeholder="Поиск...">
 							  <span class="input-group-btn">
-								<button class="btn btn-primary-o" type="button">Найти</button>
+								<button class="btn btn-primary-o" type="submit">Найти</button>
 							  </span>
 							</div>
 					    </form>
@@ -114,15 +114,17 @@
 					<div class="col-sm-6 padding-5 clearfix hidden-xs">
 						<ul class="nav navbar-nav">
 							{% for cat in categories if cat %}
-								<li><a href="{{ path('site_catalog_index', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
-							{% endfor %}								
+								<li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
+							{% endfor %}
+                            <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда недвижимости</a></li>
 						</ul>
 					</div>
 					<div class="col-sm-6 padding-5 clearfix">
 						<ul class="nav navbar-nav  hidden-xs">
-							{% for menu in menus if menu %}
+							{% for menu in menus[0:5] if menu %}
 								<li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
 							{% endfor %}
+                            <li><a href="{{ path('admin_default_index') }}">Вход для сотрудников</a></li>
 						</ul>
 						<div class="social-icon clearfix text-right">
 						<ul class="social-network">

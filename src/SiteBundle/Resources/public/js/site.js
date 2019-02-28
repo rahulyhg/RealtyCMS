@@ -37,12 +37,12 @@ $(document).ready(function() {
 		}
 	});
 	$('.antibtn').antibtn();
-	console.log($(window).height());
+	/*console.log($(window).height());
     if ($(window).width() > 990) {
         (function ($) {
             $.lockfixed(".search_objects", { offset: { top: 80, bottom: 450 } });
         })(jQuery);
-    }
+    }*/
 });
 function form_revision(){
   $('.from').each(function(){    

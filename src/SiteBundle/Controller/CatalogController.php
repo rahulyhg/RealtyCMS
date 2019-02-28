@@ -50,6 +50,7 @@ class CatalogController extends Controller
         $search_form->submit($request);
 
         # Фильтр
+        $search_query = '';
         $price_where = '';
         $filter_array = array();
         $filter_array_id = array();
@@ -108,6 +109,8 @@ class CatalogController extends Controller
                             }
                         }
                     }
+                } else if ($var[0] == 'search') {
+                    $search_query = $item_data;
                 } else {
                     if (gettype($item_data)=='string') {
                         $array = @explode("-", $item_data);
@@ -137,6 +140,10 @@ class CatalogController extends Controller
         $catalog_query->filterByModered(true);
         $catalog_query->filterByArray($filter_array);
         if ($price_where) $catalog_query->where($price_where);
+
+        // Поиск
+        if (!$search_query) $search_query = @$request->request->get('search_query')?:(@$request->query->get('search_query')?:NULL);
+        if ($search_query) $catalog_query->filterByTitle('%' . $search_query . '%');
 
         $filterWhere = array();
         if ($filter_array_id) {

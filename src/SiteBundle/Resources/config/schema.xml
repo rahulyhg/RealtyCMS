@@ -27,6 +27,18 @@
         <column name="instagram" type="varchar" size="255" required="false"/>
         <column name="linkedin" type="varchar" size="255" required="false"/>
         <column name="php_path" type="varchar" size="255" required="true"/>
+        <column name="why_1_title" type="varchar" size="255" required="false"/>
+        <column name="why_1_text" type="longvarchar" required="false"/>
+        <column name="why_2_title" type="varchar" size="255" required="false"/>
+        <column name="why_2_text" type="longvarchar" required="false"/>
+        <column name="why_3_title" type="varchar" size="255" required="false"/>
+        <column name="why_3_text" type="longvarchar" required="false"/>
+        <column name="why_4_title" type="varchar" size="255" required="false"/>
+        <column name="why_4_text" type="longvarchar" required="false"/>
+        <column name="why_5_title" type="varchar" size="255" required="false"/>
+        <column name="why_5_text" type="longvarchar" required="false"/>
+        <column name="why_6_title" type="varchar" size="255" required="false"/>
+        <column name="why_6_text" type="longvarchar" required="false"/>
     </table>
 
     <table name="menus" phpName="Menus">
@@ -282,6 +294,7 @@
         <column name="user_id" type="integer" required="false"/>
         <column name="object_id" type="integer" required="false"/>
         <column name="status" type="integer" required="true"/>
+        <column name="comment" type="longvarchar" />
         <behavior name="timestampable" />
         <foreign-key foreignTable="objects" onDelete="CASCADE" onUpdate="CASCADE">
             <reference local="object_id" foreign="id"/>

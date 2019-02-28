@@ -38,7 +38,7 @@ class ObjectsController extends Controller
         // Сортировка
         $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
         $sort = @$request->query->get('sort') ?: (@$request->cookies->get('sort') ?: 'id');
-        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '2');
+        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '20');
         $items_query->orderBy($sort, $dir);
 
         // Поиск

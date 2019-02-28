@@ -2,6 +2,8 @@
 
 namespace AdminBundle\Controller;
 
+use AdminBundle\Form\FilterType;
+use FOS\UserBundle\Propel\UserQuery;
 use SiteBundle\Model\TemplatesQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -15,6 +17,7 @@ use AdminBundle\Controller\Image;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Process\Process;
 
@@ -25,24 +28,80 @@ class DefaultController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $id = @$request->request->get('id')?:NULL;
-        if ($id) {
-            $message = MessagesQuery::create()->findPk($id);
-            if ($message) $message->setStatus(2)->save();
-        }
 
+        $status = @$request->query->get('status') ?: (@$request->cookies->get('status') ?: '1');
+        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '20');
+        $user = $this->container->get('security.token_storage')->getToken()->getUser();
+
+        $messages_query = MessagesQuery::create();
+
+        // Поиск
+        if (@$request->query->get('query')) $messages_query->filterByName('%' . $request->query->get('query') . '%');
+        // Фильтр
+        $filter_form = $this->createForm(new FilterType());
+
+        $filter_form
+            ->add('Status', 'choice', array(
+                'choices' => array('1'=>'Новые','2'=>'Отказ','3'=>'Успех'),
+                'label' => 'Статус',
+                'attr' => array('class' => 'form-control filter_change'),
+                'multiple' => false,
+                'required' => true
+            ));
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
-            $messages = MessagesQuery::create()->filterByStatus(1)->find();
+            $users = UserQuery::create()->find()->toKeyValue('id', 'Username');
+            $filter_form->add('UserId', 'choice', array(
+                'empty_value' => '- все -',
+                'choices' => $users,
+                'label' => 'Консультант',
+                'attr' => array('class' => 'form-control filter_change'),
+                'multiple' => false,
+                'required' => false
+            ));
         } else {
-            $user = $this->container->get('security.token_storage')->getToken()->getUser();
-            $messages = MessagesQuery::create()->filterByUserId($user->getId())->filterByStatus(1)->find();
+            $users = array($user->getId() => $user->getUsername());
+            $filter_form->add('UserId', 'choice', array(
+                'choices' => $users,
+                'label' => 'Консультант',
+                'attr' => array('class' => 'form-control'),
+                'multiple' => false,
+                'required' => true
+            ));
         }
 
-        return $this->render('AdminBundle:Default:index.html.twig',array(
+        $filter_form->handleRequest($request);
+        $filter_array = array();
+        if ($filter_form->isValid()) {
+            $filter_fields = $filter_form->getData();
+            foreach ($filter_fields as $name => $filter_field) {
+                if ($filter_field) $filter_array[$name] = $filter_field;
+            }
+        }
+
+        if (!@$filter_array['Status']) $filter_array['Status'] = 1;
+
+        $messages_query->filterByArray($filter_array);
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+            $messages_query->filterByUserId($user->getId())->_or()->filterByUserId(null, \Criteria::ISNULL);
+        }
+
+        $paginator = $this->get('knp_paginator');
+        $items = $paginator->paginate(
+            $messages_query,
+            $this->get('request')->query->get('page', 1),
+            $on_page
+        );
+
+        $response = $this->render('AdminBundle:Default:index.html.twig',array(
             'pages' => PagesQuery::create()->find()->count(),
             'objects' => ObjectsQuery::create()->find()->count(),
-            'messages' => $messages
-        ));		
+            'messages' => $items,
+            'on_page' => $on_page,
+            'filter_form' => $filter_form->createView(),
+        ));
+        $response->headers->setCookie(new Cookie('status', $status, time() + 3600 * 24 * 7, $this->generateUrl('admin_default_index')));
+        $response->headers->setCookie(new Cookie('on_page', $on_page, time() + 3600 * 24 * 7, $this->generateUrl('admin_default_index')));
+        return $response;
     }
 
     /**
@@ -56,6 +115,7 @@ class DefaultController extends Controller
 
         $form = $this->createForm(new SettingsType(), $settings);
         $form->handleRequest($request);
+        $dir = 'images';
         if ($form->isValid()) {
             if ($form['favicon']->getData()) {
                 $file_type = $form['favicon']->getData()->getMimeType();
@@ -64,7 +124,6 @@ class DefaultController extends Controller
                 }
             }
             if ($form['logo_top']->getData()) {
-                $dir = 'images';
                 $file_type = $form['logo_top']->getData()->getMimeType();
                 switch($file_type) {
                     case 'image/png': $Filename = 'logo_top.png'; break;
@@ -81,7 +140,6 @@ class DefaultController extends Controller
                 }
             }
             if ($form['logo_bottom']->getData()) {
-                $dir = 'images';
                 $file_type = $form['logo_bottom']->getData()->getMimeType();
                 switch($file_type) {
                     case 'image/png': $Filename = 'logo_bottom.png'; break;
@@ -217,14 +275,39 @@ class DefaultController extends Controller
     }
 	
 	/**
-     * @Route("/del_mess")
+     * @Route("/delete_message/{id}")
      */
-    public function delMessAction(Request $request)
+    public function deleteMessageAction($id, Request $request)
     {
-        $id = @$request->query->get('id')?:NULL;
-        if ($id) {
+        $comment = @$request->request->get('comment')?:NULL;
+        if ($id && $comment) {
             $message = MessagesQuery::create()->findPk($id);
-            if ($message) $message->setStatus(2)->save();
+            if ($message) {
+                if (!$message->getUserId()) {
+                    $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                    $message->setUserId($user->getId());
+                }
+                $message->setStatus(2)->setComment($comment)->save();
+            }
+        }
+        return $this->redirect($this->generateUrl('admin_default_index'));
+    }
+
+    /**
+     * @Route("/complete_message/{id}")
+     */
+    public function completeMessageAction($id, Request $request)
+    {
+        $comment = @$request->request->get('comment')?:NULL;
+        if ($id && $comment) {
+            $message = MessagesQuery::create()->findPk($id);
+            if ($message) {
+                if (!$message->getUserId()) {
+                    $user = $this->container->get('security.token_storage')->getToken()->getUser();
+                    $message->setUserId($user->getId());
+                }
+                $message->setStatus(3)->setComment($comment)->save();
+            }
         }
         return $this->redirect($this->generateUrl('admin_default_index'));
     }

@@ -102,8 +102,8 @@ video {
     height: 100%;
     top:0;
     left:0;
-    background: rgba(255,255,255,.4);
-    z-index: 9;
+    background: rgba(0,0,0,.5);
+    z-index: 9999;
 }
 .loading img {
     width: 64px;
@@ -510,4 +510,16 @@ select:required, input:required, textarea:required {
 }
 .nav > li > a:hover, .nav > li > a:focus {
     background-color: #1574c0;
+}
+.photo_top {
+    max-height: 100px;
+    background: #fff;
+    border-radius: 4px;
+    padding: 10px;
+}
+.photo_bottom {
+    max-height: 100px;
+    background: #777;
+    border-radius: 4px;
+    padding: 10px;
 }

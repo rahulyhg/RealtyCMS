@@ -18,7 +18,7 @@ $(document).on("change", ".changeable", function () {
     });
 });
 $(document).ready(function() {
-    $('.phone').inputmask('+7(999)999-9999');
+    $('.phone').inputmask('+9(999)999-9999');
     $(":input").inputmask();
     $('.from').keyup(function(){
       $(this).val($(this).val().toString().replace(/\s/g, '').replace(/\B(?=(\d{3})+(?!\d))/g, " "));

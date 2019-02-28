@@ -111,7 +111,7 @@ class DefaultController extends Controller
             if ($page) return $this->redirect($this->generateUrl('site_default_page', array('alias' => $page->getAlias())));
             return $this->redirect($this->generateUrl('site_catalog_index', array('search_query' => $search)));
         }
-
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**

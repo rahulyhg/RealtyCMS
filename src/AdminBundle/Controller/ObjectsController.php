@@ -447,6 +447,8 @@ class ObjectsController extends Controller
             if ($Filename) {
                 $request->files->get('path')->move($dir, $Filename);
                 $image = new Image($dir.'/'.$Filename);
+                $image->overlay('images/watermark.png', 'bottom right',
+                    .9, -5, -5);
                 $image->save($dir.'/'.$Filename);
                 $nimage->setPath($Filename);
                 $nimage->setObjectId($id);
@@ -476,7 +478,6 @@ class ObjectsController extends Controller
             ->filterById($id)
             ->findOne();
         $title = $request->request->get('title');
-        var_dump($title);
 
         if ($item && $title) {
             $item->setTitle($title);
@@ -520,9 +521,9 @@ class ObjectsController extends Controller
         $urlXml = "https://geocode-maps.yandex.ru/1.x/?geocode=" . urlencode($address);
         $result = @simplexml_load_file($urlXml);
         if ($result) {
-            $real_address = $result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->text;
-            if (@$result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->Address->formatted)
-                $real_address = $result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->Address->formatted;
+            //$real_address = $result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->text;
+            //if (@$result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->Address->formatted)
+            //    $real_address = $result->GeoObjectCollection->featureMember[0]->GeoObject->metaDataProperty->GeocoderMetaData->Address->formatted;
             $coord = $result->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
             $array_coord = str_replace(' ',',', $coord);
             return $array_coord;

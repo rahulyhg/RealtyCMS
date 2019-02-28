@@ -133,7 +133,7 @@ class DefaultController extends Controller
                     $form['logo_top']->getData()->move($dir, $Filename);
                     $logo_image = new Image($dir . '/' . $Filename);
                     $watermark = new Image($dir . '/' . $Filename);
-                    $logo_image->fit_to_width(200);
+                    $logo_image->fit_to_height(100);
                     $logo_image->save($dir . '/' . $Filename);
                     $watermark->fit_to_width(100);
                     $watermark->save($dir . '/watermark.png');

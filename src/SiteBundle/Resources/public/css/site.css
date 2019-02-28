@@ -806,7 +806,7 @@ ul.social-network li a {
         border-radius: 0;
     }
     .address {
-        font-size: 14px;
+        font-size: 14px !important;
     }
     .masthead .our_phones {
         text-align: left;

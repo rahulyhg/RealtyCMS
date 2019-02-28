@@ -362,6 +362,8 @@ h1 {
 .catalog {
     margin-top: 10px;
     margin-bottom: 30px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 .catalog .thumbnail{
   padding:0;

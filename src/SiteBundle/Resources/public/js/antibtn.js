@@ -65,10 +65,12 @@
 				  time = Math.round(settings.timer/1000);             
 				}); 
 			});
-			$btn.click(function(e) {
-			e.preventDefault();
-			e.stopPropagation();
-			});
+			if(!/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+				$btn.click(function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+				});
+			}
 		});
 	};
 	

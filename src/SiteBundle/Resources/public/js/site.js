@@ -37,7 +37,7 @@ $(document).ready(function() {
 		}
 	});
 	$('.antibtn').antibtn();
-    if ($(window).width() > 990 && $(document).height() > 2000) {
+    if ($(window).width() > 990 && $(document).height() > 2000 && $('.search_objects').height() < ($(window).height()-200)) {
         (function ($) {
             $.lockfixed(".search_objects", { offset: { top: 80, bottom: 450 } });
         })(jQuery);

@@ -1,0 +1,107 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+{% block title %}{{ agent.username }} | {{ settings.name }}{% endblock %}
+{% block metatitle %}{{ agent.username }}{% endblock %}
+{% block content %}
+
+    <div class="container clearfix padding-0">
+        <div class="clearfix catalog">
+            <h1>{{ agent.username }}</h1><hr>
+            <div class="clearfix catalog">
+                <div class="col-md-2">
+                    <img class="img-circle img-responsive" src="/images/photo/{{ agent.photo }}" alt="{{ agent.username }}">
+                </div>
+                <div class="col-md-4"><br>
+                    {% if agent.position %}<h4>{{ agent.position }}</h4>{% endif %}<br>
+                    {% if agent.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ agent.phone }}" title="Позвонить">{{ agent.phone }}</a></h4>{% endif %}
+                    <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ agent.email }}" title="Написать письмо">{{ agent.email }}</a></h4>
+                </div>
+                <div class="col-md-6">
+                    <h4 class="padding-5">Написать сообщение</h4>
+                    <form class="feedback_form">
+                        <div class="fb_reload">
+                            <div class="col-md-6 padding-5">
+                                <div class="form-group">
+                                    <input type="hidden" name="agent" value="{{ agent.id }}">
+                                    <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+                                </div>
+                                <p>Нажимая кнопку, я соглашаюсь с политикой конфиденциальности.</p>
+                            </div>
+                            <div class="col-md-6 padding-5">
+                                <div class="form-group">
+                                    <textarea name="question" class="form-control input-lg" placeholder="Сообщение" rows="4"></textarea>
+                                </div>
+                                <div class="form-group text-right">
+                                    <button type="submit" class="btn btn-primary-o btn-lg antibtn">Отправить сообщение</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            {% if published_objects|length > 0 %}
+                <div class="clearfix catalog">
+                    <hr>
+                    <h3 class="padding-5">Объекты в продаже</h3>
+                    {% for item in published_objects if item %}
+                        <div class="col-sm-6 col-md-3 padding-5">
+                            <div class="thumbnail">
+                                <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
+                                    <div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}');"></div>
+                                </a>
+                                <div class="caption">
+                                    <h4 class="text-center nobreak">{{ item.title }}</h4>
+                                    <h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
+                                    <div class="plan_desc"><table class="table">
+                                            <tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+                                            <tr><td colspan="2">{{ item.address }}</td></tr>
+                                            {% for param in item.ObjectParamssForTable() if param %}
+                                                {% if loop.index is odd %}<tr>{% endif %}
+                                                <td>{{ param.ObjectTypesFields.filterName }}: <b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td>
+                                                {% if loop.index is even %}</tr>{% endif %}
+                                            {% endfor %}
+                                        </table></div>
+                                    <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if not_published_objects|length > 0 %}
+                <div class="clearfix catalog">
+                    <hr>
+                    <h3 class="padding-5">Последние проданные объекты</h3>
+                    {% for item in not_published_objects if item %}
+                        <div class="col-sm-6 col-md-3 padding-5">
+                            <div class="thumbnail">
+                                <a href="{{ path('site_catalog_object', {'id':item.id}) }}">
+                                    <div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/no-photo.jpg{% endif %}');"></div>
+                                </a>
+                                <div class="caption">
+                                    <h4 class="text-center nobreak">{{ item.title }}</h4>
+                                    <h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
+                                    <div class="plan_desc"><table class="table">
+                                            <tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+                                            <tr><td colspan="2">{{ item.address }}</td></tr>
+                                            {% for param in item.ObjectParamssForTable() if param %}
+                                                {% if loop.index is odd %}<tr>{% endif %}
+                                                <td>{{ param.ObjectTypesFields.filterName }}: <b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td>
+                                                {% if loop.index is even %}</tr>{% endif %}
+                                            {% endfor %}
+                                        </table></div>
+                                    <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+{% endblock %}

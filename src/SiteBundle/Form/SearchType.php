@@ -54,19 +54,23 @@ class SearchType extends AbstractType
                 'empty_value' => '- любой -',
                 'multiple' => false,
                 'required'  => FALSE
-            ))
-            ->add('area_id', 'choice', array(
-                'choices'   => $array_areas,
-                'label'     => 'Район',
-                'attr'      => array(
-                    'class'=>'form-control selectpicker',
-                    'title'=>'Выберите район',
-                    'data-actions-box'=>'false',
-                    'disabled' => $array_areas?false:true
-                ),
-                'required'  => FALSE,
-                'multiple'  => TRUE
-            ))
+            ));
+        if (@$options['data']['town_id']) {
+            $builder
+                ->add('area_id', 'choice', array(
+                    'choices' => $array_areas,
+                    'label' => 'Район',
+                    'attr' => array(
+                        'class' => 'form-control selectpicker',
+                        'title' => 'Выберите район',
+                        'data-actions-box' => 'false',
+                        'disabled' => $array_areas ? false : true
+                    ),
+                    'required' => FALSE,
+                    'multiple' => TRUE
+                ));
+        }
+        $builder
             ->add('type', 'choice', array(
                 'choices'   => $array_types,
                 'label'     => 'Тип сделки',
@@ -141,12 +145,13 @@ class SearchType extends AbstractType
 
             }
         }
-        $builder
+        /*$builder
             ->add('save', 'submit', array(
               'label' => 'Подобрать',
               'attr'  => array(
                 'class'=>'btn btn-primary-o form-control'
-            )))
+            )));*/
+        $builder
             ->getForm();
 
     }

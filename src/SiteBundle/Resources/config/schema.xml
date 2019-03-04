@@ -12,6 +12,7 @@
         <column name="title" type="varchar" size="255" required="true"/>
         <column name="keywords" type="varchar" size="255" required="true"/>
         <column name="description" type="varchar" size="255" required="true"/>
+        <column name="copyright" type="varchar" size="255" required="true"/>
         <column name="city" type="varchar" size="255" required="false"/>
         <column name="address" type="varchar" size="255" required="false"/>
         <column name="phone" type="varchar" size="255" required="false"/>
@@ -208,6 +209,7 @@
         <column name="address" type="varchar" size="255" required="false"/>
         <column name="coordinates" type="varchar" size="255" required="false"/>
         <column name="description" type="longvarchar" />
+        <column name="info" type="longvarchar" required="false"/>
         <column name="type" type="integer" required="true"/>
         <column name="type_object" type="integer" required="false"/>
         <column name="user_id" type="integer" required="true"/>
@@ -294,7 +296,8 @@
         <column name="user_id" type="integer" required="false"/>
         <column name="object_id" type="integer" required="false"/>
         <column name="status" type="integer" required="true"/>
-        <column name="comment" type="longvarchar" />
+        <column name="question" type="longvarchar" required="false"/>
+        <column name="comment" type="longvarchar" required="false"/>
         <behavior name="timestampable" />
         <foreign-key foreignTable="objects" onDelete="CASCADE" onUpdate="CASCADE">
             <reference local="object_id" foreign="id"/>

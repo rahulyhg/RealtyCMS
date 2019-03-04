@@ -34,7 +34,7 @@ class MenusType extends AbstractType
                 'attr' => array('class' => 'form-control'),
             ))
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
-            //->add('save', 'submit', array('label'  => 'Сохранить',))
+            ->add('sort', 'text', array('label'  => 'Порядок', 'required' => FALSE))
             ->getForm();
 
     }

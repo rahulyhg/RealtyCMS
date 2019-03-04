@@ -36,12 +36,12 @@ $(document).ready(function() {
 			$(".menu").removeClass("fixed");
 		}
 	});
-	$('.antibtn').antibtn();
+	/*$('.antibtn').antibtn();
     if ($(window).width() > 990 && $(document).height() > 2000 && $('.search_objects').height() < ($(window).height()-200)) {
         (function ($) {
             $.lockfixed(".search_objects", { offset: { top: 80, bottom: 450 } });
         })(jQuery);
-    }
+    }*/
 });
 function form_revision(){
   $('.from').each(function(){    

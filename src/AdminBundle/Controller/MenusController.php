@@ -18,6 +18,8 @@ class MenusController extends Controller
     public function indexAction()
     {
         $items = MenusQuery::create()
+            ->orderByParentId()
+            ->orderBySort()
             ->find();
         if (!$items) {
             throw $this->createNotFoundException(
@@ -104,5 +106,21 @@ class MenusController extends Controller
             );
         }
         return $this->redirect($this->generateUrl('admin_menus_index'));
+    }
+
+    /**
+     * @Route("/menus/sort")
+     */
+    public function sortAction(Request $request)
+    {
+
+        $array = $request->request->get('array');
+        $cnt=1;
+        foreach ($array as $item) {
+            $menu_item = MenusQuery::create()->findPk($item);
+            $menu_item->setSort($cnt++);
+            $menu_item->save();
+        }
+        return $this->redirect($request->headers->get('referer'));
     }
 }

@@ -22,6 +22,7 @@ class SettingsType extends AbstractType
             ->add('name', 'text', array('label'  => 'Название сайта',))
             ->add('title', 'text', array('label'  => 'Заголовок',))
             ->add('description', 'textarea', array('label'  => 'Описание','attr' => array('rows' => 3)))
+            ->add('copyright', 'textarea', array('label'  => 'Copyright','attr' => array('rows' => 2)))
             ->add('keywords', 'text', array('label'  => 'Ключевые слова',))
             ->add('email', 'text', array('label'  => 'Email проекта',))
             ->add('content', 'genemu_tinymce', array(

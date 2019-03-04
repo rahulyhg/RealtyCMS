@@ -43,7 +43,7 @@ class DefaultController extends Controller
         $filter_form
             ->add('Status', 'choice', array(
                 'choices' => array('1'=>'Новые','2'=>'Отказ','3'=>'Успех'),
-                'label' => 'Статус',
+                'label' => 'Статус сообщения',
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
                 'required' => true
@@ -53,7 +53,7 @@ class DefaultController extends Controller
             $filter_form->add('UserId', 'choice', array(
                 'empty_value' => '- все -',
                 'choices' => $users,
-                'label' => 'Консультант',
+                'label' => 'Менеджер',
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
                 'required' => false
@@ -62,7 +62,7 @@ class DefaultController extends Controller
             $users = array($user->getId() => $user->getUsername());
             $filter_form->add('UserId', 'choice', array(
                 'choices' => $users,
-                'label' => 'Консультант',
+                'label' => 'Менеджер',
                 'attr' => array('class' => 'form-control'),
                 'multiple' => false,
                 'required' => true
@@ -81,7 +81,11 @@ class DefaultController extends Controller
         if (!@$filter_array['Status']) $filter_array['Status'] = 1;
 
         $messages_query->filterByArray($filter_array);
-        if (!$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
+        if (!$this->get('security.authorization_checker')->isGranted('ROLE_ADMIN')){
+            $messages_query->filterByUserId($user->getId());
+                //->_or()->filterByUserId(null, \Criteria::ISNULL);
+        }
+        if ($this->get('security.authorization_checker')->isGranted('ROLE_ADMIN') && !$this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')){
             $messages_query->filterByUserId($user->getId())->_or()->filterByUserId(null, \Criteria::ISNULL);
         }
 

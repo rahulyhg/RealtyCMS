@@ -36,9 +36,11 @@ class ObjectsController extends Controller
         $items_query = ObjectsQuery::create();
 
         // Сортировка
-        $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
-        $sort = @$request->query->get('sort') ?: (@$request->cookies->get('sort') ?: 'id');
+        $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'desc');
+        $sort = @$request->query->get('sort') ?: (@$request->cookies->get('sort') ?: 'createdAt');
         $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '20');
+        $items_query->orderByPublished('desc');
+        $items_query->orderByModered('asc');
         $items_query->orderBy($sort, $dir);
 
         // Поиск

@@ -18,10 +18,10 @@
 
     <div class="clearfix">
         <div class="highlight">
-            <table class="table table-striped table-hover">
+            <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_menus_sort') }}">
                 <thead>
                 <tr>
-                    <th>#</th>
+                    <th>Порядок</th>
                     <th>Название</th>
                     <th>Родитель</th>
                     <th>Привязанная страница</th>
@@ -31,8 +31,8 @@
                 </thead>
                 <tbody>
                 {% for item in pagination if item %}
-                    <tr>
-                        <td>{{ item.id }}</td>
+                    <tr id="{{ item.id }}" data-sort="{{ item.sort }}">
+                        <td><i class="fa fa-ellipsis-v fa-fw handle"></i> {{ item.sort }}</td>
                         <td><a href="{{ path('admin_menus_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
                         <td>{% if item.MenusRelatedByParentId.title is defined %}{{ item.MenusRelatedByParentId.title }}{% endif %}</td>
                         <td>{% if item.Pagess[0].title is defined %}<a href="{{ path('admin_pages_edit', {'id': item.Pagess[0].id}) }}" title="Редактировать">{{ item.Pagess[0].title }}</a>{% endif %}</td>
@@ -77,4 +77,32 @@
     </div>
     <a class="btn btn-default" href="{{ path('admin_default_index') }}" title="Назад"><span class="glyphicon glyphicon-arrow-left"></span> Назад</a>
 
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        $('td, th', '#sortFixed').each(function () {
+            var cell = $(this);
+            cell.width(cell.width());
+        });
+        $('#sortFixed tbody').sortable({
+            items: '> tr',
+            handle: '.handle',
+            stop: function (event, ui) {
+                $('body').css('cursor','wait');
+                var sortedIDs = $( "#sortFixed tbody" ).sortable( "toArray" );
+                $.ajax({
+                    type : "POST",
+                    url : $('#sortFixed').data('sort'),
+                    data : {
+                        array : sortedIDs
+                    },
+                    success : function () {
+                        location.reload();
+                    }
+                });
+            }
+        }).disableSelection();
+    </script>
 {% endblock %}

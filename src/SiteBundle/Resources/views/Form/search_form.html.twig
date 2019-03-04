@@ -4,6 +4,12 @@
     {% if search_form %}
         <form class="form-horizontal clearfix" role="form" action="{{ path('site_catalog_index') }}" method="GET" {{ form_enctype(search_form) }} data-update="{{ path('site_catalog_update') }}" onSubmit="form_revision()">
             {{ form_widget(search_form) }}
+            <div class="clearfix col-md-3 col-sm-6 col-xs-12 padding-5 pull-right">
+                <div class="padding-0">
+                    <br>
+                    <button type="submit" id="save" name="save" class="btn btn-primary-o form-control">Подобрать</button>
+                </div>
+            </div>
         </form>
     {% endif %}
 </div>

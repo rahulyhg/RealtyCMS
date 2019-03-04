@@ -18,7 +18,7 @@
             <div class="masthead">
                 <div class="clearfix text-center">
                     <div class="col-xs-6 col-sm-3 padding-0 text-left"><a href="{{ path('site_default_index') }}"><img class="logo" src="/images/logo_top.png" alt="{{ settings.name }}" title="{{ settings.name }}"></a></div>
-                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="address"><b>{{ settings.city }}</b><br>{{ settings.address }}</div></div>
+                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="address">{{ settings.city }}<br>{{ settings.address }}</div></div>
                     <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="our_phones">{{ settings.phone }}<br>{{ settings.phoneTwo }}</div></div>
                     <div class="col-xs-6 col-sm-3 padding-0 text-right">
                         <a class="btn btn-primary btn-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
@@ -40,18 +40,51 @@
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav nav-non-fixed">
-                            <li{% if app.request.attributes.get('_route') == 'site_default_index' %} class="active"{% endif %}><a href="{{ path('site_default_index') }}"><i class="fa fa-fw fa-home"></i></a></li>
                             <li class="dropdown{% if app.request.attributes.get('_route') in ['site_catalog_index','site_catalog_object'] %} active{% endif %}">
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Каталог <span class="caret"></span></a>
 							  <ul class="dropdown-menu">
 								{% for cat in categories if cat %}
 								    <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
 								{% endfor %}
-                                <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда</a></li>
+                                <li><a href="{{ path('site_catalog_index', {'type': 2})}}">Аренда недвижимости</a></li>
 							  </ul>
 							</li>
-							{% for menu in menus if menu %}
-                                <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+                            {% for menu in menus[0:1] %}
+                                {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
+                                    {% if menu.MenusesRelatedById|length %}
+                                        <li class="dropdown-toggle"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }} <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                {% for submenu in menu.MenusesRelatedById if submenu %}
+                                                    <li><a  class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% elseif menu.Pagess[0] is defined %}
+                                        <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}>
+                                            <a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <li{% if app.request.attributes.get('_route') in ['site_agent_index','site_agent_agent'] %} class="active"{% endif %}>
+                                <a class="text-nowrap" href="{{ path('site_agent_index') }}">Сотрудники</a>
+                            </li>
+                            {% for menu in menus[1:] %}
+                                {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
+                                    {% if menu.MenusesRelatedById|length %}
+                                        <li class="dropdown-toggle"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }} <span class="caret"></span></a>
+                                            <ul class="dropdown-menu">
+                                                {% for submenu in menu.MenusesRelatedById if submenu %}
+                                                    <li><a  class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                    {% elseif menu.Pagess[0] is defined %}
+                                        <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}>
+                                            <a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
                             {% endfor %}
                         </ul>
 						<ul class="nav navbar-nav nav-fixed">
@@ -67,9 +100,39 @@
                                       </ul>
                                   </li>
                                   <li class="divider"></li>
-								{% for menu in menus if menu %}
-									<li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
-								{% endfor %}								
+                                  {% for menu in menus[0:1] %}
+                                      {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
+                                          {% if menu.MenusesRelatedById|length %}
+                                              <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }}</a>
+                                                  <ul class="dropdown-menu">
+                                                      {% for submenu in menu.MenusesRelatedById if submenu %}
+                                                          <li><a href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </li>
+                                          {% elseif menu.Pagess[0] is defined %}
+                                              <li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+                                          {% endif %}
+                                      {% endif %}
+                                  {% endfor %}
+                                  <li{% if app.request.attributes.get('_route') in ['site_agent_index','site_agent_agent'] %} class="active"{% endif %}>
+                                      <a class="text-nowrap" href="{{ path('site_agent_index') }}">Сотрудники</a>
+                                  </li>
+                                  {% for menu in menus[1:] %}
+                                      {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
+                                          {% if menu.MenusesRelatedById|length %}
+                                              <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }}</a>
+                                                  <ul class="dropdown-menu">
+                                                      {% for submenu in menu.MenusesRelatedById if submenu %}
+                                                          <li><a href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                      {% endfor %}
+                                                  </ul>
+                                              </li>
+                                          {% elseif menu.Pagess[0] is defined %}
+                                              <li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
+                                          {% endif %}
+                                      {% endif %}
+                                  {% endfor %}
 							  </ul>
 							</li>
                         </ul>
@@ -77,7 +140,7 @@
 							<div class="input-group">
 							  <input type="text" class="form-control" name="search" placeholder="Поиск...">
 							  <span class="input-group-btn">
-								<button class="btn btn-primary-o" type="submit">Найти</button>
+								<button class="btn btn-primary-o" type="submit"><i class="fa fa-search fa-fw"></i></button>
 							  </span>
 							</div>
 					    </form>
@@ -103,55 +166,86 @@
         {# Подвал #}
         <footer class="footer">
             <div class="container clearfix">
-                <div class="col-sm-5 padding-0 clearfix text-right">
-                    <img src="/images/logo_bottom.png" class="pull-left" alt="{{ settings.name }}" title="{{ settings.name }}">
-					<h4>{{ settings.name }}</h4>
-					{{ settings.address|striptags('<br>') }}<br>
-					<a class="phone" href="tel:{{ settings.phone }}">{{ settings.phone }}</a><br>
-					<a href="mailto:{{ settings.email }}">{{ settings.email }}</a>					
+                <div class="col-sm-4 padding-0 clearfix">
+                    <div class="clearfix">
+                        <img src="/images/logo_bottom.png" class="pull-left" alt="{{ settings.name }}" title="{{ settings.name }}">
+                        <h4>{{ settings.name }}</h4>
+                        <p>{{ settings.copyright }}</p>
+                    </div>
+                    <div class="social-icon clearfix text-right">
+                        <ul class="social-network">
+                            {% if settings.facebook %}
+                                <li><a href="{{ settings.facebook }}" class="fb tool-tip" title="Facebook" target="_blank"><i
+                                            class="fa fa-fw fa-facebook"></i></a></li>{% endif %}
+                            {% if settings.twitter %}
+                                <li><a href="{{ settings.twitter }}" class="twitter tool-tip" title="Twitter" target="_blank"><i
+                                            class="fa fa-fw fa-twitter"></i></a></li>{% endif %}
+                            {% if settings.google %}
+                                <li><a href="{{ settings.google }}" class="gplus tool-tip" title="Google Plus" target="_blank"><i
+                                            class="fa fa-fw fa-google-plus"></i></a></li>{% endif %}
+                            {% if settings.vk %}
+                                <li><a href="{{ settings.vk }}" class="vk tool-tip" title="ВКонтакте" target="_blank"><i
+                                            class="fa fa-fw fa-vk"></i></a></li>{% endif %}
+                            {% if settings.instagram %}
+                                <li><a href="{{ settings.instagram }}" class="instagram tool-tip" title="Instagram" target="_blank"><i
+                                            class="fa fa-fw fa-instagram"></i></a></li>{% endif %}
+                            {% if settings.linkedin %}
+                                <li><a href="{{ settings.linkedin }}" class="linkedin tool-tip" title="Linkedin" target="_blank"><i
+                                            class="fa fa-fw fa-linkedin"></i></a></li>{% endif %}
+                            {% if settings.youtube %}
+                                <li><a href="{{ settings.youtube }}" class="ytube tool-tip" title="You Tube" target="_blank"><i
+                                            class="fa fa-fw fa-youtube-play"></i></a></li>{% endif %}
+                        </ul>
+                    </div>
                 </div>
-                <div class="col-sm-7 clearfix text-right">                    
-					<div class="col-sm-6 padding-5 clearfix hidden-xs">
-						<ul class="nav navbar-nav">
-							{% for cat in categories if cat %}
+                <div class="col-sm-8 clearfix">
+					<div class="col-sm-4 padding-5 clearfix hidden-xs">
+                        <ul class="nav navbar-nav">
+                            <li><a><b>Каталог</b></a></li>
+                            {% for cat in categories if cat %}
 								<li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
 							{% endfor %}
                             <li><a href="{{ path('site_catalog_index', {'type':2})}}">Аренда недвижимости</a></li>
 						</ul>
 					</div>
-					<div class="col-sm-6 padding-5 clearfix">
-						<ul class="nav navbar-nav  hidden-xs">
-							{% for menu in menus[0:5] if menu %}
-								<li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
-							{% endfor %}
-                            <li><a href="{{ path('admin_default_index') }}">Вход для сотрудников</a></li>
+					<div class="col-sm-4 padding-5 clearfix">
+						<ul class="nav navbar-nav hidden-xs">
+                            <li><a><b>Меню</b></a></li>
+                            {% for menu in menus[0:1] if menu %}
+                                {% if menu.Pagess|length %}
+                                    {% if menu.Pagess[0] is defined %}
+                                        <li>
+                                            <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <li>
+                                <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_agent_index') }}">Сотрудники</a>
+                            </li>
+                            {% for menu in menus[1:5] if menu %}
+                                {% if menu.Pagess|length %}
+                                    {% if menu.Pagess[0] is defined %}
+                                        <li>
+                                            <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <br>
+                            <li><a href="{{ path('admin_default_index') }}" title="Вход для сотрудников" target="_blank"><i class="fa fa-sign-in fa-fw"></i> Вход для сотрудников</a></li>
 						</ul>
-						<div class="social-icon clearfix text-right">
-						<ul class="social-network">
-							{% if settings.facebook %}
-								<li><a href="{{ settings.facebook }}" class="fb tool-tip" title="Facebook" target="_blank"><i
-											class="fa fa-fw fa-facebook"></i></a></li>{% endif %}
-							{% if settings.twitter %}
-								<li><a href="{{ settings.twitter }}" class="twitter tool-tip" title="Twitter" target="_blank"><i
-											class="fa fa-fw fa-twitter"></i></a></li>{% endif %}
-							{% if settings.google %}
-								<li><a href="{{ settings.google }}" class="gplus tool-tip" title="Google Plus" target="_blank"><i
-											class="fa fa-fw fa-google-plus"></i></a></li>{% endif %}
-							{% if settings.vk %}
-								<li><a href="{{ settings.vk }}" class="vk tool-tip" title="ВКонтакте" target="_blank"><i
-											class="fa fa-fw fa-vk"></i></a></li>{% endif %}
-							{% if settings.instagram %}
-								<li><a href="{{ settings.instagram }}" class="instagram tool-tip" title="Instagram" target="_blank"><i
-											class="fa fa-fw fa-instagram"></i></a></li>{% endif %}
-							{% if settings.linkedin %}
-								<li><a href="{{ settings.linkedin }}" class="linkedin tool-tip" title="Linkedin" target="_blank"><i
-											class="fa fa-fw fa-linkedin"></i></a></li>{% endif %}
-							{% if settings.youtube %}
-								<li><a href="{{ settings.youtube }}" class="ytube tool-tip" title="You Tube" target="_blank"><i
-											class="fa fa-fw fa-youtube-play"></i></a></li>{% endif %}
-						</ul>
-					</div>
-					</div>
+                    </div>
+                    <div class="col-sm-4 padding-5 clearfix hidden-xs faw">
+                        <i class="fa fa-map-marker fa-fw"></i> {{ settings.city }}<br>
+                        {{ settings.address }}<br><br>
+                        <i class="fa fa-phone fa-fw"></i> <a href="#" class="btn-feedback" data-toggle="modal" data-target="#feedback" title="Заказать обратный звонок">Заказать звонок</a>
+                        <a class="our_phones" href="tel:{{ settings.phone }}" title="Позвонить">{{ settings.phone }}</a><br>
+                        {% if settings.phoneTwo %}
+                            <a class="our_phones" href="tel:{{ settings.phoneTwo }}" title="Позвонить">{{ settings.phoneTwo }}</a><br>
+                        {% endif %}<br>
+                        <i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ settings.email }}" title="Написать письмо">{{ settings.email }}</a>
+                    </div>
                 </div>
             </div>
         </footer>

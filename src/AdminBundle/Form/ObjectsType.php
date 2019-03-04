@@ -51,19 +51,24 @@ class ObjectsType extends AbstractType
             //->add('modered', 'checkbox', array('label' => 'Одобрено модератором', 'required' => FALSE))
             //->add('xml', 'checkbox', array('label' => 'Добавить в выгрузку', 'required' => FALSE))
             //->add('title', 'text', array('label' => 'Название',))
+            ->add('info', 'textarea', array('label'  => 'Служебная информация','attr' => array('rows' => 3), 'required' => FALSE))
             ->add('town_id', 'choice', array(
                 'empty_value' => 'выберите город',
                 'choices' => $towns,
                 'attr' => array('class' => 'changeable form-control'),
                 'label' => 'Город',
                 'required' => TRUE
-            ))
-            ->add('area_id', 'choice', array(
-                'choices' => $areas,
-                'label' => 'Район',
-                'attr' => array('class' => 'form-control'),
-                'required' => FALSE
-            ))
+            ));
+        if ($options['data']->getTownId()) {
+            $builder->
+                add('area_id', 'choice', array(
+                    'choices' => $areas,
+                    'label' => 'Район',
+                    'attr' => array('class' => 'form-control'),
+                    'required' => FALSE
+                ));
+        }
+        $builder
             ->add('address', 'text', array('label' => 'Адрес', 'required' => FALSE))
             //->add('coordinates', 'text', array('label' => 'Координаты', 'required' => FALSE))
             ->add('type', 'choice', array(

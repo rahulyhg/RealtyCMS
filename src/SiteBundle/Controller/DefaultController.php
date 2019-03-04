@@ -25,6 +25,8 @@ class DefaultController extends Controller
         $settings = SettingsQuery::create()
             ->findOne();
         $menus = MenusQuery::create()
+            ->filterByParentId(NULL)
+            ->orderBySort()
             ->find();
         $sliders = SlidersQuery::create()
             ->find();
@@ -60,6 +62,7 @@ class DefaultController extends Controller
 
         $name = @$request->request->get('name')?:NULL;
         $phone = @$request->request->get('phone')?:NULL;
+        $question = @$request->request->get('question')?:NULL;
         $object_id = @$request->request->get('object')?:NULL;
         if ($object_id) {
             $object = ObjectsQuery::create()
@@ -78,7 +81,7 @@ class DefaultController extends Controller
         $to = $settings->getEmail();
         $body = $this->renderView(
             'SiteBundle:Default:mail.html.twig',
-            array('name' => $name, 'phone' => $phone, 'site' => $_SERVER['SERVER_NAME'], 'object' => $object, 'consultant' => $consultant)
+            array('name' => $name, 'phone' => $phone, 'site' => $_SERVER['SERVER_NAME'], 'object' => $object, 'consultant' => $consultant, 'question' => $question)
         );
         $this->get('mail_helper')->sendMailing($from, $to, $subject, $body);
 		if ($consultant) {
@@ -89,6 +92,7 @@ class DefaultController extends Controller
         $message->setPhone($phone);
         $message->setObjectId($object?$object->getId():NULL);
         $message->setUserId($consultant?$consultant->getId():NULL);
+        $message->setQuestion($question);
         $message->setStatus(1);
         $message->save();
 
@@ -119,20 +123,24 @@ class DefaultController extends Controller
      */
     public function pageAction($alias)
     {
-        $settings = SettingsQuery::create()
-            ->findOne();
-        $menus = MenusQuery::create()
-            ->find();
         $page = PagesQuery::create()
             ->filterByAlias($alias)
             ->findOne();
+        if (!$page) throw $this->createNotFoundException('Страницы не существует');
+        $settings = SettingsQuery::create()
+            ->findOne();
+        $menus = MenusQuery::create()
+            ->filterByParentId(NULL)
+            ->orderBySort()
+            ->find();
 		$categories = ObjectTypesQuery::create()            
             ->find();
+
         return $this->render('SiteBundle:Default:page.html.twig', array(
-            'settings'  => $settings,
-            'menus'     => $menus,
+            'settings'      => $settings,
+            'menus'         => $menus,
 			'categories' 	=> $categories,
-            'page'      => $page
+            'page'          => $page
         ));
     }
 

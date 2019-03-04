@@ -72,7 +72,7 @@
                     <th>Цена</th>
                     <th>Опубликовано</th>
                     <th>Одобрено</th>
-                    <th>Консультант</th>
+                    <th>Менеджер</th>
                     <th><i class="fa fa-picture-o"></i></th>
                     <th class="action">Действия</th>
                 </tr>
@@ -90,11 +90,14 @@
                         <td>{{ item.User.Username }}</td>
                         <td><a href="{{ path('admin_objects_images', {'id': item.id}) }}" title="Перейти к фотографиям">Фотографий: {{ item.ObjectImagess|length }}</a></td>
                         <td class="action">
+                            <a href="{{ path('site_catalog_object', {'id':item.id}) }}" title="На сайте" target="_blank"><i class="fa fa-share"></i></a>
                             <a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
                             <a href="{{ path('admin_objects_copy', {'id': item.id}) }}" title="Копировать"><i class="fa fa-files-o"></i></a>
-                            <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objects_delete', {'id': item.id}) }}" title="Удалить">
-                                <i class="fa fa-trash-o"></i>
-                            </a>
+                            {% if is_granted("ROLE_SUPER_ADMIN") %}
+                                <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_objects_delete', {'id': item.id}) }}" title="Удалить">
+                                    <i class="fa fa-trash-o"></i>
+                                </a>
+                            {% endif %}
                         </td>
                     </tr>
                 {% else %}

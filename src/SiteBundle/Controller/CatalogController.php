@@ -44,6 +44,8 @@ class CatalogController extends Controller
 		$settings = SettingsQuery::create()
             ->findOne();
         $menus = MenusQuery::create()
+            ->filterByParentId(NULL)
+            ->orderBySort()
             ->find();
 
         $search_form = $this->createForm(new SearchType(),$request->query->all());
@@ -180,7 +182,7 @@ class CatalogController extends Controller
 		// Сортировка
         $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
         $sort = @$request->query->get('sorting') ?: (@$request->cookies->get('sorting') ?: 'price');
-        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '20');
+        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '24');
         $catalog_query->orderBy($sort, $dir);
 
         $paginator  = $this->get('knp_paginator');
@@ -241,6 +243,8 @@ class CatalogController extends Controller
         $settings = SettingsQuery::create()
             ->findOne();
         $menus = MenusQuery::create()
+            ->filterByParentId(NULL)
+            ->orderBySort()
             ->find();
         $object = ObjectsQuery::create()
             ->findOneById($id);
@@ -275,28 +279,12 @@ class CatalogController extends Controller
 		$categories = ObjectTypesQuery::create()            
             ->find();
 			
-		$array_period = array(
-            '1_2018' => 'I кв. 2018',
-            '2_2018' => 'II кв. 2018',
-			'3_2018' => 'III кв. 2018',
-			'4_2018' => 'IV кв. 2018',
-			'1_2019' => 'I кв. 2019',
-            '2_2019' => 'II кв. 2019',
-			'3_2019' => 'III кв. 2019',
-			'4_2019' => 'IV кв. 2019',
-			'1_2020' => 'I кв. 2020',
-            '2_2020' => 'II кв. 2020',
-			'3_2020' => 'III кв. 2020',
-			'4_2020' => 'IV кв. 2020'
-        );
-			
         return $this->render('SiteBundle:Default:object.html.twig', array(
             'settings'      => $settings,
             'menus'         => $menus,
 			'categories' 	=> $categories,
 			'catalog'		=> $catalog,
-            'object'        => $object,
-			'period'		=> $array_period
+            'object'        => $object
         ));
     }
 

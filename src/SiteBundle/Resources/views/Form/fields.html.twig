@@ -1,6 +1,6 @@
 {% block form_row %}
     {% spaceless %}
-        <div class="clearfix col-md-12 col-sm-6 col-xs-12 padding-5">{{ form_label(form) }}{{ form_widget(form) }}</div>
+        <div class="clearfix col-md-3 col-sm-6 col-xs-12 padding-5">{{ form_label(form) }}{{ form_widget(form) }}</div>
     {% endspaceless %}
 {% endblock form_row %}
 
@@ -18,7 +18,7 @@
             {% if label is empty %}
                 {% set label = '&nbsp;' %}
             {% endif %}
-            <div class="padding-5"><label>{{ label }}</label></div>
+            <div class="padding-0"><label>{{ label }}</label></div>
         {% endif %}
     {% endspaceless %}
 {% endblock form_label %}
@@ -43,6 +43,6 @@
 {% block submit_widget %}
     {% spaceless %}
         {% if label is empty %}{% set label = name|humanize %}{% endif %}
-        <div class="padding-5"><button type="{{ type|default('submit') }}" {{ block('button_attributes') }}>{{ label }}</button></div>
+        <div class="padding-0"><button type="{{ type|default('submit') }}" {{ block('button_attributes') }}>{{ label }}</button></div>
     {% endspaceless %}
 {% endblock submit_widget %}

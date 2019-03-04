@@ -93,11 +93,12 @@ class UsersController extends Controller
 
     public function getExistingRoles()
     {
+        $roles_array = array('ROLE_AGENT' => 'Менеджер','ROLE_ADMIN' => 'Администратор','ROLE_SUPER_ADMIN' => 'Суперпользователь');
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
         $roles = array_keys($roleHierarchy);
 
         foreach ($roles as $role) {
-            $theRoles[$role] = $role;
+            $theRoles[$role] = $roles_array[$role];
         }
         return $theRoles;
     }

@@ -33,9 +33,14 @@ class MenusController extends Controller
             $this->get('request')->query->get('page', 1),
             20
         );
+        $modules = array(
+            'agents' => 'Сотрудники',
+            'calculator' => 'Калькулятор'
+        );
 
         return $this->render('AdminBundle:Default:menus.html.twig',array(
-            'pagination' 		=> $pagination
+            'pagination' 		=> $pagination,
+            'modules'           => $modules
         ));
     }
 

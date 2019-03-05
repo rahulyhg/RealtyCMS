@@ -182,7 +182,7 @@ class CatalogController extends Controller
 		// Сортировка
         $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
         $sort = @$request->query->get('sorting') ?: (@$request->cookies->get('sorting') ?: 'price');
-        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '24');
+        $on_page = @$request->query->get('on_page') ?: (@$request->cookies->get('on_page') ?: '12');
         $catalog_query->orderBy($sort, $dir);
 
         $paginator  = $this->get('knp_paginator');

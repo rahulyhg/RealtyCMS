@@ -17,30 +17,34 @@
         <div class="container">
             <div class="masthead">
                 <div class="clearfix text-center">
-                    <div class="col-xs-6 col-sm-3 padding-0 text-left"><a href="{{ path('site_default_index') }}"><img class="logo" src="/images/logo_top.png" alt="{{ settings.name }}" title="{{ settings.name }}"></a></div>
-                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="address">{{ settings.city }}<br>{{ settings.address }}</div></div>
-                    <div class="col-xs-6 col-sm-3 padding-5 text-right"><div class="our_phones">{{ settings.phone }}<br>{{ settings.phoneTwo }}</div></div>
-                    <div class="col-xs-6 col-sm-3 padding-0 text-right">
-                        <a class="btn btn-primary btn-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
+                    <div class="col-sm-6 padding-0 clearfix">
+                        <div class="col-xs-6 padding-0 text-left"><a href="{{ path('site_default_index') }}"><img class="logo" src="/images/logo_top.png" alt="{{ settings.name }}" title="{{ settings.name }}"></a></div>
+                        <div class="col-xs-6 padding-5 text-right"><div class="address">{{ settings.city }}<br>{{ settings.address }}</div></div>
+                    </div>
+                    <div class="col-sm-6 padding-0 clearfix">
+                        <div class="col-xs-6 padding-5 text-right"><div class="our_phones">{{ settings.phone }}<br>{{ settings.phoneTwo }}</div></div>
+                        <div class="col-xs-6 padding-0 text-right">
+                            <a class="btn btn-primary btn-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="menu">
+        <div class="menu" id="menu">
             <div class="container masthead">
                 <nav class="navbar">                    
                     <div class="navbar-header text-center">
-						<button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+						<a href="#menu" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
 						  <span class="sr-only">Меню</span>
 						  <span class="icon-bar"></span>
 						  <span class="icon-bar"></span>
 						  <span class="icon-bar"></span>            
-						</button>
+						</a>
 						<a class="navbar-brand" href="{{ path('site_default_index') }}"><img src="/images/logo_top.png" alt="{{ settings.name }}" title="{{ settings.name }}"></a>
 					</div>
 					<div id="navbar" class="navbar-collapse collapse">
                         <ul class="nav navbar-nav nav-non-fixed">
-                            <li class="dropdown{% if app.request.attributes.get('_route') in ['site_catalog_index','site_catalog_object'] %} active{% endif %}">
+                            <li class="dropdown">
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Каталог <span class="caret"></span></a>
 							  <ul class="dropdown-menu">
 								{% for cat in categories if cat %}
@@ -49,41 +53,29 @@
                                 <li><a href="{{ path('site_catalog_index', {'type': 2})}}">Аренда недвижимости</a></li>
 							  </ul>
 							</li>
-                            {% for menu in menus[0:1] %}
+                            {% for menu in menus %}
                                 {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
                                     {% if menu.MenusesRelatedById|length %}
                                         <li class="dropdown-toggle"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }} <span class="caret"></span></a>
                                             <ul class="dropdown-menu">
                                                 {% for submenu in menu.MenusesRelatedById if submenu %}
-                                                    <li><a  class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                    {% if submenu.Pagess[0] is defined %}
+                                                        <li><a class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                    {% elseif submenu.module %}
+                                                        <li><a class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.module}) }}">{{ submenu.title }}</a></li>
+                                                    {% endif %}
                                                 {% endfor %}
                                             </ul>
                                         </li>
                                     {% elseif menu.Pagess[0] is defined %}
-                                        <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}>
+                                        <li>
                                             <a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
                                         </li>
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <li{% if app.request.attributes.get('_route') in ['site_agent_index','site_agent_agent'] %} class="active"{% endif %}>
-                                <a class="text-nowrap" href="{{ path('site_agent_index') }}">Сотрудники</a>
-                            </li>
-                            {% for menu in menus[1:] %}
-                                {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
-                                    {% if menu.MenusesRelatedById|length %}
-                                        <li class="dropdown-toggle"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }} <span class="caret"></span></a>
-                                            <ul class="dropdown-menu">
-                                                {% for submenu in menu.MenusesRelatedById if submenu %}
-                                                    <li><a  class="text-nowrap" href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
-                                                {% endfor %}
-                                            </ul>
-                                        </li>
-                                    {% elseif menu.Pagess[0] is defined %}
-                                        <li{% if app.request.attributes.get('alias') == menu.Pagess[0].alias %} class="active"{% endif %}>
-                                            <a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
-                                        </li>
-                                    {% endif %}
+                                {% elseif menu.module %}
+                                    <li>
+                                        <a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a>
+                                    </li>
                                 {% endif %}
                             {% endfor %}
                         </ul>
@@ -100,37 +92,25 @@
                                       </ul>
                                   </li>
                                   <li class="divider"></li>
-                                  {% for menu in menus[0:1] %}
+                                  {% for menu in menus %}
                                       {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
                                           {% if menu.MenusesRelatedById|length %}
                                               <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }}</a>
                                                   <ul class="dropdown-menu">
                                                       {% for submenu in menu.MenusesRelatedById if submenu %}
-                                                          <li><a href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                          {% if submenu.Pagess[0] is defined %}
+                                                              <li><a href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
+                                                          {% elseif submenu.module %}
+                                                              <li><a href="{{ path('site_default_page', {'alias':submenu.module}) }}">{{ submenu.title }}</a></li>
+                                                          {% endif %}
                                                       {% endfor %}
                                                   </ul>
                                               </li>
                                           {% elseif menu.Pagess[0] is defined %}
                                               <li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
                                           {% endif %}
-                                      {% endif %}
-                                  {% endfor %}
-                                  <li{% if app.request.attributes.get('_route') in ['site_agent_index','site_agent_agent'] %} class="active"{% endif %}>
-                                      <a class="text-nowrap" href="{{ path('site_agent_index') }}">Сотрудники</a>
-                                  </li>
-                                  {% for menu in menus[1:] %}
-                                      {% if menu.Pagess|length or menu.MenusesRelatedById|length %}
-                                          {% if menu.MenusesRelatedById|length %}
-                                              <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">{{ menu.title }}</a>
-                                                  <ul class="dropdown-menu">
-                                                      {% for submenu in menu.MenusesRelatedById if submenu %}
-                                                          <li><a href="{{ path('site_default_page', {'alias':submenu.Pagess[0].alias}) }}">{{ submenu.title }}</a></li>
-                                                      {% endfor %}
-                                                  </ul>
-                                              </li>
-                                          {% elseif menu.Pagess[0] is defined %}
-                                              <li><a href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a></li>
-                                          {% endif %}
+                                      {% elseif menu.module %}
+                                          <li><a href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
                                       {% endif %}
                                   {% endfor %}
 							  </ul>
@@ -147,12 +127,12 @@
                         <a class="btn btn-primary navbar-right navbar-feedback" data-toggle="modal" data-target="#feedback"><i class="fa fa-phone fa-fw hidden-xs"></i> Заказать звонок</a>
                         {% if settings.phoneTwo %}
                             <ul class="nav navbar-nav navbar-right hidden-sm hidden-md">
-                                <li><a href="tel:{{ settings.phoneTwo }}" class="our_phones">{{ settings.phoneTwo }}</a></li>
+                                <li><a href="tel:{{ settings.phoneTwo }}" class="our_phones" title="Позвонить"><i class="fa fa-phone fa-fw"></i> {{ settings.phoneTwo }}</a></li>
                             </ul>
                         {% endif %}
                         {% if settings.phone %}
                             <ul class="nav navbar-nav navbar-right hidden-sm">
-                                <li><a href="tel:{{ settings.phone }}" class="our_phones">{{ settings.phone }}</a></li>
+                                <li><a href="tel:{{ settings.phone }}" class="our_phones" title="Позвонить"><i class="fa fa-phone fa-fw"></i> {{ settings.phone }}</a></li>
                             </ul>
                         {% endif %}
                     </div>                    
@@ -209,27 +189,17 @@
 						</ul>
 					</div>
 					<div class="col-sm-4 padding-5 clearfix">
-						<ul class="nav navbar-nav hidden-xs">
-                            <li><a><b>Меню</b></a></li>
-                            {% for menu in menus[0:1] if menu %}
+						<ul class="nav navbar-nav">
+                            <li class="hidden-xs"><a><b>Меню</b></a></li>
+                            {% for menu in menus if menu %}
                                 {% if menu.Pagess|length %}
                                     {% if menu.Pagess[0] is defined %}
-                                        <li>
+                                        <li class="hidden-xs">
                                             <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
                                         </li>
                                     {% endif %}
-                                {% endif %}
-                            {% endfor %}
-                            <li>
-                                <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_agent_index') }}">Сотрудники</a>
-                            </li>
-                            {% for menu in menus[1:5] if menu %}
-                                {% if menu.Pagess|length %}
-                                    {% if menu.Pagess[0] is defined %}
-                                        <li>
-                                            <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
-                                        </li>
-                                    {% endif %}
+                                {% elseif menu.module %}
+                                    <li><a  class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             <br>

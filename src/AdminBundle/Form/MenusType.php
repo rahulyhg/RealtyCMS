@@ -25,6 +25,10 @@ class MenusType extends AbstractType
         foreach ($menus as $menu) {
             $array_menu[$menu->getId()] = $menu->getTitle();
         }
+        $modules = array(
+            'agents' => 'Сотрудники',
+            'calculator' => 'Калькулятор'
+        );
 
         $builder
             ->add('parent_id', 'choice', array(
@@ -34,6 +38,13 @@ class MenusType extends AbstractType
                 'attr' => array('class' => 'form-control'),
             ))
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
+            ->add('module', 'choice', array(
+                'empty_value' => 'выберите модуль',
+                'choices' => $modules,
+                'attr' => array('class' => 'form-control'),
+                'label' => 'Модуль',
+                'required' => FALSE
+            ))
             ->add('sort', 'text', array('label'  => 'Порядок', 'required' => FALSE))
             ->getForm();
 

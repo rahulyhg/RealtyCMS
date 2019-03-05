@@ -50,6 +50,7 @@
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="parent_id" type="integer" required="false"/>
         <column name="title" type="varchar" size="255" required="true"/>
+        <column name="module" type="varchar" size="255" required="false"/>
         <column name="sort" type="integer" required="false"/>
         <foreign-key foreignTable="menus" onDelete="CASCADE" onUpdate="CASCADE">
             <reference local="parent_id" foreign="id"/>

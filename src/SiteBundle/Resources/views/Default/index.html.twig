@@ -212,41 +212,62 @@
 			}
 			if($("#owl-agents").length) {
 				$("#owl-agents").owlCarousel({
-					lazyLoad: true,
-					navigation: true,
-					itemsCustom: [
-						[0, 1],
-						[400, 2],
-						[800, 3]
-					],
-					navigationText: false
+					responsiveClass:true,
+					responsive:{
+						0:{
+							items:2,
+							nav:false
+						},
+						600:{
+							items:3,
+							nav:false
+						},
+						1000:{
+							items:6,
+							nav:false,
+							loop:false
+						}
+					}
 				});
 			}
 			if($("#owl-docs").length) {
 				$("#owl-docs").owlCarousel({
-					items: 4,
-					itemsCustom: [
-						[0, 1],
-						[400, 2],
-						[600, 3],
-						[800, 4]
-					],
-					lazyLoad: true,
-					navigation: true,
-					navigationText: false
+					responsiveClass:true,
+					responsive:{
+						0:{
+							items:2,
+							nav:false
+						},
+						600:{
+							items:3,
+							nav:false
+						},
+						1000:{
+							items:6,
+							nav:false,
+							loop:false
+						}
+					}
 				});
 			}
 			if($("#owl-clients").length) {
 				$("#owl-clients").owlCarousel({
-					items: 6,
-					itemsCustom: [
-						[0, 2],
-						[400, 3],
-						[800, 6]
-					],
-					lazyLoad: true,
-					navigation: true,
-					navigationText: false
+					responsiveClass:true,
+					responsive:{
+						0:{
+							items:2,
+							nav:false
+						},
+						600:{
+							items:3,
+							nav:false
+						},
+						1000:{
+							items:6,
+							nav:false,
+							loop:false
+						}
+					}
 				});
 			}
         });

@@ -1,6 +1,7 @@
 {% extends 'SiteBundle::layout.html.twig' %}
 {% block title %}Наши сотрудники | {{ settings.name }}{% endblock %}
 {% block metatitle %}Наши сотрудники{% endblock %}
+{% block description %}Вся необходимая контактная информация о наших сотрудниках, а также предлагаемые ими объекты недвижимости.{% endblock %}
 {% block content %}
 
     <div class="container clearfix padding-0">
@@ -10,12 +11,12 @@
                 {% for agent in agents if agent %}
                     <div class="col-sm-6 col-md-3 padding-0">
                         <div class="clearfix">
-                            <div class="col-sm-5 padding-5">
+                            <div class="col-xs-5 padding-5">
                                 <a href="{{ path('site_agent_agent', {'id': agent.id}) }}">
                                     <img class="img-circle img-responsive" src="/images/photo/{{ agent.photo }}" width="150" alt="{{ agent.username }}">
                                 </a>
                             </div>
-                            <div class="col-sm-7 padding-5">
+                            <div class="col-xs-7 padding-5">
                                 <h4>{{ agent.username }}</h4>
                                 {% if agent.position %}<h5>{{ agent.position }}</h5>{% endif %}
                             </div>

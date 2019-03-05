@@ -33,14 +33,14 @@
             <div class="col-sm-6">
                 <h1>{{ object.title }}</h1>
                 {% set type = ['-','Продажа','Аренда'] %}                
-                <table class="table table-hover">
-                    <tr><td>Тип сделки</td><td><b>{{ type[object.type] }}</b></td></tr>
-                    <tr><td>Тип недвижимости</td><td><b>{{ object.ObjectTypes.title }}</b></td></tr>
-                    <tr><td>Город</td><td><b>{{ object.Towns.title }}</b></td></tr>
-                    {% if object.Areas %}<tr><td>Район</td><td><b>{{ object.Areas.title }}</b></td></tr>{% endif %}
-                    {% if object.address %}<tr><td>Адрес</td><td><b>{{ object.address }}</b></td></tr>{% endif %}
+                <table class="table">
+                    <tr><td>Тип сделки</td><td>{{ type[object.type] }}</td></tr>
+                    <tr><td>Тип недвижимости</td><td>{{ object.ObjectTypes.title }}</td></tr>
+                    <tr><td>Город</td><td>{{ object.Towns.title }}</td></tr>
+                    {% if object.Areas %}<tr><td>Район</td><td>{{ object.Areas.title }}</td></tr>{% endif %}
+                    {% if object.address %}<tr><td>Адрес</td><td>{{ object.address }}</td></tr>{% endif %}
                     {% for param in object.ObjectParamss() if param %}
-                        <tr><td>{{ param.ObjectTypesFields.name }}</td><td><b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td></tr>
+                        <tr><td>{{ param.ObjectTypesFields.name }}</td><td>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td></tr>
                     {% endfor %}
                     <tr><td>Цена объекта</td><td class="red"><b>{{ object.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></td></tr>
                 </table>                
@@ -63,52 +63,55 @@
         {% if object.published %}
             <div class="clearfix">
                 {% if object.description %}
-                    <div class="col-sm-6">
+                    <div class="col-xs-12 clearfix">
                         {{ object.description | raw }}
                     </div>
                 {% endif %}
-                {% if object.address %}
-                    <div class="col-sm-6 text-center">
-                        <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
-                    </div>
-                {% endif %}
-                {% if object.userId %}
-                    <div class="col-sm-3 text-center">
-                        <h3 class="text-center">Менеджер</h3>
-                        <div id="owl-agents">
-                            <div class="item text-center">
-                                <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">
-                                    <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
-                                </a>
-                                <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
-                                {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
-                                <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h4>
+                <div class="clearfix">
+                    {% if object.address %}
+                        <div class="col-sm-6 text-center">
+                            <h3 class="text-left">На карте</h3>
+                            <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
+                        </div>
+                    {% endif %}
+                    {% if object.userId %}
+                        <div class="col-sm-3 text-center">
+                            <h3 class="text-center">Менеджер</h3>
+                            <div id="owl-agents">
+                                <div class="item text-center">
+                                    <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">
+                                        <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
+                                    </a>
+                                    <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
+                                    {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
+                                    <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h4>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-sm-3 text-center">
-                        <h3 class="text-center">Есть вопросы?</h3>
-                        <form class="feedback_form">
-                            <div class="fb_reload">
-                                <div class="form-group">
-                                    <input type="hidden" name="object" value="{{ object.id }}">
-                                    <input type="hidden" name="agent" value="{{ object.User.id }}">
-                                    <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+                        <div class="col-sm-3 text-center">
+                            <h3 class="text-center">Есть вопросы?</h3>
+                            <form class="feedback_form">
+                                <div class="fb_reload">
+                                    <div class="form-group">
+                                        <input type="hidden" name="object" value="{{ object.id }}">
+                                        <input type="hidden" name="agent" value="{{ object.User.id }}">
+                                        <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea name="question" class="form-control input-lg" placeholder="Сообщение" rows="2"></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-primary-o btn-lg antibtn">Получить консультацию</button>
+                                        <h4>Это Бесплатно!</h4>
+                                    </div>
                                 </div>
-                                <div class="form-group">
-                                    <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
-                                </div>
-                                <div class="form-group">
-                                    <textarea name="question" class="form-control input-lg" placeholder="Сообщение" rows="3"></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <button type="submit" class="btn btn-primary-o btn-lg antibtn">Получить консультацию</button>
-                                    <h4>Это Бесплатно!</h4>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                {% endif %}
+                            </form>
+                        </div>
+                    {% endif %}
+                </div>
             </div>
         {% endif %}
         {% if catalog|length > 0 %}

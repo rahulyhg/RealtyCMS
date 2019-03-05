@@ -25,6 +25,7 @@
                     <th>Название</th>
                     <th>Родитель</th>
                     <th>Привязанная страница</th>
+                    <th>Модуль</th>
                     <th>Путь</th>
                     <th class="action">Действия</th>
                 </tr>
@@ -36,7 +37,8 @@
                         <td><a href="{{ path('admin_menus_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
                         <td>{% if item.MenusRelatedByParentId.title is defined %}{{ item.MenusRelatedByParentId.title }}{% endif %}</td>
                         <td>{% if item.Pagess[0].title is defined %}<a href="{{ path('admin_pages_edit', {'id': item.Pagess[0].id}) }}" title="Редактировать">{{ item.Pagess[0].title }}</a>{% endif %}</td>
-                        <td>{% if item.Pagess[0].alias is defined %}<a href="{{ path('admin_pages_edit', {'id': item.Pagess[0].id}) }}" title="Редактировать">{{ item.Pagess[0].alias }}</a>{% endif %}</td>
+                        <td>{% if item.module %}{{ modules[item.module] }}{% endif %}</td>
+                        <td>{% if item.Pagess[0].alias is defined %}/{{ item.Pagess[0].alias }}{% elseif item.module %}/{{ item.module }}{% endif %}</td>
                         <td class="action">
                             <a href="{{ path('admin_menus_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
                             <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_menus_delete', {'id': item.id}) }}" title="Удалить">

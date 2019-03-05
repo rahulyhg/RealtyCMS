@@ -1,0 +1,85 @@
+{% extends 'SiteBundle::layout.html.twig' %}
+{% block title %}Ипотечный калькулятор | {{ settings.name }}{% endblock %}
+{% block metatitle %}Ипотечный калькулятор{% endblock %}
+{% block description %}Удобный ипотечный калькулятор. Быстро и удобно рассчитать процентную ставку, размер суммы и срок платежа по ипотечному кредиту.{% endblock %}
+{% block content %}
+
+    <div class="container clearfix padding-0">
+        <div class="clearfix catalog">
+            <h1 class="padding-5">Ипотечный калькулятор</h1><hr>
+            <div class="clearfix">
+                <div class="col-md-9 padding-5">
+                    <h2 class="padding-5">Расчёт ежемесячного платежа</h2>
+                    <p class="padding-5">Удобный ипотечный калькулятор. Быстро и удобно рассчитать процентную ставку, размер суммы и срок платежа по ипотечному кредиту.</p><br>
+                    <form class="calculator_form">
+                        <div class="clearfix">
+                            <div class="col-md-4 padding-5">
+                                <div class="form-group">
+                                    <label>Стоимость объекта, руб.</label>
+                                    <input type="text" id="price" class="form-control input-lg" data-inputmask="'alias': 'numeric'" placeholder="Стоимость объекта" value="3000000">
+                                </div>
+                                <div class="form-group">
+                                    <label>Первоначальный взнос, руб.</label>
+                                    <input type="text" id="first" class="form-control input-lg" data-inputmask="'alias': 'numeric'" placeholder="Первоначальный взнос" value="1500000">
+                                </div>
+                            </div>
+                            <div class="col-md-4 padding-5">
+                                <div class="form-group">
+                                    <label>Срок кредита, лет</label>
+                                    <input type="text" id="years" class="form-control input-lg" data-inputmask="'alias': 'numeric'" placeholder="Срок кредита" value="20">
+                                </div>
+                                <div class="form-group">
+                                    <label>Процентная ставка, %</label>
+                                    <input type="text" id="procent" class="form-control input-lg" data-inputmask="'alias': 'numeric'" placeholder="Процентная ставка" value="8.7">
+                                </div>
+                            </div>
+                            <div class="col-md-4 padding-5">
+                                <div class="calc text-center">
+                                    <h4>Ежемесячный платеж</h4>
+                                    <h3><b id="calc-result">13208</b> руб.</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-3 padding-5"><img class="pull-right" width="150" src="/images/ipoteka.png" alt="Ипотечный калькулятор"></div>
+            </div><hr>
+            <div class="clearfix">
+                <div class="col-md-6 padding-5">
+                    <h3 class="padding-5">Оставить заявку на ипотеку</h3>
+                    <p class="padding-5">Отправьте заявку на ипотеку. Наш специалист свяжется с вами и предложит варианты от банков-партнеров.</p>
+                    <form class="feedback_form">
+                        <input type="hidden" hidden name="question" value="Меня интересует ипотека">
+                        <div class="fb_reload">
+                            <div class="clearfix">
+                                <div class="col-md-6 padding-5">
+                                    <div class="form-group">
+                                        <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+                                    </div>
+                                </div>
+                                <div class="col-md-6 padding-5">
+                                    <div class="form-group">
+                                        <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                <div class="col-md-6 padding-5">
+                                    <div class="form-group">
+                                        <p>Нажимая кнопку, я соглашаюсь с политикой конфиденциальности.</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 padding-5">
+                                    <div class="form-group text-right">
+                                        <button type="submit" class="btn btn-primary-o btn-lg antibtn">Отправьте заявку</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

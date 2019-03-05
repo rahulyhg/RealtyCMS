@@ -46,18 +46,22 @@
                 </table>                
             </div>
 			<div class="col-sm-6">
-                <div id="owl-images" class="owl-carousel owl-theme">
-                    {% for item in object.ObjectImagess if item %}
-                        <a class="imagelightbox" href="/images/objects/{{ item.path }}" data-exthumbimage="/images/objects/{{ item.path }}" data-sub-html="<h4>{{ object.title }}</h4><b>{{ object.price|number_format(0,'.',' ') }}</b><i class='fa fa-rub fa-fw'></i>">
-                            <div class="item text-center" style="background-image:url('/images/objects/{{ item.path }}')"></div>
-                        </a>
-                    {% endfor %}
-                </div>
-                <div id="owl-thumbs" class="owl-carousel owl-theme">
-                    {% for item in object.ObjectImagess if item %}
-                        <div class="item text-center" style="background-image:url('/images/objects/{{ item.thumb }}')"></div>
-                    {% endfor %}
-                </div>
+                {% if object.ObjectImagess|length %}
+                    <div id="owl-images" class="owl-carousel owl-theme">
+                        {% for item in object.ObjectImagess if item %}
+                            <a class="imagelightbox" href="/images/objects/{{ item.path }}" data-exthumbimage="/images/objects/{{ item.path }}" data-sub-html="<h4>{{ object.title }}</h4><b>{{ object.price|number_format(0,'.',' ') }}</b><i class='fa fa-rub fa-fw'></i>">
+                                <div class="item text-center" style="background-image:url('/images/objects/{{ item.path }}')"></div>
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div id="owl-thumbs" class="owl-carousel owl-theme">
+                        {% for item in object.ObjectImagess if item %}
+                            <div class="item text-center" style="background-image:url('/images/objects/{{ item.thumb }}')"></div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <img class="img-responsive" src="/images/realty.png" alt="{{ object.title }}">
+                {% endif %}
             </div>
         </div>
         {% if object.published %}

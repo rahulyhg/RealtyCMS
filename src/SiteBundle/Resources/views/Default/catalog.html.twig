@@ -44,7 +44,7 @@
 								<h4 class="text-center nobreak">{{ item.title }}</h4>
 								<h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
 								<div class="plan_desc"><table class="table">
-									<tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
+									<tr><td>{{ item.Towns.title }}</td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
 									<tr><td colspan="2">{{ item.address }}</td></tr>
 									{% for param in item.ObjectParamssForTable() if param %}
 										{% if loop.index is odd %}<tr>{% endif %}

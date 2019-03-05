@@ -198,7 +198,7 @@
                                         </li>
                                     {% endif %}
                                 {% elseif menu.module %}
-                                    <li><a  class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
+                                    <li class="hidden-xs"><a  class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             <br>

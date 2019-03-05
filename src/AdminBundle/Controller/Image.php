@@ -268,6 +268,15 @@ class Image {
 
     }
 
+    function square($len) {
+        if ($this->width > $this->height) {
+            $this->fit_to_height($len);
+        } else {
+            $this->fit_to_width($len);
+        }
+        return $this->crop(0,0,$len,$len);
+    }
+
     /**
      * Crop an image
      *

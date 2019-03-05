@@ -8,15 +8,17 @@
         <div class="clearfix catalog">
             <h1>{{ agent.username }}</h1><hr>
             <div class="clearfix catalog">
-                <div class="col-md-2">
-                    <img class="img-circle img-responsive" src="/images/photo/{{ agent.photo }}" alt="{{ agent.username }}">
+                <div class="col-sm-6 padding-0">
+                    <div class="col-md-4">
+                        <img class="img-circle img-responsive" src="/images/photo/{{ agent.photo }}" alt="{{ agent.username }}">
+                    </div>
+                    <div class="col-md-8"><br>
+                        {% if agent.position %}<h4>{{ agent.position }}</h4>{% endif %}<br>
+                        {% if agent.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ agent.phone }}" title="Позвонить">{{ agent.phone }}</a></h4>{% endif %}
+                        <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ agent.email }}" title="Написать письмо">{{ agent.email }}</a></h4><br>
+                    </div>
                 </div>
-                <div class="col-md-4"><br>
-                    {% if agent.position %}<h4>{{ agent.position }}</h4>{% endif %}<br>
-                    {% if agent.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ agent.phone }}" title="Позвонить">{{ agent.phone }}</a></h4>{% endif %}
-                    <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ agent.email }}" title="Написать письмо">{{ agent.email }}</a></h4><br>
-                </div>
-                <div class="col-md-6">
+                <div class="col-sm-6">
                     <h4 class="padding-5">Написать сообщение</h4>
                     <form class="feedback_form">
                         <div class="fb_reload">

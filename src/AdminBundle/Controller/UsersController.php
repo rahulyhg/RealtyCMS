@@ -74,7 +74,7 @@ class UsersController extends Controller
                     $form['photo']->getData()->move($dir, $Filename);
                     $item->setPhoto($Filename);
                     $image = new Image($dir.'/'.$Filename);
-                    $image->fit_to_width(300);
+                    $image->square(300);
                     $image->save($dir.'/'.$Filename);
                 }
             }
@@ -139,7 +139,7 @@ class UsersController extends Controller
                     $form['photo']->getData()->move($dir, $Filename);
                     $item->setPhoto($Filename);
                     $image = new Image($dir.'/'.$Filename);
-                    $image->fit_to_width(300);
+                    $image->square(300);
                     $image->save($dir.'/'.$Filename);
                     if ($photo) {
                         $fs = new Filesystem();

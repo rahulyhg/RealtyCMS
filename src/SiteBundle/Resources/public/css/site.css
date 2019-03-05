@@ -924,7 +924,7 @@ ul.social-network li a {
         -o-transition: all 0.3s ease-in-out;
     }
     .fixed .navbar-form {
-        position: relative;
+        position: static;
     }
     .navbar-form:focus, .navbar-form:hover {
         width: auto;

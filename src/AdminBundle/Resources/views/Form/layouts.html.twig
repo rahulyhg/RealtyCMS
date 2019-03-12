@@ -1,0 +1,42 @@
+{% if object_layouts is defined %}{% if object_layouts %}
+<div class="clearfix">
+    <h2>Планировки:</h2>
+    <div class="clearfix"><a href="{{ path('admin_layouts_add',{'id':item.id}) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить планировку</a></div><br>
+    <div class="highlight">
+
+        <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_layouts_sort') }}">
+            <thead>
+            <tr>
+                <th>Порядок</th>
+                <th>Название</th>
+                <th>Стоимость</th>
+                <th>Фотография</th>
+                {% for field in item.ObjectTypes.LayoutsFieldss if field %}
+                    <th>{{ field.name }}</th>
+                {% endfor %}
+                <th colspan="2" class="action">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for layout in item.ObjectLayoutss if layout %}
+                <tr id="{{ layout.id }}" data-sort="{{ layout.sort }}">
+                    <td><i class="fa fa-ellipsis-v fa-fw handle"></i> {{ layout.sort }}</td>
+                    <td><a href="{{ path('admin_layouts_edit',{'id':layout.id}) }}">{{ layout.title }}</a></td>
+                    <td>{{ layout.price }}</td>
+                    <td>{% if layout.image %}<i class="fa fa-picture-o"></i>{% endif %}</td>
+                    {% for field in item.ObjectTypes.LayoutsFieldss if field %}
+                        <td>{{ layout.params(field.id,true) }}{% if field.postfix %} {{ field.postfix }}{% endif %}</td>
+                    {% endfor %}
+                    <td colspan="2" class="action">
+                        <a href="{{ path('admin_layouts_edit',{'id':layout.id}) }}" title="Редактировать"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+                        <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_layouts_delete',{'id':layout.id}) }}" title="Удалить"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="{{ 5 + item.ObjectTypes.LayoutsFieldss|length }}">Нет планировок</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}{% endif %}

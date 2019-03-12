@@ -34,7 +34,8 @@ class CalculatorController extends Controller
             ->filterByParentId(NULL)
             ->orderBySort()
             ->find();
-		$categories = ObjectTypesQuery::create()            
+		$categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 
         $response = $this->render('SiteBundle:Default:calculator.html.twig', array(

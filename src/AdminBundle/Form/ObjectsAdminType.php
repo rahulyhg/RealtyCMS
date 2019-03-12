@@ -87,12 +87,16 @@ class ObjectsAdminType extends AbstractType
                 'required' => TRUE
             ))
             ->add('type_object', 'choice', array(
+                'empty_value' => 'выберите тип объекта',
                 'choices' => $object_types,
                 'label' => 'Тип объекта',
                 'attr' => array('class' => 'changeable form-control'),
                 'required' => TRUE
-            ))
-            ->add('price', 'text', array('label' => 'Цена'))
+            ));
+        if ($options['data']->getObjectPrice()) {
+            $builder->add('price', 'text', array('label' => 'Стоимость объекта'));
+        }
+        $builder
             ->add('description', 'genemu_tinymce', array(
                     'label' => 'Описание',
                     'required' => false,
@@ -136,8 +140,8 @@ class ObjectsAdminType extends AbstractType
                                 'data' => $options['data']->getParams($field->getId()),
                                 'mapped' => false));
                     } elseif ($field->getType() == 2 || $field->getType() == 4) {
-                        $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->find()->toKeyValue('Id', 'Name');
-                        asort($values);
+                        $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
+                        //asort($values);
                         if ($values)
                             $builder->add('params_' . $field->getId(), 'choice', array(
                                 'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
@@ -201,8 +205,8 @@ class ObjectsAdminType extends AbstractType
                                     'required' => $field->getRequired() ? true : false,
                                     'mapped' => false));
                         } elseif ($field->getType() == 2 || $field->getType() == 4) {
-                            $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->find()->toKeyValue('Id', 'Name');
-                            asort($values);
+                            $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
+                            //asort($values);
                             if ($values) $form->add('params_' . $field->getId(), 'choice',
                                 array(
                                     'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',

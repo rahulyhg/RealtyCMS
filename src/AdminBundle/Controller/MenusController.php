@@ -40,7 +40,8 @@ class MenusController extends Controller
 
         return $this->render('AdminBundle:Default:menus.html.twig',array(
             'pagination' 		=> $pagination,
-            'modules'           => $modules
+            'modules'           => $modules,
+            'back' => $this->generateUrl('admin_default_index')
         ));
     }
 

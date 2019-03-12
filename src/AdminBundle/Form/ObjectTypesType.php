@@ -12,7 +12,7 @@ class ObjectTypesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $builder            
+        $builder
             ->add('title', 'text', array('label'  => 'Название', 'required' => TRUE))
 			->add('alias', 'text', array('label'  => 'Алиас', 'required' => TRUE))
 			->add('image', 'file', array('label'  => 'Изображение', 'required' => FALSE))
@@ -35,8 +35,10 @@ class ObjectTypesType extends AbstractType
                     )
                 )
             )
-            ->add('generator', 'text', array('label'  => 'Генератор Названий', 'required' => false))
-            //->add('save', 'submit', array('label'  => 'Сохранить',))
+            ->add('generator', 'text', array('label'  => 'Генератор Названий Объектов', 'required' => false))
+            ->add('sort', 'text', array('label'  => 'Порядок', 'required' => FALSE))
+            ->add('layouts', 'checkbox', array('label' => 'Содержит планировки', 'required' => FALSE))
+            ->add('generator_layout', 'text', array('label'  => 'Генератор Названий Планировок', 'required' => false))
             ->getForm();
 
     }

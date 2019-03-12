@@ -12,11 +12,9 @@ use SiteBundle\Model\ObjectTypesFieldsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use SiteBundle\Model\Objects;
-use SiteBundle\Model\ObjectTypes;
 use \Criteria;
 use SiteBundle\Model\ObjectsQuery;
 use SiteBundle\Model\ObjectTypesQuery;
-use AdminBundle\Form\ObjectTypesType;
 use AdminBundle\Form\ObjectsType;
 use AdminBundle\Form\ObjectsAdminType;
 use Symfony\Component\Filesystem\Filesystem;
@@ -107,6 +105,7 @@ class ObjectsController extends Controller
             'sort' => $sort,
             'on_page' => $on_page,
             'filter_form' => $filter_form->createView(),
+            'back' => $this->generateUrl('admin_default_index')
         ));
         $response->headers->setCookie(new Cookie('dir', $dir, time() + 3600 * 24 * 7, $this->generateUrl('admin_objects_index')));
         $response->headers->setCookie(new Cookie('sort', $sort, time() + 3600 * 24 * 7, $this->generateUrl('admin_objects_index')));
@@ -152,28 +151,28 @@ class ObjectsController extends Controller
                         $param->save();
                     }
                 }
-                # генерируем Название
-                $type_objects = $item->getObjectTypes();
-                if ($type_objects->getGenerator()) {
-                    $item = ObjectsQuery::create()->findPk($item->getId());
-                    $generator = $type_objects->getGenerator();
-                    preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
-                    foreach ($out[1] as $gvalue) {
-                        $new_value = null;
-                        $gid = (int)$gvalue;
-                        $new_value = $item->getParams($gid, true);
-                        $gpattern = "/{" . $gvalue . "\}/ix";
-                        if ($new_value) {
-                            $generator = preg_replace($gpattern, $new_value, $generator);
-                        }
+            }
+            # генерируем Название
+            $type_objects = $item->getObjectTypes();
+            if ($type_objects->getGenerator()) {
+                $nitem = ObjectsQuery::create()->findPk($item->getId());
+                $generator = $type_objects->getGenerator();
+                preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
+                foreach ($out[1] as $gvalue) {
+                    $new_value = null;
+                    $gid = (int)$gvalue;
+                    $new_value = $nitem->getParams($gid, true);
+                    $gpattern = "/{" . $gvalue . "\}/ix";
+                    if ($new_value) {
+                        $generator = preg_replace($gpattern, $new_value, $generator);
                     }
-                    $item->setTitle($generator);
-                    $item->save();
                 }
+                $nitem->setTitle($generator);
+                $nitem->save();
             }
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Успешно добавлено!'
+                '"'.$nitem->getTitle().'" успешно добавлено!'
             );
             return $this->redirect($this->generateUrl('admin_objects_images', array('id'=>$item->getId())));
         }
@@ -222,35 +221,38 @@ class ObjectsController extends Controller
                         $param->save();
                     }
                 }
-                # генерируем Название
-                $type_objects = $item->getObjectTypes();
-                if ($type_objects->getGenerator()) {
-                    $item = ObjectsQuery::create()->findPk($item->getId());
-                    $generator = $type_objects->getGenerator();
-                    preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
-                    foreach ($out[1] as $gvalue) {
-                        $new_value = null;
-                        $gid = (int)$gvalue;
-                        $new_value = $item->getParams($gid, true);
-                        $gpattern = "/{" . $gvalue . "\}/ix";
-                        if ($new_value) {
-                            $generator = preg_replace($gpattern, $new_value, $generator);
-                        }
+            }
+            # генерируем Название
+            $type_objects = $item->getObjectTypes();
+            if ($type_objects->getGenerator()) {
+                $nitem = ObjectsQuery::create()->findPk($item->getId());
+                $generator = $type_objects->getGenerator();
+                preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
+                foreach ($out[1] as $gvalue) {
+                    $new_value = null;
+                    $gid = (int)$gvalue;
+                    $new_value = $nitem->getParams($gid, true);
+                    $gpattern = "/{" . $gvalue . "\}/ix";
+                    if ($new_value) {
+                        $generator = preg_replace($gpattern, $new_value, $generator);
                     }
-                    $item->setTitle($generator);
-                    $item->save();
                 }
+                $nitem->setTitle($generator);
+                $nitem->save();
             }
             $this->get('session')->getFlashBag()->add(
                 'notice',
-                'Успешно сохранено!'
+                '"'.$nitem->getTitle().'" успешно сохранено!'
             );
-            return $this->redirect($this->generateUrl('admin_objects_index'));
+            //return $this->redirect($this->generateUrl('admin_objects_index'));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
+            'item' => $item,
             'title' => 'Редактирование',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'object_layouts' => $item->getObjectTypes()->getLayouts(),
+            'back' => $this->generateUrl('admin_objects_index')
         ));
     }
     
@@ -311,27 +313,27 @@ class ObjectsController extends Controller
                 # генерируем Название
                 $type_objects = $item->getObjectTypes();
                 if ($type_objects->getGenerator()) {
-                    $item = ObjectsQuery::create()->findPk($item->getId());
+                    $nitem = ObjectsQuery::create()->findPk($item->getId());
                     $generator = $type_objects->getGenerator();
                     preg_match_all("/{(\d+)}/ix", $generator, $out, PREG_PATTERN_ORDER);
                     foreach ($out[1] as $gvalue) {
                         $new_value = null;
                         $gid = (int)$gvalue;
-                        $new_value = $item->getParams($gid, true);
+                        $new_value = $nitem->getParams($gid, true);
                         $gpattern = "/{" . $gvalue . "\}/ix";
                         if ($new_value) {
                             $generator = preg_replace($gpattern, $new_value, $generator);
                         }
                     }
-                    $item->setTitle($generator);
-                    $item->save();
+                    $nitem->setTitle($generator);
+                    $nitem->save();
                 }
             }
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'Успешно сохранено!'
             );
-            return $this->redirect($this->generateUrl('admin_objects_index'));
+            return $this->redirect($this->generateUrl('admin_objects_images', array('id'=>$item->getId())));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
@@ -365,6 +367,11 @@ class ObjectsController extends Controller
             $form = $this->createForm(new ObjectsType(), $item);
         }
         $form->handleRequest($request);
+        if ($this->get('security.context')->isGranted('ROLE_ADMIN')) {
+            $form = $this->createForm(new ObjectsAdminType(), $item);
+        } else {
+            $form = $this->createForm(new ObjectsType(), $item);
+        }
 
         return $this->render('AdminBundle:Form:update.html.twig',
             array('form' => $form->createView()));

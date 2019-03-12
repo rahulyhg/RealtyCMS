@@ -40,6 +40,7 @@ class DefaultController extends Controller
         $search_form = $this->createForm(new SearchType());
 		
 		$categories = ObjectTypesQuery::create()            
+            ->orderBySort()
             ->find();
 
         return $this->render('SiteBundle:Default:index.html.twig', array(
@@ -133,7 +134,8 @@ class DefaultController extends Controller
             ->filterByParentId(NULL)
             ->orderBySort()
             ->find();
-		$categories = ObjectTypesQuery::create()            
+		$categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 
         return $this->render('SiteBundle:Default:page.html.twig', array(

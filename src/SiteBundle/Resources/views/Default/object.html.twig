@@ -68,54 +68,97 @@
             <div class="clearfix">
                 {% if object.description %}
                     <div class="col-xs-12 clearfix">
+                        <h3>Описание объекта</h3>
                         {{ object.description | raw }}
                     </div>
                 {% endif %}
-                <div class="clearfix">
-                    {% if object.address %}
-                        <div class="col-sm-6 text-center">
-                            <h3 class="text-left">На карте</h3>
-                            <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
-                        </div>
-                    {% endif %}
-                    {% if object.userId %}
-                        <div class="col-sm-3 text-center">
-                            <h3 class="text-center">Менеджер</h3>
-                            <div id="owl-agents">
-                                <div class="item text-center">
-                                    <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">
-                                        <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
-                                    </a>
-                                    <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
-                                    {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
-                                    <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h4>
+            </div>
+            {% if object.ObjectLayoutss|length %}
+                <div class="clearfix padding-5">
+                    <h3>Планировки</h3>
+                    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                        {% for layout in object.ObjectLayoutss if layout %}
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="heading{{ layout.id }}">
+                                    <div class="panel-title cursor-pointer clearfix" data-toggle="collapse" data-parent="#accordion" href="#collapse{{ layout.id }}" aria-expanded="true" aria-controls="collapse{{ layout.id }}">
+                                        <div class="col-md-6"><h4>{{ layout.title }}</h4></div>
+                                        <div class="col-md-6"><h4><b>{{ layout.price|number_format(0,'.',' ') }}</b> <i class='fa fa-rub fa-fw'></i></h4></div>
+                                    </div>
+                                </div>
+                                <div id="collapse{{ layout.id }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ layout.id }}">
+                                    <div class="panel-body">
+                                        <div class="col-md-3 padding-0">
+                                            {% if layout.image %}
+                                                <a class="imagelightbox" href="/images/objects/layouts/{{ layout.image }}" data-exthumbimage="/images/objects/layouts/{{ layout.image }}" data-sub-html="<h4>{{ layout.title }}</h4><b>{{ layout.price|number_format(0,'.',' ') }}</b><i class='fa fa-rub fa-fw'></i>">
+                                                    <img class="img-responsive" src="/images/objects/layouts/{{ layout.thumb }}" alt="{{ layout.title }}">
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                        <div class="col-md-9 padding-0">
+                                            <h4 class="padding-5">Харакетристики</h4>
+                                            <table class="table table-hover table-striped">
+                                                <tbody>
+                                                    {% for field in object.ObjectTypes.LayoutsFieldss if field %}
+                                                        <tr>
+                                                            <td>{{ field.name }}</td>
+                                                            <td>{{ layout.params(field.id,true) }}{% if field.postfix %} {{ field.postfix }}{% endif %}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                </tbody>
+                                            </table>
+                                            {{ layout.description|raw }}
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-sm-3 text-center">
-                            <h3 class="text-center">Есть вопросы?</h3>
-                            <form class="feedback_form">
-                                <div class="fb_reload">
-                                    <div class="form-group">
-                                        <input type="hidden" name="object" value="{{ object.id }}">
-                                        <input type="hidden" name="agent" value="{{ object.User.id }}">
-                                        <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
-                                    </div>
-                                    <div class="form-group">
-                                        <textarea name="question" class="form-control input-lg" placeholder="Сообщение" rows="2"></textarea>
-                                    </div>
-                                    <div class="form-group">
-                                        <button type="submit" class="btn btn-primary-o btn-lg antibtn">Получить консультацию</button>
-                                        <h4>Это Бесплатно!</h4>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                    {% endif %}
+                        {% endfor %}
+                    </div>
                 </div>
+            {% endif %}
+            <div class="clearfix">
+                {% if object.address %}
+                    <div class="col-sm-6 text-center">
+                        <h3 class="text-left">На карте</h3>
+                        <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
+                    </div>
+                {% endif %}
+                {% if object.userId %}
+                    <div class="col-sm-3 text-center">
+                        <h3 class="text-center">Менеджер</h3>
+                        <div id="owl-agents">
+                            <div class="item text-center">
+                                <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">
+                                    <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
+                                </a>
+                                <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
+                                {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
+                                <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 text-center">
+                        <h3 class="text-center">Есть вопросы?</h3>
+                        <form class="feedback_form">
+                            <div class="fb_reload">
+                                <div class="form-group">
+                                    <input type="hidden" name="object" value="{{ object.id }}">
+                                    <input type="hidden" name="agent" value="{{ object.User.id }}">
+                                    <input type="text" name="name" class="form-control input-lg" placeholder="Ваше имя" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <input type="text" name="phone" class="form-control phone input-lg" placeholder="Телефон" required="required">
+                                </div>
+                                <div class="form-group">
+                                    <textarea name="question" class="form-control input-lg" placeholder="Сообщение" rows="2"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary-o btn-lg antibtn">Получить консультацию</button>
+                                    <h4>Это Бесплатно!</h4>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
             </div>
         {% endif %}
         {% if catalog|length > 0 %}
@@ -156,6 +199,9 @@
         $(document).ready(function() {
             if ($("#owl-images").length) {
                 $("#owl-images").lightGallery({selector: '.imagelightbox', thumbnail: true, exThumbImage: 'data-exthumbimage', hash: false});
+            }
+            if ($("#accordion").length) {
+                $("#accordion").lightGallery({selector: '.imagelightbox', thumbnail: true, exThumbImage: 'data-exthumbimage', hash: false});
             }
             var sync1 = $("#owl-images");
             var sync2 = $("#owl-thumbs");

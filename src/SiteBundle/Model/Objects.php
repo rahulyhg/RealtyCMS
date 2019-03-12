@@ -16,9 +16,27 @@ class Objects extends BaseObjects
         return $image ? $image : NULL;
     }
 
+    public function getObjectPrice()
+    {
+        return $this->getObjectTypes() ? ($this->getObjectTypes()->getLayouts() ? false : true) : true;
+    }
+
+    public function getPrice()
+    {
+        if ($this->getObjectTypes()) {
+            if ($this->getObjectTypes()->getLayouts()) {
+                $layouts = $this->getObjectLayoutss()->toKeyValue('Id','Price');
+                if (count($layouts)) {
+                    return min($layouts);
+                } else return 0;
+            } else return parent::getPrice();
+        } else return parent::getPrice();
+    }
+
     public function getParams($id, $normalized = false)
     {
-        $params = $this->getObjectParamss()->toKeyValue('FieldId',($normalized?'ValueNormalized':'Value'));
+        //$params = $this->getObjectParamss()->toKeyValue('FieldId',($normalized?'ValueNormalized':'Value'));
+        $params = ObjectParamsQuery::create()->filterByObjects($this)->find()->toKeyValue('FieldId',($normalized?'ValueNormalized':'Value'));
         return @$params[$id]?:'';
     }
 
@@ -117,5 +135,51 @@ class Objects extends BaseObjects
         }
 
         return $this->collObjectParamss;
+    }
+
+    public function getObjectLayoutss($criteria = null, \PropelPDO $con = null)
+    {
+        $partial = $this->collObjectLayoutssPartial && !$this->isNew();
+        if (null === $this->collObjectLayoutss || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collObjectLayoutss) {
+                // return empty collection
+                $this->initObjectLayoutss();
+            } else {
+                $collObjectLayoutss = ObjectLayoutsQuery::create(null, $criteria)
+                    ->orderBySort()
+                    ->filterByObjects($this)
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collObjectLayoutssPartial && count($collObjectLayoutss)) {
+                        $this->initObjectLayoutss(false);
+
+                        foreach ($collObjectLayoutss as $obj) {
+                            if (false == $this->collObjectLayoutss->contains($obj)) {
+                                $this->collObjectLayoutss->append($obj);
+                            }
+                        }
+
+                        $this->collObjectLayoutssPartial = true;
+                    }
+
+                    $collObjectLayoutss->getInternalIterator()->rewind();
+
+                    return $collObjectLayoutss;
+                }
+
+                if ($partial && $this->collObjectLayoutss) {
+                    foreach ($this->collObjectLayoutss as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjectLayoutss[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjectLayoutss = $collObjectLayoutss;
+                $this->collObjectLayoutssPartial = false;
+            }
+        }
+
+        return $this->collObjectLayoutss;
     }
 }

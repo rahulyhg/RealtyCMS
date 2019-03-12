@@ -8,11 +8,8 @@ class ObjectTypes extends BaseObjectTypes
 {
     public function min_price()
     {
-        $price_array = array();
-        foreach ($this->getObjectss() as  $object) {
-            $price_array[] = $object->getPrice();
-        }
-        return $price_array ? min($price_array) : 0;
+        $price_array = $this->getObjectss()->toKeyValue('Price','Price');
+        return count($price_array) ? min($price_array) : 0;
     }
 
     public function getObjectTypesFieldss($criteria = null, \PropelPDO $con = null)

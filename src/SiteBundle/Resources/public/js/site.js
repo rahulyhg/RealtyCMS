@@ -11,7 +11,7 @@ $(document).on("change", ".changeable", function () {
         type : "GET",
         data : form_data,
         success : function (data) {
-            $('.search_objects').html(data);
+            $('#filter_objects').html(data);
             $('.selectpicker').selectpicker();
             form_number();
         }
@@ -127,5 +127,8 @@ $(document).on('click', '[data-toggle="modal"]', function () {
             $(this).parent().siblings().removeClass('open');
             $(this).parent().toggleClass('open');
         });
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            $('#collapseOne').collapse('hide');
+        }
     });
 })(jQuery);

@@ -9,85 +9,31 @@
 namespace AdminBundle\Form;
 
 use Doctrine\Common\Collections\Criteria;
-use SiteBundle\Model\ObjectTypesFieldsQuery;
-use SiteBundle\Model\ObjectTypesFieldsValuesQuery;
+use SiteBundle\Model\LayoutsFieldsQuery;
+use SiteBundle\Model\LayoutsFieldsValuesQuery;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use FOS\UserBundle\Propel\UserQuery;
-use SiteBundle\Model\TownsQuery;
-use SiteBundle\Model\AreasQuery;
-use SiteBundle\Model\ObjectTypesQuery;
 
-class ObjectsType extends AbstractType
+class LayoutsType extends AbstractType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
 
-        $towns = TownsQuery::create()
-            ->find()->toKeyValue('id', 'Title');
-
-        $areas = [];
-        if ($options['data']->getTownId()) {
-            $areas = AreasQuery::create()
-                ->filterByTownId($options['data']->getTownId())
-                ->find()->toKeyValue('id', 'Title');
-        }
-        $types = array(
-            1 => 'Продажа',
-            2 => 'Аренда'
-        );
-
-        $object_types = ObjectTypesQuery::create()
-            ->find()->toKeyValue('id', 'title');
-
         $builder
             ->add('id', 'hidden')
-            ->add('published', 'checkbox', array('label' => 'Опубликовано', 'required' => FALSE))
+            ->add('info', 'textarea', array('label'  => 'Служебная информация','attr' => array('rows' => 3), 'required' => FALSE))
+            //->add('published', 'checkbox', array('label' => 'Опубликовано', 'required' => FALSE))
             //->add('for_all', 'checkbox', array('label' => 'Видно всем', 'required' => FALSE))
             //->add('modered', 'checkbox', array('label' => 'Одобрено модератором', 'required' => FALSE))
             //->add('xml', 'checkbox', array('label' => 'Добавить в выгрузку', 'required' => FALSE))
             //->add('title', 'text', array('label' => 'Название',))
-            ->add('info', 'textarea', array('label'  => 'Служебная информация','attr' => array('rows' => 3), 'required' => FALSE))
-            ->add('town_id', 'choice', array(
-                'empty_value' => 'выберите город',
-                'choices' => $towns,
-                'attr' => array('class' => 'changeable form-control'),
-                'label' => 'Город',
-                'required' => TRUE
-            ));
-        if ($options['data']->getTownId()) {
-            $builder->
-                add('area_id', 'choice', array(
-                    'choices' => $areas,
-                    'label' => 'Район',
-                    'attr' => array('class' => 'form-control'),
-                    'required' => FALSE
-                ));
-        }
-        $builder
-            ->add('address', 'text', array('label' => 'Адрес', 'required' => FALSE))
-            //->add('coordinates', 'text', array('label' => 'Координаты', 'required' => FALSE))
-            ->add('type', 'choice', array(
-                'choices' => $types,
-                'label' => 'Тип сделки',
-                'attr' => array('class' => 'form-control'),
-                'required' => TRUE
-            ))
-            ->add('type_object', 'choice', array(
-                'empty_value' => 'выберите тип объекта',
-                'choices' => $object_types,
-                'label' => 'Тип объекта',
-                'attr' => array('class' => 'changeable form-control'),
-                'required' => TRUE
-            ));
-        if ($options['data']->getObjectPrice()) {
-            $builder->add('price', 'text', array('label' => 'Стоимость объекта'));
-        }
-        $builder
+            //->add('info', 'textarea', array('label'  => 'Служебная информация','attr' => array('rows' => 3), 'required' => FALSE))
+            ->add('price', 'text', array('label' => 'Цена'))
+            ->add('image', 'file', array('label'  => 'Фотография', 'required' => FALSE))
             ->add('description', 'genemu_tinymce', array(
                     'label' => 'Описание',
                     'required' => false,
@@ -112,7 +58,7 @@ class ObjectsType extends AbstractType
         if ($options['data']->getTypeObject()) {
 
             # Добавление полей типа объекта
-            $fields = ObjectTypesFieldsQuery::create()
+            $fields = LayoutsFieldsQuery::create()
                 ->filterByObjectTypeId($options['data']->getTypeObject())
                 ->orderBySort()
                 ->find();
@@ -128,7 +74,7 @@ class ObjectsType extends AbstractType
                             'data' => $options['data']->getParams($field->getId()),
                             'mapped' => false));
                     } elseif ($field->getType() == 2 || $field->getType() == 4) {
-                        $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
+                        $values = LayoutsFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
                         //asort($values);
                         if ($values)
                             $builder->add('params_' . $field->getId(), 'choice', array(
@@ -157,24 +103,12 @@ class ObjectsType extends AbstractType
         $builder->addEventListener(FormEvents::PRE_SUBMIT, function (FormEvent $event) {
             $form = $event->getForm();
             $data = $event->getData();
-            # Если указали город
-            if (@$data['town_id']) {
-                $areas = AreasQuery::create()
-                    ->filterByTownId($data['town_id'])
-                    ->find()->toKeyValue('id', 'Title');
-                $form->add('area_id', 'choice', array(
-                    'choices' => $areas,
-                    'label' => 'Район',
-                    'attr' => array('class' => 'form-control'),
-                    'required' => FALSE
-                ));
-            }
 
             # Дополнительные поля
             if (@$data['type_object']) {
 
                 # Добавление полей типа объекта
-                $fields = ObjectTypesFieldsQuery::create()
+                $fields = LayoutsFieldsQuery::create()
                     ->filterByObjectTypeId($data['type_object'])
                     ->orderBySort()
                     ->find();
@@ -190,7 +124,7 @@ class ObjectsType extends AbstractType
                                     'required' => $field->getRequired() ? true : false,
                                     'mapped' => false));
                         } elseif ($field->getType() == 2 || $field->getType() == 4) {
-                            $values = ObjectTypesFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
+                            $values = LayoutsFieldsValuesQuery::create()->filterByFieldId($field->getId())->orderBySort()->find()->toKeyValue('Id', 'Name');
                             //asort($values);
                             if ($values) $form->add('params_' . $field->getId(), 'choice',
                                 array(
@@ -209,9 +143,7 @@ class ObjectsType extends AbstractType
                         }
                     }
                 }
-
             }
-
         });
         $builder->getForm();
 
@@ -219,13 +151,13 @@ class ObjectsType extends AbstractType
 
     public function getName()
     {
-        return 'objects';
+        return 'object_layouts';
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'SiteBundle\Model\Objects',
+            'data_class' => 'SiteBundle\Model\ObjectLayouts',
         ));
     }
 

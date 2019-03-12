@@ -8,7 +8,20 @@
 	<div class="container clearfix">
 		<div class="clearfix">
 			<div class="search_objects">
-				{% if search_form %}{% embed "SiteBundle:Form:search_form.html.twig" %}{% endembed %}{% endif %}
+				<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+					<div class="panel">
+						<div class="panel-heading" role="tab" id="headingOne">
+							<b class="panel-title">
+								<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+									<i class="fa fa-sliders fa-fw"></i> Фильтр
+								</a>
+							</b>
+						</div>
+						<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+							<div class="panel-body" id="filter_objects">{% if search_form %}{% embed "SiteBundle:Form:search_form.html.twig" %}{% endembed %}{% endif %}</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="catalog clearfix">

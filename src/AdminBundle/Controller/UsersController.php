@@ -33,7 +33,8 @@ class UsersController extends Controller
         );
 
         return $this->render('AdminBundle:Default:users.html.twig',array(
-            'pagination' 		=> $pagination
+            'pagination' 		=> $pagination,
+            'back' => $this->generateUrl('admin_default_index')
         ));
     }
 

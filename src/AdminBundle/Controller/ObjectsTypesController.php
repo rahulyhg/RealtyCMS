@@ -5,22 +5,15 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\ObjectTypesFieldsType;
 use AdminBundle\Form\ObjectTypesFieldsValuessType;
 use AdminBundle\Form\ObjectTypesFieldsValuesType;
-use SiteBundle\Model\ObjectImages;
-use SiteBundle\Model\ObjectImagesQuery;
 use SiteBundle\Model\ObjectTypesFields;
 use SiteBundle\Model\ObjectTypesFieldsQuery;
 use SiteBundle\Model\ObjectTypesFieldsValues;
 use SiteBundle\Model\ObjectTypesFieldsValuesQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use SiteBundle\Model\Objects;
 use SiteBundle\Model\ObjectTypes;
-use \Criteria;
-use SiteBundle\Model\ObjectsQuery;
 use SiteBundle\Model\ObjectTypesQuery;
 use AdminBundle\Form\ObjectTypesType;
-use AdminBundle\Form\ObjectsType;
-use AdminBundle\Form\ObjectsAdminType;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
@@ -34,6 +27,7 @@ class ObjectsTypesController extends Controller
     public function indexTypesAction()
     {
         $items = ObjectTypesQuery::create()            
+            ->orderBySort()
             ->find();
         if (!$items) {
             throw $this->createNotFoundException(
@@ -49,7 +43,8 @@ class ObjectsTypesController extends Controller
         );
 
         return $this->render('AdminBundle:Default:object_types.html.twig',array(
-            'pagination' 		=> $pagination
+            'pagination' 		=> $pagination,
+            'back' => $this->generateUrl('admin_default_index')
         ));
     }
 
@@ -86,12 +81,13 @@ class ObjectsTypesController extends Controller
                 'notice',
                 'Успешно добавлено!'
             );
-            return $this->redirect($this->generateUrl('admin_objectstypes_indextypes'));
+            return $this->redirect($this->generateUrl('admin_objectstypes_edittypes', array('id'=> $item->getId())));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title' => 'Создание',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'back' => $this->generateUrl('admin_objectstypes_indextypes')
         ));
     }
 
@@ -143,7 +139,7 @@ class ObjectsTypesController extends Controller
                 'notice',
                 'Успешно сохранено!'
             );
-            return $this->redirect($this->generateUrl('admin_objectstypes_indextypes'));
+            //return $this->redirect($this->generateUrl('admin_objectstypes_edittypes', array('id'=> $item->getId())));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
@@ -151,7 +147,9 @@ class ObjectsTypesController extends Controller
             'item'      => $item,
             'form' 		=> $form->createView(),
 			'photo'     => $oldimage ? '/'.$dir.'/'.$oldimage : null,
-            'object_types_fields' => true
+            'object_types_fields' => true,
+            'layouts' => $item->getLayouts(),
+            'back' => $this->generateUrl('admin_objectstypes_indextypes')
         ));
     }
 	
@@ -180,6 +178,22 @@ class ObjectsTypesController extends Controller
             );
         }
         return $this->redirect($this->generateUrl('admin_objectstypes_indextypes'));
+    }
+
+    /**
+     * @Route("/object_types/sort")
+     */
+    public function sortAction(Request $request)
+    {
+
+        $array = $request->request->get('array');
+        $cnt = 1;
+        foreach ($array as $item) {
+            $object_type_item = ObjectTypesQuery::create()->findPk($item);
+            $object_type_item->setSort($cnt++);
+            $object_type_item->save();
+        }
+        return $this->redirect($request->headers->get('referer'));
     }
 
     /**
@@ -213,7 +227,8 @@ class ObjectsTypesController extends Controller
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title' => 'Создание',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'back' => $this->generateUrl('admin_objectstypes_edittypes', array('id'=> $id))
         ));
     }
 
@@ -237,14 +252,16 @@ class ObjectsTypesController extends Controller
                 'notice1',
                 'Поле "'.$field->getName().'" успешно изменено!'
             );
-            return $this->redirect($this->generateUrl('admin_objectstypes_edittypes', array('id'=> $field->getObjectTypeId())));
+            if (!$field->getType() == 2 && !$field->getType() == 4)
+                return $this->redirect($this->generateUrl('admin_objectstypes_edittypes', array('id'=> $field->getObjectTypeId())));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title' => 'Редактирование',
             'item' => $field,
             'form' 		=> $form->createView(),
-            'type_field' => $field->getType()
+            'type_field' => $field->getType(),
+            'back' => $this->generateUrl('admin_objectstypes_edittypes', array('id'=> $field->getObjectTypeId()))
         ));
     }
 
@@ -275,7 +292,7 @@ class ObjectsTypesController extends Controller
         if ($field) {
             $object_type_id = $field->getObjectTypeId();
             $field->delete();
-            return $this->redirect($this->generateUrl('admin_objectstypes_edit', array('id'=> $object_type_id)));
+            return $this->redirect($this->generateUrl('admin_objectstypes_edittypes', array('id'=> $object_type_id)));
         }
 
         return $this->redirect($request->headers->get('referer'));
@@ -313,7 +330,8 @@ class ObjectsTypesController extends Controller
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title'     => 'Добавление значения',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'back'      => $this->generateUrl('admin_objectstypes_editfield', array('id'=> $id))
         ));
     }
 
@@ -355,7 +373,8 @@ class ObjectsTypesController extends Controller
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title'     => 'Добавление нескольких значений',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'back'      => $this->generateUrl('admin_objectstypes_editfield', array('id'=> $id))
         ));
     }
 
@@ -384,7 +403,8 @@ class ObjectsTypesController extends Controller
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
             'title'     => 'Редактирование',
-            'form' 		=> $form->createView()
+            'form' 		=> $form->createView(),
+            'back'      => $this->generateUrl('admin_objectstypes_editfield', array('id'=> $value->getFieldId()))
         ));
     }
 

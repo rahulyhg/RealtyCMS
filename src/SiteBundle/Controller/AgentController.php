@@ -35,7 +35,8 @@ class AgentController extends Controller
             ->orderBySort()
             ->find();
 		
-		$categories = ObjectTypesQuery::create()            
+		$categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 			
 		$agents = UserQuery::create()
@@ -64,6 +65,7 @@ class AgentController extends Controller
             ->find();
 
         $categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 
         $agent = UserQuery::create()

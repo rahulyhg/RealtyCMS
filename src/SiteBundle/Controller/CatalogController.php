@@ -192,7 +192,8 @@ class CatalogController extends Controller
             $on_page
         );
 		
-		$categories = ObjectTypesQuery::create()            
+		$categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 			
 		$category = null;
@@ -276,7 +277,8 @@ class CatalogController extends Controller
 		
         $catalog = $catalog_query->limit(4)->find();
 		
-		$categories = ObjectTypesQuery::create()            
+		$categories = ObjectTypesQuery::create()
+            ->orderBySort()
             ->find();
 			
         return $this->render('SiteBundle:Default:object.html.twig', array(

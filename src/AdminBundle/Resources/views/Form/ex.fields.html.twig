@@ -1,7 +1,7 @@
 {% if object_types_fields is defined %}
 <div class="clearfix">
     <h2>Характеристики объектов:</h2>
-    <div class="clearfix"><a href="{{ path('admin_objectstypes_addfield',{'id':item.id}) }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> Добавить поле</a></div><br>
+    <div class="clearfix"><a href="{{ path('admin_objectstypes_addfield',{'id':item.id}) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить характеристику</a></div><br>
     <div class="highlight">
 
         <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_objectstypes_sortfields') }}">
@@ -35,7 +35,7 @@
                     </td>
                 </tr>
             {% else %}
-                <tr><td colspan="6">Нет полей</td></tr>
+                <tr><td colspan="10">Нет характеристик</td></tr>
             {% endfor %}
             </tbody>
         </table>

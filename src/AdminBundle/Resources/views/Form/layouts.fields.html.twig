@@ -1,0 +1,40 @@
+{% if layouts is defined %}{% if layouts %}
+<div class="clearfix">
+    <h2>Характеристики планировок:</h2>
+    <div class="clearfix"><a href="{{ path('admin_layouts_addfield',{'id':item.id}) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить характеристику</a></div><br>
+    <div class="highlight">
+
+        <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_layouts_sortfields') }}">
+            <thead>
+            <tr>
+                <th>Порядок</th>
+                <th>ID</th>
+                <th>Поле</th>
+                <th>Тип поля</th>
+                <th>Значений</th>
+                <th>Обязательное</th>
+                <th colspan="2" class="action">Действия</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for field in item.LayoutsFieldss if field %}
+                <tr id="{{ field.id }}" data-sort="{{ field.sort }}">
+                    <td><i class="fa fa-ellipsis-v fa-fw handle"></i> {{ field.sort }}</td>
+                    <td>{{ field.id }}</td>
+                    <td><a href="{{ path('admin_layouts_editfield',{'id':field.id}) }}">{{ field.name }}</a></td>
+                    <td>{% if field.type == 1 %}Текстовое поле{% elseif field.type == 2 %}Список{% elseif field.type == 3 %}Числовое поле{% elseif field.type == 4 %}Числовой список{% else %}Флажок{% endif %}</td>
+                    <td>{% if field.LayoutsFieldsValuess|length %}{{ field.LayoutsFieldsValuess|length }}{% endif %}</td>
+                    <td>{% if field.required %}<span class="glyphicon glyphicon-ok"></span>{% endif %}</td>
+                    <td colspan="2" class="action">
+                        <a href="{{ path('admin_layouts_editfield',{'id':field.id}) }}" title="Редактировать"><span class="glyphicon glyphicon-edit"></span></a>&nbsp;
+                        <a class="confirm-delete" href="" data-toggle="modal" data-target="#deleteModal" data-path="{{ path('admin_layouts_deletefield',{'id':field.id}) }}" title="Удалить"><span class="glyphicon glyphicon-trash"></span></a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr><td colspan="8">Нет характеристик</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endif %}{% endif %}

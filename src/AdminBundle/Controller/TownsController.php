@@ -35,7 +35,8 @@ class TownsController extends Controller
         );
 
         return $this->render('AdminBundle:Default:towns.html.twig',array(
-            'pagination' 		=> $pagination
+            'pagination' 		=> $pagination,
+            'back' => $this->generateUrl('admin_default_index')
         ));
     }
 

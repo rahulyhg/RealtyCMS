@@ -73,6 +73,7 @@ class ObjectsTypesController extends Controller
                     $form['image']->getData()->move($dir, $Filename);
                     $item->setImage($Filename);
                     $image = new Image($dir.'/'.$Filename);
+                    $image->fit_to_width(600);
                     $image->save($dir.'/'.$Filename);
                 }
             }
@@ -121,6 +122,7 @@ class ObjectsTypesController extends Controller
                     $form['image']->getData()->move($dir, $Filename);
                     $item->setImage($Filename);
                     $image = new Image($dir.'/'.$Filename);
+                    $image->fit_to_width(600);
                     $image->save($dir.'/'.$Filename);
 					if ($oldimage) {
                         $fs = new Filesystem();

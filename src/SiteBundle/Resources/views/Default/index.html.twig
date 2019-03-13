@@ -69,6 +69,16 @@
 	<div class="container clearfix"><h1 class="tect-left">{{ settings.name }}</h1></div>
 	<div class="cates clearfix">
 		<div class="container text-center clearfix">
+			<div class="col-md-3 padding-0 clearfix">
+				<a class="tile img-box" href="//panoramaekt.nmarket.pro">
+					<div class="tile_bg" style="background-image:url('/images/cates/novostroyki.jpg');"></div>
+					<div class="tile-o">
+						<div class="tile-t">
+							<h3>Квартиры в новостройках</h3>
+						</div>
+					</div>
+				</a>
+			</div>
 			{% for cat in categories if cat %}
 				<div class="col-md-3 padding-0 clearfix">
 					<a class="tile img-box" href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">

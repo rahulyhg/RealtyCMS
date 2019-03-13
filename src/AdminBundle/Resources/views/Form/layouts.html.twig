@@ -2,8 +2,7 @@
 <div class="clearfix">
     <h2>Планировки:</h2>
     <div class="clearfix"><a href="{{ path('admin_layouts_add',{'id':item.id}) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить планировку</a></div><br>
-    <div class="highlight">
-
+    <div class="clearfix highlight table-responsive">
         <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_layouts_sort') }}">
             <thead>
             <tr>

@@ -2,7 +2,7 @@
 <div class="clearfix">
     <h2>Характеристики объектов:</h2>
     <div class="clearfix"><a href="{{ path('admin_objectstypes_addfield',{'id':item.id}) }}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-plus"></span> Добавить характеристику</a></div><br>
-    <div class="highlight">
+    <div class="clearfix highlight table-responsive">
 
         <table class="table table-striped table-hover" id="sortFixed" data-sort="{{ path('admin_objectstypes_sortfields') }}">
             <thead>

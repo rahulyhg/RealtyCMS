@@ -1,5 +1,6 @@
 {% extends 'SiteBundle::layout.html.twig' %}
-{% block title %}{{ object.title }} | {{ settings.name }}{% endblock %}
+{% set type = ['-','Продажа','Аренда'] %}
+{% block title %}{{ type[object.type] }}: {{ object.title }} - {{ object.ObjectTypes.title }} | {{ settings.name }}{% endblock %}
 {% block metatitle %}{{ object.title }}{% endblock %}
 {% block content %}
 
@@ -32,7 +33,6 @@
         <div class="clearfix">
             <div class="col-sm-6">
                 <h1>{{ object.title }}</h1>
-                {% set type = ['-','Продажа','Аренда'] %}                
                 <table class="table">
                     <tr><td>Тип сделки</td><td>{{ type[object.type] }}</td></tr>
                     <tr><td>Тип недвижимости</td><td>{{ object.ObjectTypes.title }}</td></tr>

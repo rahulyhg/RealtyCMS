@@ -1090,7 +1090,8 @@ ul.social-network li a {
     border-color: #00a0e4;
 }
 .plan_desc {
-    height: 105px;
+    height: 120px;
     overflow: hidden;
     opacity: .9;
+    font-size: 12px;
 }

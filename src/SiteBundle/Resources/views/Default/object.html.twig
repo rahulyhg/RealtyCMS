@@ -132,7 +132,7 @@
                                 </a>
                                 <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
                                 {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
-                                <h4><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h4>
+                                <h5><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h5>
                             </div>
                         </div>
                     </div>

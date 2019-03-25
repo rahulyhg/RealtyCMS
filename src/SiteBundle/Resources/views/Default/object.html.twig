@@ -2,6 +2,8 @@
 {% set type = ['-','Продажа','Аренда'] %}
 {% block title %}{{ type[object.type] }}: {{ object.title }} - {{ object.ObjectTypes.title }} | {{ settings.name }}{% endblock %}
 {% block metatitle %}{{ type[object.type] }}: {{ object.title }} - {{ object.ObjectTypes.title }}{% endblock %}
+{% block description %}{{ object.description | truncate(150, true) }}{% endblock %}
+{% block keywords %}{{ type[object.type] }},{{ object.ObjectTypes.title }},{{ settings.name }}{% endblock %}
 {% block content %}
 
     <div class="container object clearfix padding-0">

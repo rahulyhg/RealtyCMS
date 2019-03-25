@@ -49,7 +49,10 @@ class UsersController extends Controller
 
         $form = $formFactory->createForm();
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('roles', 'choice', array(
+            $form
+                ->add('position', 'text', array('label'  => 'Должность', 'required' => FALSE))
+                ->add('enabled', 'checkbox', array('label' => 'Активен', 'required' => FALSE))
+                ->add('roles', 'choice', array(
                 'choices' => $this->getExistingRoles(),
                 'data' => $item->getRoles(),
                 'label' => 'Группа',
@@ -94,7 +97,7 @@ class UsersController extends Controller
 
     public function getExistingRoles()
     {
-        $roles_array = array('ROLE_AGENT' => 'Менеджер','ROLE_ADMIN' => 'Администратор','ROLE_SUPER_ADMIN' => 'Суперпользователь');
+        $roles_array = array('ROLE_AGENT' => 'Специалист','ROLE_ADMIN' => 'Администратор','ROLE_SUPER_ADMIN' => 'Суперпользователь');
         $roleHierarchy = $this->container->getParameter('security.role_hierarchy.roles');
         $roles = array_keys($roleHierarchy);
 
@@ -115,7 +118,10 @@ class UsersController extends Controller
         $formFactory = $this->container->get('fos_user.profile.form.factory');
         $form = $formFactory->createForm();
         if ($this->get('security.authorization_checker')->isGranted('ROLE_SUPER_ADMIN')) {
-            $form->add('roles', 'choice', array(
+            $form
+                ->add('position', 'text', array('label'  => 'Должность', 'required' => FALSE))
+                ->add('enabled', 'checkbox', array('label' => 'Активен', 'required' => FALSE))
+                ->add('roles', 'choice', array(
                 'choices' => $this->getExistingRoles(),
                 'data' => $item->getRoles(),
                 'label' => 'Группа',

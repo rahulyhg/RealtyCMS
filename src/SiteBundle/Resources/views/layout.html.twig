@@ -197,11 +197,11 @@
                                 {% if menu.Pagess|length %}
                                     {% if menu.Pagess[0] is defined %}
                                         <li class="hidden-xs">
-                                            <a class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
+                                            <a class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.Pagess[0].alias}) }}">{{ menu.title }}</a>
                                         </li>
                                     {% endif %}
                                 {% elseif menu.module %}
-                                    <li class="hidden-xs"><a  class="text-nowrap text-uppercase text-bold" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
+                                    <li class="hidden-xs"><a  class="text-nowrap" href="{{ path('site_default_page', {'alias':menu.module}) }}">{{ menu.title }}</a></li>
                                 {% endif %}
                             {% endfor %}
                             <br>

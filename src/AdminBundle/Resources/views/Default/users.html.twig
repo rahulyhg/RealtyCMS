@@ -24,6 +24,7 @@
                     <th>#</th>
                     <th>Пользователь</th>
                     <th>Email</th>
+                    <th>Активен</th>
                     <th>Фото</th>
                     <th class="action">Действия</th>
                 </tr>
@@ -34,6 +35,7 @@
                         <td>{{ item.id }}</td>
                         <td><a href="{{ path('admin_users_edit', {'id': item.id}) }}" title="Редактировать">{{ item.Username }}</a></td>
                         <td><a href="{{ path('admin_users_edit', {'id': item.id}) }}" title="Редактировать">{{ item.email }}</a></td>
+                        <td>{% if item.enabled %}<i class="fa fa-check"></i>{% endif %}</td>
                         <td>{% if item.photo %}<i class="fa fa-picture-o"></i>{% endif %}</td>
                         <td class="action">
                             {% if 'ROLE_SUPER_ADMIN' in app.user.Roles %}

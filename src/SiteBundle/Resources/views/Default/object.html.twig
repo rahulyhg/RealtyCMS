@@ -124,7 +124,7 @@
                 {% endif %}
                 {% if object.userId %}
                     <div class="col-sm-3 text-center">
-                        <h3 class="text-center">Менеджер</h3>
+                        <h3 class="text-center">Специалист по недвижимости</h3>
                         <div id="owl-agents">
                             <div class="item text-center">
                                 <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о менеджере">
@@ -174,12 +174,11 @@
                             <h4 class="text-center nobreak">{{ item.title }}</h4>
                             <h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
                             <div class="plan_desc"><table class="table">
-                                    <tr><td><b>{{ item.Towns.title }}</b></td><td>{% if item.Areas %}{{ item.Areas.title }}{% endif %}</td></tr>
-                                    <tr><td colspan="2">{{ item.address }}</td></tr>
+                                    <tr><td colspan="2">г. {{ item.Towns.title }}{% if item.Areas %}, {{ item.Areas.title }} р-н{% endif %}, {{ item.address }}</td></tr>
                                     {% for param in item.ObjectParamssForTable() if param %}
-                                        {% if loop.index is odd %}<tr>{% endif %}
-                                        <td>{{ param.ObjectTypesFields.filterName }}: <b>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</b></td>
-                                        {% if loop.index is even %}</tr>{% endif %}
+                                        <tr>
+                                            <td><b>{{ param.ObjectTypesFields.filterName }}:</b> {{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td>
+                                        </tr>
                                     {% endfor %}
                                 </table></div>
                             <div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>

@@ -46,8 +46,6 @@ class UsersType extends AbstractType
             ))
             ->add('photo', 'file', array('label'  => 'Фотография', 'required' => FALSE))
             ->add('phone', 'text', array('label'  => 'Номер телефона', 'attr' => array('data-inputmask' => "'mask': '+9(999)999-9999'"), 'required' => FALSE))
-            ->add('position', 'text', array('label'  => 'Должность', 'required' => FALSE))
-            //->add('save', 'submit', array('label'  => 'Сохранить',))
             ->getForm();
 
     }

@@ -57,7 +57,7 @@ class ObjectsAdminType extends AbstractType
             ->add('user_id', 'choice', array(
                 'choices' => $users,
                 'attr' => array('class' => 'form-control'),
-                'label' => 'Менеджер',
+                'label' => 'Специалист',
                 'required' => TRUE
             ))
             //->add('title', 'text', array('label' => 'Название',))

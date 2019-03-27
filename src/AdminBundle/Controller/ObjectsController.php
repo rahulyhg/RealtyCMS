@@ -62,7 +62,7 @@ class ObjectsController extends Controller
             $filter_form->add('UserId', 'choice', array(
                 'empty_value' => '- все -',
                 'choices' => $users,
-                'label' => 'Консультант',
+                'label' => 'Специалист',
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
                 'required' => false
@@ -72,7 +72,7 @@ class ObjectsController extends Controller
             $users = array($user->getId() => $user->getUsername());
             $filter_form->add('UserId', 'choice', array(
                 'choices' => $users,
-                'label' => 'Консультант',
+                'label' => 'Специалист',
                 'attr' => array('class' => 'form-control'),
                 'multiple' => false,
                 'required' => true
@@ -461,6 +461,7 @@ class ObjectsController extends Controller
                 $image = new Image($dir.'/'.$Filename);
                 $image->overlay('images/watermark.png', 'bottom right',
                     .9, -5, -5);
+                $image->best_fit(1400,1000);
                 $image->save($dir.'/'.$Filename);
                 $nimage->setPath($Filename);
                 $nimage->setObjectId($id);

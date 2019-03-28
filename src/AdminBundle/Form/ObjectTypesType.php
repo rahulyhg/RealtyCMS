@@ -37,6 +37,7 @@ class ObjectTypesType extends AbstractType
             )
             ->add('generator', 'text', array('label'  => 'Генератор Названий Объектов', 'required' => false))
             ->add('sort', 'text', array('label'  => 'Порядок', 'required' => FALSE))
+            ->add('live', 'checkbox', array('label' => 'Жилая недвижимость', 'required' => FALSE))
             ->add('layouts', 'checkbox', array('label' => 'Содержит планировки', 'required' => FALSE))
             ->add('generator_layout', 'text', array('label'  => 'Генератор Названий Планировок', 'required' => false))
             ->getForm();

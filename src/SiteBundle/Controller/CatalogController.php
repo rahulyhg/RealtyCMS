@@ -178,6 +178,11 @@ class CatalogController extends Controller
 
             $catalog_query->where('Objects.Id IN ?', $objects_where);
         }
+
+        if (@$request->query->get('home')) {
+            $live = ObjectTypesQuery::create()->filterByLive(true)->find()->toKeyValue('Id','Id');
+            $catalog_query->filterByTypeObject($live);
+        }
         
 		// Сортировка
         $dir = @$request->query->get('dir') ?: (@$request->cookies->get('dir') ?: 'asc');
@@ -225,6 +230,7 @@ class CatalogController extends Controller
     public function aliasAction($alias, Request $request)
     {
         if ($alias) {
+            if ($alias == 'arenda') return $this->redirect($this->generateUrl('site_catalog_index', array('type' => 2, 'home' => 'yes')));
             $cat = ObjectTypesQuery::create()
                 ->filterByAlias($alias)->findOne();
             if (!$cat) {

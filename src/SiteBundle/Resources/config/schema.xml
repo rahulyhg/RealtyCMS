@@ -156,6 +156,7 @@
         <column name="generator" type="varchar" size="255" required="false"/>
         <column name="generator_layout" type="varchar" size="255" required="false"/>
         <column name="sort" type="integer" required="false"/>
+        <column name="live" type="boolean" defaultValue="false" required="false"/>
         <column name="layouts" type="boolean" defaultValue="false" required="false"/>
     </table>
 
@@ -219,7 +220,7 @@
         <column name="town_id" type="integer" required="true"/>
         <column name="area_id" type="integer" required="false"/>
         <column name="price" type="integer" required="false"/>
-        <column name="for_all" type="boolean" defaultValue="0"/> 
+        <column name="for_all" type="boolean" defaultValue="0"/>
         <column name="published" type="boolean" defaultValue="0"/>        
         <column name="modered" type="boolean" defaultValue="0"/>
         <column name="xml" type="boolean" defaultValue="0"/>

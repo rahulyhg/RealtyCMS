@@ -90,18 +90,21 @@ class TownsController extends Controller
         if ($form->isValid()) {
             $item->save();
             if ($form['areas']->getData()) {
-                $cnt=0;
-                AreasQuery::create()
-                    ->filterByTownId($item->getId())
-                    ->delete();
+                $cnt = 0;
+                $areas_ids = array();
                 $areas = explode(',',$form['areas']->getData());
                 foreach ($areas as $area_name) {
-                    $area = new Areas();
-                    $area->setTitle(trim($area_name));
-                    $area->setTownId($item->getId());
-                    $area->save();
-                    $cnt++;
+                    $area = AreasQuery::create()->filterByTownId($item->getId())->filterByTitle(trim($area_name))->findOne();
+                    if (!$area) {
+                        $area = new Areas();
+                        $area->setTitle(trim($area_name));
+                        $area->setTownId($item->getId());
+                        $area->save();
+                        $cnt++;
+                    }
+                    $areas_ids[] = $area->getId();
                 }
+                if ($areas_ids) AreasQuery::create()->filterByTownId($item->getId())->filterById($areas_ids,\Criteria::NOT_IN)->delete();
             }
             $this->get('session')->getFlashBag()->add(
                 'notice',

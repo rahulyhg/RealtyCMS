@@ -864,6 +864,7 @@ ul.social-network li a {
     }
     .masthead .our_phones {
         text-align: left;
+        font-size: 15px !important;
     }
     .dropdown-submenu.open .dropdown-menu {
         background-color: #ffffff;

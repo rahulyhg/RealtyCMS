@@ -230,7 +230,7 @@
         <foreign-key foreignTable="towns" onDelete="CASCADE" onUpdate="CASCADE">
             <reference local="town_id" foreign="id"/>
         </foreign-key>
-        <foreign-key foreignTable="areas" onDelete="CASCADE" onUpdate="CASCADE">
+        <foreign-key foreignTable="areas" onDelete="SETNULL" onUpdate="CASCADE">
             <reference local="area_id" foreign="id"/>
         </foreign-key>
 		<foreign-key foreignTable="object_types" onDelete="SETNULL" onUpdate="CASCADE">

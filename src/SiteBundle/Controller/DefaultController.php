@@ -54,6 +54,19 @@ class DefaultController extends Controller
     }
 
     /**
+     * @Route("/robots.txt", defaults={"_format": "txt"},)
+     */
+    public function robotsAction()
+    {
+        $settings = SettingsQuery::create()
+            ->findOne();
+
+        return $this->render('SiteBundle:Default:robots.html.twig', array(
+            'robots'        => $settings->getRobots(),
+        ));
+    }
+
+    /**
      * @Route("/post")
      */
     public function postAction(Request $request)

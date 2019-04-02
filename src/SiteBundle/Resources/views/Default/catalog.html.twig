@@ -25,7 +25,7 @@
 			</div>
 		</div>
 		<div class="catalog clearfix">
-			<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% endif %}</h1>
+			<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% elseif type %} <small>{{ type }}</small>{% endif %}</h1>
 			<div class="clearfix">
 				<div class="col-md-6 clearfix padding-0 padding-top-5">
 					<div class="btn-group padding-5" role="group" aria-label="...">

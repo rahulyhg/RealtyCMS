@@ -28,16 +28,16 @@ class ObjectsAdminType extends AbstractType
     {
 
         $users = UserQuery::create()
-            ->find()->toKeyValue('id', 'Username');
+            ->orderByPosition()->orderByUsername()->find()->toKeyValue('id', 'Username');
 
         $towns = TownsQuery::create()
-            ->find()->toKeyValue('id', 'Title');
+            ->orderByTitle()->find()->toKeyValue('id', 'Title');
 
         $areas = [];
         if ($options['data']->getTownId()) {
             $areas = AreasQuery::create()
                 ->filterByTownId($options['data']->getTownId())
-                ->find()->toKeyValue('id', 'Title');
+                ->orderByTitle()->find()->toKeyValue('id', 'Title');
         }
         $types = array(
             1 => 'Продажа',
@@ -173,7 +173,7 @@ class ObjectsAdminType extends AbstractType
             if (@$data['town_id']) {
                 $areas = AreasQuery::create()
                     ->filterByTownId($data['town_id'])
-                    ->find()->toKeyValue('id', 'Title');
+                    ->orderByTitle()->find()->toKeyValue('id', 'Title');
                 $form->add('area_id', 'choice', array(
                     'choices' => $areas,
                     'label' => 'Район',

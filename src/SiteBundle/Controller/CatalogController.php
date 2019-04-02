@@ -270,7 +270,7 @@ class CatalogController extends Controller
         $catalog_query->filterByPublished(true);
         $catalog_query->filterByModered(true);        
         $catalog_query->filterByTownId($object->getTownId());
-        $catalog_query->filterByAreaId($object->getAreaId());
+        //$catalog_query->filterByAreaId($object->getAreaId());
         $catalog_query->filterByTypeObject($object->getTypeObject());
         $catalog_query->filterByType($object->getType());
         $catalog_query->where('price >='.($object->getPrice() - $price_avg));

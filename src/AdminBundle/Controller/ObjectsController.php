@@ -129,7 +129,7 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if ($item->getAddress() && $item->getTownId()) {
+            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) {
                 $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
                 $item->setAddress($this->get_cool_address('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
             }
@@ -202,7 +202,7 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if ($item->getAddress() && $item->getTownId()) {
+            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) {
                 $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
                 $item->setAddress($this->get_cool_address('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
             }
@@ -276,7 +276,7 @@ class ObjectsController extends Controller
         $item->setTownId($old_item->getTownId());
         $item->setAreaId($old_item->getAreaId());
         $item->setAddress($old_item->getAddress());
-		$item->setCoordinates($old_item->getCoordinates());
+		//$item->setCoordinates($old_item->getCoordinates());
         $item->setType($old_item->getType());
         $item->setTypeObject($old_item->getTypeObject());
         $item->setPrice($old_item->getPrice());
@@ -294,7 +294,10 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
+            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) {
+                $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+                $item->setAddress($this->get_cool_address('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+            }
             $item->save();
             if ($item->getTypeObject()) {
                 $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();

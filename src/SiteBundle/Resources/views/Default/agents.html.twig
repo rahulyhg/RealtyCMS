@@ -12,12 +12,12 @@
                     <div class="col-sm-6 col-md-3 padding-0 agent">
                         <div class="clearfix">
                             <div class="col-xs-5 padding-5">
-                                <a href="{{ path('site_agent_agent', {'id': agent.id}) }}">
+                                <a href="{{ path('site_agent_agent', {'id': agent.id}) }}" title="{{ agent.username }}">
                                     <img class="img-circle img-responsive" src="/images/photo/{{ agent.photo }}" width="150" alt="{{ agent.username }}">
                                 </a>
                             </div>
                             <div class="col-xs-7 padding-5">
-                                <h4>{{ agent.username }}</h4>
+                                <a href="{{ path('site_agent_agent', {'id': agent.id}) }}"><h4>{{ agent.username }}</h4></a>
                                 {% if agent.position %}<h5>{{ agent.position }}</h5>{% endif %}
                             </div>
                         </div>

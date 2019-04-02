@@ -129,10 +129,10 @@
                         <h3 class="text-center">Специалист по недвижимости</h3>
                         <div id="owl-agents">
                             <div class="item text-center">
-                                <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о специалисте по недвижимости">
-                                    <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}">
+                                <a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="{{ object.User.username }}">
+                                    <img class="img-circle" src="/images/photo/{{ object.User.photo }}" width="150" alt="{{ object.User.username }}" title="{{ object.User.username }}">
                                 </a>
-                                <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="Перейти к информации о специалисте по недвижимости">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
+                                <h4><a href="{{ path('site_agent_agent', {'id': object.User.id}) }}" title="{{ object.User.username }}">{{ object.User.username }}</a>{% if object.User.position %}<br><small>{{ object.User.position }}</small>{% endif %}</h4>
                                 {% if object.User.phone %}<h4><i class="fa fa-phone fa-fw"></i> <a href="tel:{{ object.User.phone }}" title="Позвонить">{{ object.User.phone }}</a></h4>{% endif %}
                                 <h5><i class="fa fa-envelope-o fa-fw"></i> <a href="mailto:{{ object.User.email }}" title="Написать письмо">{{ object.User.email }}</a></h5>
                             </div>

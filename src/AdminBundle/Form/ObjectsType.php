@@ -28,13 +28,13 @@ class ObjectsType extends AbstractType
     {
 
         $towns = TownsQuery::create()
-            ->find()->toKeyValue('id', 'Title');
+            ->orderByTitle()->find()->toKeyValue('id', 'Title');
 
         $areas = [];
         if ($options['data']->getTownId()) {
             $areas = AreasQuery::create()
                 ->filterByTownId($options['data']->getTownId())
-                ->find()->toKeyValue('id', 'Title');
+                ->orderByTitle()->find()->toKeyValue('id', 'Title');
         }
         $types = array(
             1 => 'Продажа',
@@ -161,7 +161,7 @@ class ObjectsType extends AbstractType
             if (@$data['town_id']) {
                 $areas = AreasQuery::create()
                     ->filterByTownId($data['town_id'])
-                    ->find()->toKeyValue('id', 'Title');
+                    ->orderByTitle()->find()->toKeyValue('id', 'Title');
                 $form->add('area_id', 'choice', array(
                     'choices' => $areas,
                     'label' => 'Район',

@@ -8,7 +8,11 @@ class ObjectTypes extends BaseObjectTypes
 {
     public function min_price()
     {
-        $price_array = $this->getObjectss()->toKeyValue('Price','Price');
+        $price_array = array();
+        $objects = $this->getObjectss();
+        foreach ($objects as $object) {
+            if ($object->getType() == 1) $price_array[] = $object->getPrice();
+        }
         return count($price_array) ? min($price_array) : 0;
     }
 

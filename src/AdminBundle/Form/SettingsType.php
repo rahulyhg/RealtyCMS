@@ -54,6 +54,7 @@ class SettingsType extends AbstractType
 			->add('counters', 'textarea', array('label'  => 'Счетчики (код)', 'required' => FALSE, 'attr' => array('rows' => 8)))
             ->add('robots', 'textarea', array('label'  => 'Robots.txt', 'required' => true, 'attr' => array('rows' => 8)))
             ->add('favicon', 'file', array('label'  => 'Иконка', 'required' => FALSE, 'mapped' => false))
+            ->add('yandex', 'text', array('label'  => 'Яндекс Вебмастер', 'required' => FALSE))
             ->add('logo_top', 'file', array('label'  => 'Логотип верхний', 'required' => FALSE, 'mapped' => false))
             ->add('logo_bottom', 'file', array('label'  => 'Логотип нижний', 'required' => FALSE, 'mapped' => false))
             ->add('facebook', 'text', array('label'  => 'Страница Facebook', 'required' => FALSE))

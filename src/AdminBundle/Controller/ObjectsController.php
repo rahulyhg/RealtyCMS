@@ -42,7 +42,7 @@ class ObjectsController extends Controller
         $items_query->orderBy($sort, $dir);
 
         // Поиск
-        if (@$request->query->get('query')) $items_query->filterByTitle('%' . $request->query->get('query') . '%');
+        if (@$request->query->get('query')) $items_query->filterByTitle('%' . $request->query->get('query') . '%')->_or()->filterByAddress('%' . $request->query->get('query') . '%');
 
         // Фильтр
         $filter_form = $this->createForm(new FilterType());
@@ -129,8 +129,11 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
-			$item->save();
+            if ($item->getAddress() && $item->getTownId()) {
+                $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+                $item->setAddress($this->get_cool_address('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+            }
+            $item->save();
             if ($item->getTypeObject()) {
                 $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();
                 foreach ($fields as $field) {
@@ -199,7 +202,10 @@ class ObjectsController extends Controller
         }
         $form->handleRequest($request);
         if ($form->isValid()) {
-            if (!$item->getCoordinates() && $item->getAddress() && $item->getTownId()) $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle().', '.$item->getAddress()));
+            if ($item->getAddress() && $item->getTownId()) {
+                $item->setCoordinates($this->get_coordinates('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+                $item->setAddress($this->get_cool_address('Россия, ' . $item->getTowns()->getTitle() . ', ' . $item->getAddress()));
+            }
 			$item->save();
             if ($item->getTypeObject()) {
                 $fields = ObjectTypesFieldsQuery::create()->filterByObjectTypeId($item->getTypeObject())->orderByType()->orderByName()->find();
@@ -244,7 +250,7 @@ class ObjectsController extends Controller
                 'notice',
                 '"'.$nitem->getTitle().'" успешно сохранено!'
             );
-            //return $this->redirect($this->generateUrl('admin_objects_index'));
+            return $this->redirect($this->generateUrl('admin_objects_edit', array('id' => $id)));
         }
 
         return $this->render('AdminBundle:Form:edit.html.twig',array(
@@ -445,34 +451,46 @@ class ObjectsController extends Controller
         $item = ObjectsQuery::create()
             ->filterById($id)
             ->findOne();
-        $nimage = new ObjectImages();
         if ($request->files->get('path')) {
-            $dir = 'images/objects';
-            $file_type = $request->files->get('path')->getMimeType();
-            $uniqid = uniqid();
-            switch($file_type) {
-                case 'image/png': $Filename = $uniqid.'.png';$Thumb = $uniqid.'_thumb.png'; break;
-                case 'image/jpeg': $Filename = $uniqid.'.jpg';$Thumb = $uniqid.'_thumb.jpg'; break;
-                case 'image/gif': $Filename = $uniqid.'.gif';$Thumb = $uniqid.'_thumb.gif'; break;
-                default: $Filename = NULL;
-            }
-            if ($Filename) {
-                $request->files->get('path')->move($dir, $Filename);
-                $image = new Image($dir.'/'.$Filename);
-                $image->overlay('images/watermark.png', 'bottom right',
-                    .9, -5, -5);
-                $image->best_fit(1400,1000);
-                $image->save($dir.'/'.$Filename);
-                $nimage->setPath($Filename);
-                $nimage->setObjectId($id);
-                $nimage->setAlt($item->getTitle());
-                $nimage->setTitle(@$request->request->get('title')?:$item->getTitle());
-                if ($Thumb) {
-                    $image->fit_to_width(400);
-                    $image->save($dir . '/' . $Thumb);
-                    $nimage->setThumb($Thumb);
+            foreach ($request->files->get('path') as $path) {
+                $nimage = new ObjectImages();
+                $dir = 'images/objects';
+                $file_type = $path->getMimeType();
+                $uniqid = uniqid();
+                switch ($file_type) {
+                    case 'image/png':
+                        $Filename = $uniqid . '.png';
+                        $Thumb = $uniqid . '_thumb.png';
+                        break;
+                    case 'image/jpeg':
+                        $Filename = $uniqid . '.jpg';
+                        $Thumb = $uniqid . '_thumb.jpg';
+                        break;
+                    case 'image/gif':
+                        $Filename = $uniqid . '.gif';
+                        $Thumb = $uniqid . '_thumb.gif';
+                        break;
+                    default:
+                        $Filename = NULL;
                 }
-                $nimage->save();
+                if ($Filename) {
+                    $path->move($dir, $Filename);
+                    $image = new Image($dir . '/' . $Filename);
+                    $image->overlay('images/watermark.png', 'bottom right',
+                        .9, -5, -5);
+                    $image->best_fit(1400, 1000);
+                    $image->save($dir . '/' . $Filename);
+                    $nimage->setPath($Filename);
+                    $nimage->setObjectId($id);
+                    $nimage->setAlt($item->getTitle());
+                    $nimage->setTitle(@$request->request->get('title') ?: $item->getTitle());
+                    if ($Thumb) {
+                        $image->fit_to_width(400);
+                        $image->save($dir . '/' . $Thumb);
+                        $nimage->setThumb($Thumb);
+                    }
+                    $nimage->save();
+                }
             }
         }
 
@@ -540,6 +558,17 @@ class ObjectsController extends Controller
             $coord = $result->GeoObjectCollection->featureMember[0]->GeoObject->Point->pos;
             $array_coord = str_replace(' ',',', $coord);
             return $array_coord;
+        }
+        return false;
+    }
+
+    // Получение координат из Яндекса по адресу
+    function get_cool_address($address)
+    {
+        $urlXml = "https://geocode-maps.yandex.ru/1.x/?geocode=" . urlencode($address);
+        $result = @simplexml_load_file($urlXml);
+        if ($result) {
+            return $result->GeoObjectCollection->featureMember[0]->GeoObject->name;
         }
         return false;
     }

@@ -293,6 +293,9 @@ a:hover, a:focus {
     padding-top: 20px;
     padding-bottom: 30px;
 }
+.agent {
+    min-height: 120px;
+}
 .docs .item img {
     padding:20px;
 }

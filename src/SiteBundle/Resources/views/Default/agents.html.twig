@@ -9,7 +9,7 @@
 			<div class="clearfix catalog">
 				<h1 class="padding-5">Наши сотрудники</h1><hr>
                 {% for agent in agents if agent %}
-                    <div class="col-sm-6 col-md-3 padding-0">
+                    <div class="col-sm-6 col-md-3 padding-0 agent">
                         <div class="clearfix">
                             <div class="col-xs-5 padding-5">
                                 <a href="{{ path('site_agent_agent', {'id': agent.id}) }}">

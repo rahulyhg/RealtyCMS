@@ -6,6 +6,53 @@ use SiteBundle\Model\om\BaseObjects;
 
 class Objects extends BaseObjects
 {
+
+    public function getObjectImagess($criteria = null, \PropelPDO $con = null)
+    {
+        $partial = $this->collObjectImagessPartial && !$this->isNew();
+        if (null === $this->collObjectImagess || null !== $criteria  || $partial) {
+            if ($this->isNew() && null === $this->collObjectImagess) {
+                // return empty collection
+                $this->initObjectImagess();
+            } else {
+                $collObjectImagess = ObjectImagesQuery::create(null, $criteria)
+                    ->filterByObjects($this)
+                    ->orderBySrt()
+                    ->find($con);
+                if (null !== $criteria) {
+                    if (false !== $this->collObjectImagessPartial && count($collObjectImagess)) {
+                        $this->initObjectImagess(false);
+
+                        foreach ($collObjectImagess as $obj) {
+                            if (false == $this->collObjectImagess->contains($obj)) {
+                                $this->collObjectImagess->append($obj);
+                            }
+                        }
+
+                        $this->collObjectImagessPartial = true;
+                    }
+
+                    $collObjectImagess->getInternalIterator()->rewind();
+
+                    return $collObjectImagess;
+                }
+
+                if ($partial && $this->collObjectImagess) {
+                    foreach ($this->collObjectImagess as $obj) {
+                        if ($obj->isNew()) {
+                            $collObjectImagess[] = $obj;
+                        }
+                    }
+                }
+
+                $this->collObjectImagess = $collObjectImagess;
+                $this->collObjectImagessPartial = false;
+            }
+        }
+
+        return $this->collObjectImagess;
+    }
+
     public function getImage()
     {
         $image = NULL;

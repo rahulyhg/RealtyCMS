@@ -41,6 +41,8 @@ class AgentController extends Controller
 			
 		$agents = UserQuery::create()
             ->filterByRole('ROLE_AGENT')
+            ->orderByPosition()
+            ->orderByUsername()
             ->find();
 
         $response = $this->render('SiteBundle:Default:agents.html.twig', array(

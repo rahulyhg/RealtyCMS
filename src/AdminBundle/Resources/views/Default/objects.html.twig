@@ -69,6 +69,7 @@
                     <th>Название</th>
                     <th>Тип объекта</th>
                     <th>Город</th>
+                    <th>Адрес</th>
                     <th>Стоимость объекта</th>
                     <th>Планировки</th>
                     <th>Опубликовано</th>
@@ -85,6 +86,7 @@
                         <td><a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
                         <td>{{ item.ObjectTypes.Title }}</td>
                         <td>{{ item.Towns.title }}</td>
+                        <td>{{ item.Address }}</td>
                         <td>{{ item.price|number_format(0,'.',' ') }}</td>
                         <td>{% if item.ObjectLayoutss|length %}{{ item.ObjectLayoutss|length }}{% endif %}</td>
                         <td>{% if item.Published %}<i class="fa fa-check"></i>{% endif %}</td>

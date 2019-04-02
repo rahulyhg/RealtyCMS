@@ -1099,3 +1099,13 @@ ul.social-network li a {
     opacity: .9;
     font-size: 12px;
 }
+.type {
+    background: #2196f3bf;
+    font-size: 14px;
+    position: absolute;
+    margin: 4px;
+    padding: 2px 8px;
+    border: 0;
+    color: #ffffff;
+    text-shadow: 0 0 4px #2196f3;
+}

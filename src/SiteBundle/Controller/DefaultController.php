@@ -18,7 +18,9 @@ use Symfony\Component\HttpFoundation\Request;
 class DefaultController extends Controller
 {
     /**
-     * @Route("/")
+     * @Route("/",
+     *      options={"sitemap" = {"priority" = 1, "changefreq" = "weekly", "section" = "default" }}
+     * )
      */
     public function indexAction(Request $request)
     {

@@ -26,6 +26,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Knp\Bundle\PaginatorBundle\KnpPaginatorBundle(),
             new Genemu\Bundle\FormBundle\GenemuFormBundle(),
+            new Presta\SitemapBundle\PrestaSitemapBundle(),
             new AdminBundle\AdminBundle(),
             new SiteBundle\SiteBundle(),
         );

@@ -137,6 +137,9 @@ fos_user:
                 name:               fos_user_profile_form
                 validation_groups:  [Profile, Default]
 
+presta_sitemap:
+    timetolive: 3600
+
 knp_paginator:
     page_range: 3
     default_options:

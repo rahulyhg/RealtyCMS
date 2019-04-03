@@ -10,3 +10,6 @@ site:
     resource: "@SiteBundle/Controller/"
     type:     annotation
     prefix:   /
+
+presta_sitemap:
+    resource: "@PrestaSitemapBundle/Resources/config/routing.yml"

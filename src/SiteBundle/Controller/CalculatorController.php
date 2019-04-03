@@ -24,7 +24,9 @@ class CalculatorController extends Controller
 {
 
 	/**
-     * @Route("/calculator")
+     * @Route("/calculator",
+     *      options={"sitemap" = {"priority" = 0.7, "changefreq" = "weekly", "section" = "default" }}
+     * )
      */
     public function indexAction(Request $request)
     {        

@@ -37,7 +37,9 @@ class CatalogController extends Controller
     }
 	
 	/**
-     * @Route("/catalog")
+     * @Route("/catalog",
+     *      options={"sitemap" = {"priority" = 0.5, "changefreq" = "weekly", "section" = "catalog" }}
+     * )
      */
     public function indexAction(Request $request)
     {        

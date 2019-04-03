@@ -24,7 +24,9 @@ class AgentController extends Controller
 {
 
 	/**
-     * @Route("/agents")
+     * @Route("/agents",
+     *      options={"sitemap" = {"priority" = 0.7, "changefreq" = "weekly", "section" = "agents" }}
+     * )
      */
     public function indexAction(Request $request)
     {        
@@ -55,7 +57,9 @@ class AgentController extends Controller
     }
 
     /**
-     * @Route("/agent/{id}")
+     * @Route("/agent/{id}",
+     *      requirements={"id" = "\d+"}
+     * )
      */
     public function agentAction($id, Request $request)
     {

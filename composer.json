@@ -26,7 +26,7 @@
         "willdurand/propel-typehintable-behavior": "1.0.5",
         "swiftmailer/swiftmailer": "5.4.*",
         "symfony/assetic-bundle": "2.1.*",
-        "presta/sitemap-bundle": "dev-master",
+        "presta/sitemap-bundle": "1.5.x-dev",
         "propel/propel-bundle": "1.5.*",
         "propel/propel1": "1.7.1",
         "friendsofsymfony/user-bundle": "2.0.0-alpha1",

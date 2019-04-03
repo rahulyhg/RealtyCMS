@@ -61,7 +61,7 @@ class CatalogController extends Controller
         $filter_array_value = array();
         $filter_array_between = array();
 
-
+        $catalog_query = ObjectsQuery::create('Objects');
         foreach ($search_form->all() as $item) {
             if ($item->getData()) {
                 //var_dump($item->getName(),$item->getData(),gettype($item->getData()));
@@ -127,9 +127,8 @@ class CatalogController extends Controller
                     } else {
                         $item_name = ucfirst(PropelInflector::camelize((string)$item_name));
                         if (is_array($item_data)) {
-                            foreach ($item_data as $item_data_i) {
-                                $filter_array[$item_name] = $item_data_i;
-                            }
+                            $method = 'filterBy'.$item_name;
+                            $catalog_query->$method($item_data);
                         } else {
                             $filter_array[$item_name] = $item_data;
                         }
@@ -138,7 +137,6 @@ class CatalogController extends Controller
             }
         }
 
-        $catalog_query = ObjectsQuery::create('Objects');
         //$catalog_query->filterByForAll(true);
         $catalog_query->filterByPublished(true);
         $catalog_query->filterByModered(true);

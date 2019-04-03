@@ -22,7 +22,8 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Название</th>
+                    <th>Название нас.пункта</th>
+                    <th>Написание нас.пункта</th>
                     <th>Районов</th>
                     <th class="action">Действия</th>
                 </tr>
@@ -32,6 +33,7 @@
                     <tr>
                         <td>{{ item.id }}</td>
                         <td><a href="{{ path('admin_towns_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
+                        <td>{{ item.pagetitle }}</td>
                         <td>{{ item.Areass|length }}</td>
                         <td class="action">
                             <a href="{{ path('admin_towns_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>

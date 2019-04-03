@@ -129,6 +129,7 @@
         </vendor>
         <column name="id" type="integer" required="true" primaryKey="true" autoIncrement="true" />
         <column name="title" type="varchar" size="255" required="true"/>
+        <column name="pagetitle" type="varchar" size="255" required="true"/>
     </table>
 
     <table name="areas" phpName="Areas">

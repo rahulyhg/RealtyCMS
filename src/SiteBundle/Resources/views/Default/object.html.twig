@@ -35,12 +35,12 @@
         <div class="clearfix">
             <div class="col-sm-6">
                 <h1>{{ object.title }}</h1>
-                <table class="table">
+                <table class="table table-hover table-striped">
                     <tr><td>Тип сделки</td><td>{{ type[object.type] }}</td></tr>
                     <tr><td>Тип недвижимости</td><td>{{ object.ObjectTypes.title }}</td></tr>
-                    <tr><td>Населенный пункт</td><td>{{ object.Towns.title }}</td></tr>
-                    {% if object.Areas %}<tr><td>Район</td><td>{{ object.Areas.title }}</td></tr>{% endif %}
-                    {% if object.address %}<tr><td>Адрес</td><td>{{ object.address }}</td></tr>{% endif %}
+                    <tr><td>Населенный пункт</td><td>{% if object.Towns.pagetitle %}{{ object.Towns.pagetitle }}{% else %}{{ object.Towns.title }}{% endif %}</td></tr>
+                    {% if object.Areas %}<tr><td>Район/Микрорайон</td><td>{{ object.Areas.title }}</td></tr>{% endif %}
+                    {% if object.address %}<tr><td>Адрес объекта</td><td><a href="#map">{{ object.address }}</a></td></tr>{% endif %}
                     {% for param in object.ObjectParamss() if param %}
                         <tr><td>{{ param.ObjectTypesFields.name }}</td><td>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td></tr>
                     {% endfor %}

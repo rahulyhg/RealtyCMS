@@ -1,0 +1,23 @@
+{% set type = ['-','Продажа','Аренда'] %}
+<div class="col-sm-6 col-md-3 padding-5">
+    <div class="thumbnail">
+        <a href="{{ path('site_catalog_object', {'id':oitem.id}) }}">
+            <div class="sl_img" style="background-image:url('{% if oitem.image %}/images/objects/{{ oitem.image.thumb }}{% else %}/images/realty.png{% endif %}');">
+                <div class="type">{{ type[oitem.type] }}</div>
+            </div>
+        </a>
+        <div class="caption">
+            <h4 class="text-center nobreak">{{ oitem.title }}</h4>
+            <h5 class="text-center red"><b>{{ oitem.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
+            <div class="plan_desc"><table class="table">
+                    <tr><td colspan="2">г. {{ oitem.Towns.title }}{% if oitem.Areas %}, мкр. {{ oitem.Areas.title }}{% endif %}, {{ oitem.address }}</td></tr>
+                    {% for param in oitem.ObjectParamssForTable() if param %}
+                        <tr>
+                            <td><b>{{ param.ObjectTypesFields.filterName }}:</b> {{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td>
+                        </tr>
+                    {% endfor %}
+                </table></div>
+            <div class="text-center"><a href="{{ path('site_catalog_object', {'id':oitem.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
+        </div>
+    </div>
+</div>

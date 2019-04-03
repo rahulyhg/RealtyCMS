@@ -210,7 +210,7 @@ class CatalogController extends Controller
             1 => 'Продажа',
             2 => 'Аренда'
         );
-		$type = @$request->query->get('type') ? $types[$request->query->get('type')] . (@$request->query->get('home') == 'yes' ? ' жилой недвижимости' : '') : '';
+		$obtype = @$request->query->get('type') ? $types[$request->query->get('type')] . (@$request->query->get('home') == 'yes' ? ' жилой недвижимости' : '') : '';
 
         $response = $this->render('SiteBundle:Default:catalog.html.twig', array(
             'settings'      => $settings,
@@ -218,7 +218,7 @@ class CatalogController extends Controller
             'catalog'       => $pagination,
             'category'		=> $category,
             'categories' 	=> $categories,
-            'type'          => $type,
+            'obtype'          => $obtype,
             'search_form'   => $search_form->createView(),
             'dir' 			=> $dir,
             'sort' 			=> $sort,

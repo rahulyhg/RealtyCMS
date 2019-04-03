@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		<div class="catalog clearfix">
-			<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% elseif type %} <small>{{ type }}</small>{% endif %}</h1>
+			<h1 class="padding-5">Каталог недвижимости{% if category %} <small>{{ category.title }}</small>{% elseif obtype %} <small>{{ obtype }}</small>{% endif %}</h1>
 			<div class="clearfix">
 				<div class="col-md-6 clearfix padding-0 padding-top-5">
 					<div class="btn-group padding-5" role="group" aria-label="...">
@@ -48,27 +48,8 @@
 			</div>
 			{#<h3>Обращаем Ваше внимание, что не все объекты находятся в открытом доступе.</h3>#}
 			<div class="clearfix padding-top-5">
-				{% for item in catalog if item %}
-					<div class="col-sm-6 col-md-3 padding-5">
-						<div class="thumbnail">
-							<a href="{{ path('site_catalog_object', {'id':item.id}) }}">
-								<div class="sl_img" style="background-image:url('{% if item.image %}/images/objects/{{ item.image.thumb }}{% else %}/images/realty.png{% endif %}');"><div class="type">{{ type[item.type] }}</div></div>
-							</a>
-							<div class="caption">
-								<h4 class="text-center nobreak">{{ item.title }}</h4>
-								<h5 class="text-center red"><b>{{ item.price|number_format(0,'.',' ') }}</b><i class="fa fa-rub fa-fw"></i></h5>
-								<div class="plan_desc"><table class="table">
-										<tr><td colspan="2">г. {{ item.Towns.title }}{% if item.Areas %}, {{ item.Areas.title }} р-н{% endif %}, {{ item.address }}</td></tr>
-										{% for param in item.ObjectParamssForTable() if param %}
-										<tr>
-											<td><b>{{ param.ObjectTypesFields.filterName }}:</b> {{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td>
-										</tr>
-									{% endfor %}
-								</table></div>
-								<div class="text-center"><a href="{{ path('site_catalog_object', {'id':item.id}) }}" class="btn btn-primary" role="button">Подробнее</a></div>
-							</div>
-						</div>
-					</div>
+				{% for oitem in catalog if oitem %}
+					{% embed "SiteBundle:Default:item.html.twig" %}{% endembed %}
 				{% endfor %}
 				{% if catalog|length == 0 %}
 					<div class="alert alert-default" role="alert">Нет объектов удовлетворяющих Вашему запросу</div>

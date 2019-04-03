@@ -48,7 +48,7 @@
                             <li class="dropdown">
 							  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Каталог <span class="caret"></span></a>
 							  <ul class="dropdown-menu">
-                                  <li><a href="//panoramaekt.nmarket.pro">Квартиры в новостройках</a></li>
+                                  <li><a href="//panoramaekt.nmarket.pro" target="_blank">Квартиры в новостройках</a></li>
 								{% for cat in categories if cat %}
 								    <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
 								{% endfor %}
@@ -87,7 +87,7 @@
 							  <ul class="dropdown-menu">
                                   <li class="dropdown dropdown-submenu"><a href="#" class="dropdown-toggle" data-toggle="dropdown">Каталог</a>
                                       <ul class="dropdown-menu">
-                                          <li><a href="//panoramaekt.nmarket.pro">Квартиры в новостройках</a></li>
+                                          <li><a href="//panoramaekt.nmarket.pro" target="_blank">Квартиры в новостройках</a></li>
                                           {% for cat in categories if cat %}
                                               <li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
                                           {% endfor %}
@@ -185,7 +185,7 @@
 					<div class="col-sm-4 padding-5 clearfix hidden-xs">
                         <ul class="nav navbar-nav">
                             <li><a><b>Каталог</b></a></li>
-                            <li><a href="//panoramaekt.nmarket.pro">Квартиры в новостройках</a></li>
+                            <li><a href="//panoramaekt.nmarket.pro" target="_blank">Квартиры в новостройках</a></li>
                             {% for cat in categories if cat %}
 								<li><a href="{{ path('site_catalog_alias', {'alias':cat.alias})}}">{{ cat.title }}</a></li>
 							{% endfor %}

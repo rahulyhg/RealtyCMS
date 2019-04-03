@@ -70,7 +70,7 @@
 	<div class="cates clearfix">
 		<div class="container text-center clearfix">
 			<div class="col-md-3 padding-0 clearfix">
-				<a class="tile img-box" href="//panoramaekt.nmarket.pro">
+				<a class="tile img-box" href="//panoramaekt.nmarket.pro" target="_blank">
 					<div class="tile_bg" style="background-image:url('/images/cates/novostroyki.jpg');"></div>
 					<div class="tile-o">
 						<div class="tile-t">
@@ -204,82 +204,4 @@
 			</div>
 		</div>
 	</div>
-{% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        $(document).ready(function() {
-        	if($("#owl-first").length) {
-				$("#owl-first").owlCarousel({
-					items: 1,
-					autoHeight: false,
-					lazyLoad: true,
-					navigation: true,
-					responsive: false,
-					navigationText: false
-				});
-			}
-			if($("#owl-agents").length) {
-				$("#owl-agents").owlCarousel({
-					responsiveClass:true,
-					responsive:{
-						0:{
-							items:2,
-							nav:false
-						},
-						600:{
-							items:3,
-							nav:false
-						},
-						1000:{
-							items:6,
-							nav:false,
-							loop:false
-						}
-					}
-				});
-			}
-			if($("#owl-docs").length) {
-				$("#owl-docs").owlCarousel({
-					responsiveClass:true,
-					responsive:{
-						0:{
-							items:2,
-							nav:false
-						},
-						600:{
-							items:3,
-							nav:false
-						},
-						1000:{
-							items:6,
-							nav:false,
-							loop:false
-						}
-					}
-				});
-			}
-			if($("#owl-clients").length) {
-				$("#owl-clients").owlCarousel({
-					responsiveClass:true,
-					responsive:{
-						0:{
-							items:2,
-							nav:false
-						},
-						600:{
-							items:3,
-							nav:false
-						},
-						1000:{
-							items:6,
-							nav:false,
-							loop:false
-						}
-					}
-				});
-			}
-        });
-    </script>    
 {% endblock %}

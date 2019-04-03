@@ -74,7 +74,30 @@
 {% block text_widget %}
     {% spaceless %}
         <div class="col-sm-9">
-            <input type="text" class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+            {% if 'user_id' in name %}
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <a href="{{ path('admin_users_edit',{'id': value}) }}" class="btn btn-default" target="_blank" title="К пользователю"><i class="fa fa-user"></i></a>
+                    </span>
+                    <input type="text" class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+                </div>
+            {% elseif 'alias' in name %}
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="fill_alias()" title="Заполнить автоматически"><i class="fa fa-magic"></i></button>
+                    </span>
+                    <input type="text" class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+                </div>
+            {% elseif 'name' in name %}
+                <div class="input-group">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button" onclick="capitalize(this)" title="Отформатировать"> Aa </button>
+                    </span>
+                    <input type="text" class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+                </div>
+            {% else %}
+                <input type="text" class="form-control" {{ block('widget_attributes') }}{% if value is defined %} value="{{ value }}"{% endif %}>
+            {% endif %}
         </div>
     {% endspaceless %}
 {% endblock text_widget %}

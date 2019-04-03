@@ -1,6 +1,6 @@
 {% extends 'AdminBundle::layout.html.twig' %}
 {% block content %}
-    <h1>Города</h1>
+    <h1>Населенные пункты</h1>
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="alert alert-success">
             {{ flashMessage }}
@@ -43,7 +43,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="4">Нет элементов</td></tr>
+                    <tr><td colspan="5">Нет населенных пунктов</td></tr>
                 {% endfor %}
                 </tbody>
             </table>

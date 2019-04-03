@@ -21,11 +21,6 @@ class TownsController extends Controller
     {
         $items = TownsQuery::create()
             ->find();
-        if (!$items) {
-            throw $this->createNotFoundException(
-                'Нет доступных элементов'
-            );
-        }
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

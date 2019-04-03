@@ -294,6 +294,30 @@ class CatalogController extends Controller
 		$categories = ObjectTypesQuery::create()
             ->orderBySort()
             ->find();
+
+        $user = $this->container->get('security.context')->getToken()->getUser();
+        # Увеличиваем счетчик просмотров объекта
+        $useragent = $_SERVER['HTTP_USER_AGENT'];
+
+        # Отсеиваем ботов
+        if (!preg_match("/bot/i", $useragent)) {
+            # Есть ли уже просмотренные объявления в текущей сессии
+            if (@$_SESSION['objects']) {
+                if (!in_array($id, $_SESSION['objects'])) {
+                    array_push($_SESSION['objects'], $id);
+                    if ($user == 'anon.') {
+                        $object->setViewed($object->getViewed() + 1);
+                        $object->save();
+                    }
+                }
+            } else {
+                $_SESSION['objects'] = array($id);
+                if ($user == 'anon.') {
+                    $object->setViewed($object->getViewed() + 1);
+                    $object->save();
+                }
+            }
+        }
 			
         return $this->render('SiteBundle:Default:object.html.twig', array(
             'settings'      => $settings,

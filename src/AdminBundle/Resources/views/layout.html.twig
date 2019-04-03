@@ -38,12 +38,12 @@
                         <ul class="nav" id="side-menu">
                             <li><a href="{{ path('admin_users_edit',{'id': app.user.id }) }}"><i class="fa fa-fw fa-user"></i> {{ app.user.username }}</a></li>
                             {% if is_granted("ROLE_SUPER_ADMIN") %}
-                                <li><a href="{{ path('admin_default_settings') }}"><i class="fa fa-fw fa-cogs"></i> Настройки</a></li>
-                                <li><a href="{{ path('admin_users_index') }}"><i class="fa fa-fw fa-users"></i> Пользователи</a></li>
+                                <li><a href="{{ path('admin_default_settings') }}"><i class="fa fa-fw fa-cogs"></i> Настройки сайта</a></li>
+                                <li><a href="{{ path('admin_users_index') }}"><i class="fa fa-fw fa-users"></i> Сотрудники</a></li>
                                 <li><a href="{{ path('admin_menus_index') }}"><i class="fa fa-fw fa-list"></i> Меню</a></li>
                                 <li><a href="{{ path('admin_pages_index') }}"><i class="fa fa-fw fa-files-o"></i> Страницы</a></li>
                                 <li><a href="{{ path('admin_sliders_index') }}"><i class="fa fa-fw fa-film"></i> Слайдеры</a></li>
-                                <li><a href="{{ path('admin_towns_index') }}"><i class="fa fa-fw fa-map-marker"></i> Города</a></li>
+                                <li><a href="{{ path('admin_towns_index') }}"><i class="fa fa-fw fa-map-marker"></i> Населенные пункты</a></li>
                                 <li><a href="{{ path('admin_objectstypes_indextypes') }}"><i class="fa fa-fw fa-inbox"></i> Типы объектов</a></li>
                             {% endif %}
 							<li><a href="{{ path('admin_objects_index') }}"><i class="fa fa-fw fa-building-o"></i> Каталог объектов</a></li>

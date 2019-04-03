@@ -38,7 +38,7 @@
                 <table class="table">
                     <tr><td>Тип сделки</td><td>{{ type[object.type] }}</td></tr>
                     <tr><td>Тип недвижимости</td><td>{{ object.ObjectTypes.title }}</td></tr>
-                    <tr><td>Город</td><td>{{ object.Towns.title }}</td></tr>
+                    <tr><td>Населенный пункт</td><td>{{ object.Towns.title }}</td></tr>
                     {% if object.Areas %}<tr><td>Район</td><td>{{ object.Areas.title }}</td></tr>{% endif %}
                     {% if object.address %}<tr><td>Адрес</td><td>{{ object.address }}</td></tr>{% endif %}
                     {% for param in object.ObjectParamss() if param %}

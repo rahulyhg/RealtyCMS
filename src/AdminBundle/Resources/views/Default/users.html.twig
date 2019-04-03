@@ -1,6 +1,6 @@
 {% extends 'AdminBundle::layout.html.twig' %}
 {% block content %}
-    <h1>Пользователи</h1>
+    <h1>Сотрудники</h1>
     {% for flashMessage in app.session.flashbag.get('notice') %}
         <div class="alert alert-success">
             {{ flashMessage }}
@@ -22,7 +22,7 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Пользователь</th>
+                    <th>Сотрудник</th>
                     <th>Email</th>
                     <th>Активен</th>
                     <th>Фото</th>
@@ -48,7 +48,7 @@
                         </td>
                     </tr>
                 {% else %}
-                    <tr><td colspan="5">Нет пользователей</td></tr>
+                    <tr><td colspan="5">Нет сотрудников</td></tr>
                 {% endfor %}
                 </tbody>
             </table>

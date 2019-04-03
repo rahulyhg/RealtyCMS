@@ -68,13 +68,14 @@
                     <th>#</th>
                     <th>Название</th>
                     <th>Тип объекта</th>
-                    <th>Город</th>
+                    <th>Нас. пункт</th>
                     <th>Адрес</th>
                     <th>Стоимость объекта</th>
-                    <th>Планировки</th>
-                    <th>Опубликовано</th>
-                    <th>Одобрено</th>
-                    <th>Менеджер</th>
+                    <th><i class="fa fa-th fa-fw" title="Планировки"></i></th>
+                    <th><i class="fa fa-power-off fa-fw" title="Опубликовано"></i></th>
+                    <th><i class="fa fa-check fa-fw" title="Одобрено"></i></th>
+                    <th>Специалист</th>
+                    <th><i class="fa fa-eye fa-fw" title="Просмотров"></i></th>
                     <th><i class="fa fa-picture-o"></i></th>
                     <th class="action">Действия</th>
                 </tr>
@@ -88,13 +89,14 @@
                         <td>{{ item.Towns.title }}</td>
                         <td>{{ item.Address }}</td>
                         <td>{{ item.price|number_format(0,'.',' ') }}</td>
-                        <td>{% if item.ObjectLayoutss|length %}{{ item.ObjectLayoutss|length }}{% endif %}</td>
-                        <td>{% if item.Published %}<i class="fa fa-check"></i>{% endif %}</td>
-                        <td>{% if item.modered %}<i class="fa fa-check"></i>{% endif %}</td>
+                        <td class="text-center" title="Кол-во планировок">{% if item.ObjectLayoutss|length %}{{ item.ObjectLayoutss|length }}{% endif %}</td>
+                        <td class="text-center">{% if item.Published %}<i class="fa fa-check fa-fw" title="Опубликовано"></i>{% endif %}</td>
+                        <td class="text-center">{% if item.modered %}<i class="fa fa-check fa-fw" title="Одобрено"></i>{% endif %}</td>
                         <td>{{ item.User.Username }}</td>
+                        <td class="text-center" title="Просмотров"><b>{{ item.Viewed }}</b></td>
                         <td><a href="{{ path('admin_objects_images', {'id': item.id}) }}" title="Перейти к фотографиям">Фотографий: {{ item.ObjectImagess|length }}</a></td>
                         <td class="action">
-                            <a href="{{ path('site_catalog_object', {'id':item.id}) }}" title="На сайте" target="_blank"><i class="fa fa-share"></i></a>
+                            <a href="{{ path('site_catalog_object', {'id':item.id}) }}" title="Посмотреть на сайте" target="_blank"><i class="fa fa-eye"></i></a>
                             <a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать"><i class="fa fa-pencil"></i></a>
                             <a href="{{ path('admin_objects_copy', {'id': item.id}) }}" title="Копировать"><i class="fa fa-files-o"></i></a>
                             {% if is_granted("ROLE_SUPER_ADMIN") %}

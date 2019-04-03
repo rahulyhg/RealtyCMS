@@ -136,11 +136,9 @@ class DefaultController extends Controller
                 if ($Filename) {
                     $form['logo_top']->getData()->move($dir, $Filename);
                     $logo_image = new Image($dir . '/' . $Filename);
-                    $watermark = new Image($dir . '/' . $Filename);
                     $logo_image->fit_to_height(100);
                     $logo_image->save($dir . '/' . $Filename);
-                    $watermark->fit_to_width(100);
-                    $watermark->save($dir . '/watermark.png');
+
                 }
             }
             if ($form['logo_bottom']->getData()) {
@@ -152,8 +150,11 @@ class DefaultController extends Controller
                 if ($Filename) {
                     $form['logo_bottom']->getData()->move($dir, $Filename);
                     $logo_image = new Image($dir . '/' . $Filename);
+                    $watermark = new Image($dir . '/' . $Filename);
                     $logo_image->fit_to_width(300);
                     $logo_image->save($dir . '/' . $Filename);
+                    $watermark->fit_to_width(100);
+                    $watermark->save($dir . '/watermark.png');
                 }
             }
             $settings->save();

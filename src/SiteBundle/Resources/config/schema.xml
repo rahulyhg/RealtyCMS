@@ -225,6 +225,7 @@
         <column name="published" type="boolean" defaultValue="0"/>        
         <column name="modered" type="boolean" defaultValue="0"/>
         <column name="xml" type="boolean" defaultValue="0"/>
+        <column name="viewed" type="integer" required="false"/>
         <behavior name="timestampable" />
         <foreign-key foreignTable="fos_user" onDelete="CASCADE" onUpdate="CASCADE">
             <reference local="user_id" foreign="id"/>

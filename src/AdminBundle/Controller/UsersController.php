@@ -19,11 +19,6 @@ class UsersController extends Controller
     {
         $items = UserQuery::create()
             ->find();
-        if (!$items) {
-            throw $this->createNotFoundException(
-                'Нет доступных элементов'
-            );
-        }
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

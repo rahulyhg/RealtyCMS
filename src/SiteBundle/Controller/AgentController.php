@@ -43,7 +43,7 @@ class AgentController extends Controller
 			
 		$agents = UserQuery::create()
             ->filterByRole('ROLE_AGENT')
-            ->orderByPosition()
+            ->orderByRoles()
             ->orderByUsername()
             ->find();
 

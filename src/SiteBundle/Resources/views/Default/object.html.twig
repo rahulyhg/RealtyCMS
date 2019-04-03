@@ -40,7 +40,7 @@
                     <tr><td>Тип недвижимости</td><td>{{ object.ObjectTypes.title }}</td></tr>
                     <tr><td>Населенный пункт</td><td>{% if object.Towns.pagetitle %}{{ object.Towns.pagetitle }}{% else %}{{ object.Towns.title }}{% endif %}</td></tr>
                     {% if object.Areas %}<tr><td>Район/Микрорайон</td><td>{{ object.Areas.title }}</td></tr>{% endif %}
-                    {% if object.address %}<tr><td>Адрес объекта</td><td><a href="#map">{{ object.address }}</a></td></tr>{% endif %}
+                    {% if object.address %}<tr><td>Адрес объекта</td><td><a href="#map_show">{{ object.address }}</a></td></tr>{% endif %}
                     {% for param in object.ObjectParamss() if param %}
                         <tr><td>{{ param.ObjectTypesFields.name }}</td><td>{{ param.valueNormalized }}{% if param.ObjectTypesFields.postfix %} {{ param.ObjectTypesFields.postfix }}{% endif %}</td></tr>
                     {% endfor %}
@@ -119,7 +119,7 @@
             {% endif %}
             <div class="clearfix">
                 {% if object.address %}
-                    <div class="col-sm-6 text-center">
+                    <div class="col-sm-6 text-center" id="map_show">
                         <h3 class="text-left">На карте</h3>
                         <div id="map" data-coordinate="{{ object.coordinates }}"></div><br>
                     </div>

@@ -175,8 +175,7 @@ class DefaultController extends Controller
     public function runAction($param = NULL)
     {
 
-        $settings = SettingsQuery::create()
-            ->findOne();
+        $settings = SettingsQuery::create()->findOne();
 
         $php_path = $settings->getPhpPath() ? : 'php';
 

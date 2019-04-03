@@ -9,6 +9,7 @@ use SiteBundle\Model\ObjectImagesQuery;
 use SiteBundle\Model\ObjectParams;
 use SiteBundle\Model\ObjectParamsQuery;
 use SiteBundle\Model\ObjectTypesFieldsQuery;
+use SiteBundle\Model\SettingsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use SiteBundle\Model\Objects;
@@ -21,6 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Process\Process;
 
 class ObjectsController extends Controller
 {
@@ -177,6 +179,11 @@ class ObjectsController extends Controller
                 'notice',
                 '"'.$nitem->getTitle().'" успешно добавлено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
+
             return $this->redirect($this->generateUrl('admin_objects_images', array('id'=>$item->getId())));
         }
 
@@ -342,6 +349,10 @@ class ObjectsController extends Controller
                 'notice',
                 'Успешно сохранено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
             return $this->redirect($this->generateUrl('admin_objects_images', array('id'=>$item->getId())));
         }
 

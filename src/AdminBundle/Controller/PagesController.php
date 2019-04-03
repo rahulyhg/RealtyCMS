@@ -2,12 +2,14 @@
 
 namespace AdminBundle\Controller;
 
+use SiteBundle\Model\SettingsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use SiteBundle\Model\Pages;
 use SiteBundle\Model\PagesQuery;
 use AdminBundle\Form\PagesType;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Process\Process;
 
 class PagesController extends Controller
 {
@@ -54,6 +56,10 @@ class PagesController extends Controller
                 'notice',
                 'Успешно добавлено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
             return $this->redirect($this->generateUrl('admin_pages_index'));
         }
 

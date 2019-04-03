@@ -2,12 +2,14 @@
 
 namespace AdminBundle\Controller;
 
+use SiteBundle\Model\SettingsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use FOS\UserBundle\Propel\UserQuery;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Exception\IOExceptionInterface;
+use Symfony\Component\Process\Process;
 
 class UsersController extends Controller
 {
@@ -82,6 +84,10 @@ class UsersController extends Controller
                 'notice',
                 'Успешно добавлено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
             return $this->redirect($this->generateUrl('admin_users_index'));
         }
 

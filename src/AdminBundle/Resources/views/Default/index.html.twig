@@ -91,7 +91,7 @@
 					{% for message in messages %}
 						<tr>
 							<td>
-								{% if message.status == 1 %}<label class="label label-primary">Новая</label>
+								{% if message.status == 1 %}<label class="label label-primary">Новое</label>
 								{% elseif message.status == 2 %}<label class="label label-danger">Отказ</label>
 								{% else %}<label class="label label-success">Успех</label>{% endif %}
 							</td>

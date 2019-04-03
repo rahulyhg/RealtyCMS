@@ -42,7 +42,7 @@ class DefaultController extends Controller
 
         $filter_form
             ->add('Status', 'choice', array(
-                'choices' => array('1'=>'Новые','2'=>'Отказ','3'=>'Успех'),
+                'choices' => array('1'=>'Новое','2'=>'Отказ','3'=>'Успех'),
                 'label' => 'Статус сообщения',
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
@@ -53,7 +53,7 @@ class DefaultController extends Controller
             $filter_form->add('UserId', 'choice', array(
                 'empty_value' => '- все -',
                 'choices' => $users,
-                'label' => 'Менеджер',
+                'label' => 'Специалист',
                 'attr' => array('class' => 'form-control filter_change'),
                 'multiple' => false,
                 'required' => false
@@ -62,7 +62,7 @@ class DefaultController extends Controller
             $users = array($user->getId() => $user->getUsername());
             $filter_form->add('UserId', 'choice', array(
                 'choices' => $users,
-                'label' => 'Менеджер',
+                'label' => 'Специалист',
                 'attr' => array('class' => 'form-control'),
                 'multiple' => false,
                 'required' => true

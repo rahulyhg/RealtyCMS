@@ -52,7 +52,7 @@ class SearchType extends AbstractType
                 'label'     => 'Город',
                 'attr'      => array('class'=>'form-control changeable selectpicker','title'=>'Выберите город'),
                 'empty_value' => '- любой -',
-                'multiple' => false,
+                'multiple' => FALSE,
                 'required'  => FALSE
             ));
         if (@$options['data']['town_id']) {
@@ -67,7 +67,7 @@ class SearchType extends AbstractType
                         'disabled' => $array_areas ? false : true
                     ),
                     'required' => FALSE,
-                    'multiple' => TRUE
+                    'multiple' => FALSE
                 ));
         }
         $builder
@@ -76,7 +76,7 @@ class SearchType extends AbstractType
                 'label'     => 'Тип сделки',
                 'attr'      => array('class'=>'form-control selectpicker','title'=>'Выберите тип сделки'),
                 'empty_value' => '- любой -',
-                'multiple' => false,
+                'multiple' => FALSE,
                 'required'  => FALSE
             ))
             ->add('type_object', 'choice', array(
@@ -84,7 +84,7 @@ class SearchType extends AbstractType
                 'label'     => 'Тип объекта',
                 'attr'      => array('class'=>'form-control selectpicker changeable','title'=>'Выберите тип объекта'),
                 'empty_value' => '- любой -',
-				'multiple' => false,
+				'multiple' => FALSE,
 				'required'  => FALSE
             ))
             ->add('price', 'search', array(

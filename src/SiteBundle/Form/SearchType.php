@@ -66,6 +66,7 @@ class SearchType extends AbstractType
                         'data-actions-box' => 'false',
                         'disabled' => $array_areas ? false : true
                     ),
+                    'empty_value' => '- любой -',
                     'required' => FALSE,
                     'multiple' => FALSE
                 ));

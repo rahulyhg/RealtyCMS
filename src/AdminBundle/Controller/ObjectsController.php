@@ -407,11 +407,30 @@ class ObjectsController extends Controller
             ->findOne();
 
         if ($item) {
+            $images = ObjectImagesQuery::create()
+                ->filterByObjectId($id)
+                ->find();
+            foreach ($images as $image) {
+                if ($image->getPath()) {
+                    $fs = new Filesystem();
+                    try {
+                        $fs->remove( 'images/objects/'.$image->getPath() );
+                    } catch (IOExceptionInterface $e) {
+                        echo "Ошибка удаления изображения";
+                    }
+                }
+                $image->delete();
+            }
+
             $item->delete();
             $this->get('session')->getFlashBag()->add(
                 'notice',
                 'Успешно удалено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
         }
         return $this->redirect($this->generateUrl('admin_objects_index'));
     }

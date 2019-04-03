@@ -109,6 +109,10 @@ class PagesController extends Controller
                 'notice',
                 'Успешно удалено!'
             );
+            $settings = SettingsQuery::create()->findOne();
+            $php_path = $settings->getPhpPath() ? : 'php';
+            $process = new Process($php_path.' '.$this->get('kernel')->getRootDir().'/console presta:sitemap:dump ../web/');
+            $process->run();
         }
         return $this->redirect($this->generateUrl('admin_pages_index'));
     }

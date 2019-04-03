@@ -36,43 +36,6 @@ $(document).ready(function() {
 			$(".menu").removeClass("fixed");
 		}
 	});
-    $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
-        event.preventDefault();
-        event.stopPropagation();
-        $(this).parent().siblings().removeClass('open');
-        $(this).parent().toggleClass('open');
-    });
-    if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        $('#collapseOne').collapse('hide');
-    }
-    if($("#owl-first").length) {
-        $("#owl-first").owlCarousel({
-            items: 1,
-            autoHeight: false,
-            lazyLoad: true,
-            navigation: true,
-            responsive: false,
-            navigationText: false
-        });
-    }
-    if($("#owl-agents").length) {
-        $("#owl-agents").owlCarousel({
-            responsiveClass:true,
-            responsive:{0:{items:2,nav:false},600:{items:3,nav:false},1000:{items:6,nav:false,loop:false}}
-        });
-    }
-    if($("#owl-docs").length) {
-        $("#owl-docs").owlCarousel({
-            responsiveClass:true,
-            responsive:{0:{items:2,nav:false},600:{items:3,nav:false},1000:{items:6,nav:false,loop:false}}
-        });
-    }
-    if($("#owl-clients").length) {
-        $("#owl-clients").owlCarousel({
-            responsiveClass:true,
-            responsive:{0:{items:2,nav:false},600:{items:3,nav:false},1000:{items:6,nav:false,loop:false}}
-        });
-    }
 	/*$('.antibtn').antibtn();
     if ($(window).width() > 990 && $(document).height() > 2000 && $('.search_objects').height() < ($(window).height()-200)) {
         (function ($) {
@@ -156,3 +119,16 @@ $(document).on('click', '[data-toggle="modal"]', function () {
         }
     }
 });
+(function($){
+    $(document).ready(function(){
+        $('ul.dropdown-menu [data-toggle=dropdown]').on('click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            $(this).parent().siblings().removeClass('open');
+            $(this).parent().toggleClass('open');
+        });
+        if(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            $('#collapseOne').collapse('hide');
+        }
+    });
+})(jQuery);

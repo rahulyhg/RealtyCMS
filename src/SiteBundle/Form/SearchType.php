@@ -63,6 +63,7 @@ class SearchType extends AbstractType
                     'attr' => array(
                         'class' => 'form-control selectpicker',
                         'title' => 'Выберите район',
+                        'data-actions-box' => (count($array_areas)>10 ? 'true' : 'false'),
                         'disabled' => $array_areas ? false : true
                     ),
                     'empty_value' => '- любой -',
@@ -120,7 +121,10 @@ class SearchType extends AbstractType
                                         'label' => $field->getName() . ($field->getPostfix() ? ' (' . $field->getPostfix() . ')' : '') . ':',
                                         'empty_value' => 'выбрать',
                                         'choices' => $values,
-                                        'attr' => array('class' => 'form-control selectpicker'),
+                                        'attr' => array(
+                                            'class' => 'form-control selectpicker',
+                                            'data-actions-box' => (count($values)>10 ? 'true' : 'false'),
+                                        ),
                                         'required' => false,
                                         'multiple' => true,
                                         'mapped' => false)

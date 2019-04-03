@@ -68,7 +68,7 @@ class SearchType extends AbstractType
                     ),
                     'empty_value' => '- любой -',
                     'required' => FALSE,
-                    'multiple' => FALSE
+                    'multiple' => TRUE
                 ));
         }
         $builder

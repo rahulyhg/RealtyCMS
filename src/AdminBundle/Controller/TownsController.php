@@ -20,7 +20,7 @@ class TownsController extends Controller
     public function indexAction()
     {
         $items = TownsQuery::create()
-            ->find();
+            ->orderByTitle()->find();
 
         $paginator  = $this->get('knp_paginator');
         $pagination = $paginator->paginate(

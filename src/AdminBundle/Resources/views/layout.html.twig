@@ -36,7 +36,7 @@
                 <div class="navbar-default sidebar" role="navigation">
                     <div class="sidebar-nav navbar-collapse collapse" aria-expanded="false">
                         <ul class="nav" id="side-menu">
-                            <li><a href="{{ path('admin_users_edit',{'id': app.user.id }) }}"><i class="fa fa-fw fa-user-o"></i> {{ app.user.username }}</a></li>
+                            <li><a href="{{ path('admin_users_edit',{'id': app.user.id }) }}"><i class="fa fa-fw fa-user"></i> {{ app.user.username }}</a></li>
                             {% if is_granted("ROLE_SUPER_ADMIN") %}
                                 <li><a href="{{ path('admin_default_settings') }}"><i class="fa fa-fw fa-cogs"></i> Настройки сайта</a></li>
                                 <li><a href="{{ path('admin_users_index') }}"><i class="fa fa-fw fa-users"></i> Сотрудники</a></li>

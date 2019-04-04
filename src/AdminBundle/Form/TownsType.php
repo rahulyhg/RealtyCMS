@@ -20,11 +20,7 @@ class TownsType extends AbstractType
 
         $areas = '';
         if ($options['data']->getAreass()) {
-            $areas_array = [];
-            foreach($options['data']->getAreass() as $item) {
-                $areas_array[] = $item->getTitle();
-            }
-            $areas = implode(',',$areas_array);
+            $areas = implode(',',$options['data']->getAreass()->toKeyValue('ID','Title'));
         }
 
         $builder

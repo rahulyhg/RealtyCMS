@@ -85,14 +85,14 @@
                     <tr{% if not item.Published %} class="info"{% elseif not item.Modered %} class="warning"{% endif %}>
                         <td>{{ item.id }}</td>
                         <td><a href="{{ path('admin_objects_edit', {'id': item.id}) }}" title="Редактировать">{{ item.title }}</a></td>
-                        <td>{{ item.ObjectTypes.Title }}</td>
-                        <td>{{ item.Towns.title }}</td>
-                        <td>{{ item.Address }}</td>
+                        <td><small>{{ item.ObjectTypes.Title }}</small></td>
+                        <td><small>{{ item.Towns.title }}</small></td>
+                        <td><small>{{ item.Address }}</small></td>
                         <td>{{ item.price|number_format(0,'.',' ') }}</td>
                         <td class="text-center" title="Кол-во планировок">{% if item.ObjectLayoutss|length %}{{ item.ObjectLayoutss|length }}{% endif %}</td>
                         <td class="text-center">{% if item.Published %}<i class="fa fa-check fa-fw" title="Опубликовано"></i>{% endif %}</td>
                         <td class="text-center">{% if item.modered %}<i class="fa fa-check fa-fw" title="Одобрено"></i>{% endif %}</td>
-                        <td>{{ item.User.Username }}</td>
+                        <td><small>{{ item.User.Username }}</small></td>
                         <td class="text-center" title="Просмотров"><b>{{ item.Viewed }}</b></td>
                         <td><a href="{{ path('admin_objects_images', {'id': item.id}) }}" title="Перейти к фотографиям">Фотографий: {{ item.ObjectImagess|length }}</a></td>
                         <td class="action">

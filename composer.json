@@ -40,7 +40,8 @@
         "paragonie/random_compat": "1.2.2",
         "phing/phing": "2.14.0",
         "braincrafted/bootstrap-bundle": "dev-master",
-        "eko/feedbundle": "1.2.6"
+        "eko/feedbundle": "1.2.6",
+        "yandex/geo": "1.0.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~3.0",

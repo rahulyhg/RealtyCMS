@@ -28,7 +28,10 @@ class ObjectsAdminType extends AbstractType
     {
 
         $users = UserQuery::create()
-            ->orderByPosition()->orderByUsername()->find()->toKeyValue('id', 'Username');
+            ->filterByRole('ROLE_AGENT')
+            ->orderByRoles('DESC')
+            ->orderByUsername()
+            ->find()->toKeyValue('id', 'Username');
 
         $towns = TownsQuery::create()
             ->orderByTitle()->find()->toKeyValue('id', 'Title');

@@ -2,6 +2,7 @@
 {% block head %}
 
     {% block stylesheets %}
+        <style>:root{--main-color: {{ settings.color }};}</style>
         {{ parent() }}
         {% stylesheets '@bootstrap_css' '@SiteBundle/Resources/public/css/*'  %}
             <link href="{{ asset_url }}" type="text/css" rel="stylesheet" />

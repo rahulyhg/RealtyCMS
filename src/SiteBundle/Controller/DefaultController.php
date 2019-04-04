@@ -90,27 +90,29 @@ class DefaultController extends Controller
                 ->findOneById($consultant_id);
         } else $consultant = NULL;
 
-        # Отсылаем сообщение
-        $subject = 'Заявка с сайта '.$_SERVER['SERVER_NAME'];
-        $from = $settings->getName().' <no-reply@'.$_SERVER['SERVER_NAME'].'>';
+        if ($name && $phone && $question) {
+            # Отсылаем сообщение
+            $subject = 'Заявка с сайта ' . $_SERVER['SERVER_NAME'];
+            $from = $settings->getName() . ' <no-reply@' . $_SERVER['SERVER_NAME'] . '>';
 
-        $to = $settings->getEmail();
-        $body = $this->renderView(
-            'SiteBundle:Default:mail.html.twig',
-            array('name' => $name, 'phone' => $phone, 'site' => $_SERVER['SERVER_NAME'], 'object' => $object, 'consultant' => $consultant, 'question' => $question)
-        );
-        $this->get('mail_helper')->sendMailing($from, $to, $subject, $body);
-		if ($consultant) {
-			$this->get('mail_helper')->sendMailing($from, $consultant->getEmail(), $subject, $body);
-		}
-        $message = new Messages();
-        $message->setName($name);
-        $message->setPhone($phone);
-        $message->setObjectId($object?$object->getId():NULL);
-        $message->setUserId($consultant?$consultant->getId():NULL);
-        $message->setQuestion($question);
-        $message->setStatus(1);
-        $message->save();
+            $to = $settings->getEmail();
+            $body = $this->renderView(
+                'SiteBundle:Default:mail.html.twig',
+                array('name' => $name, 'phone' => $phone, 'site' => $_SERVER['SERVER_NAME'], 'object' => $object, 'consultant' => $consultant, 'question' => $question)
+            );
+            $this->get('mail_helper')->sendMailing($from, $to, $subject, $body);
+            if ($consultant) {
+                $this->get('mail_helper')->sendMailing($from, $consultant->getEmail(), $subject, $body);
+            }
+            $message = new Messages();
+            $message->setName($name);
+            $message->setPhone($phone);
+            $message->setObjectId($object ? $object->getId() : NULL);
+            $message->setUserId($consultant ? $consultant->getId() : NULL);
+            $message->setQuestion($question);
+            $message->setStatus(1);
+            $message->save();
+        }
 
         return $this->render('SiteBundle:Default:post.html.twig', array(
             'name'  => $name

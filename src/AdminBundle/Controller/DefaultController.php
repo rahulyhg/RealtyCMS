@@ -5,6 +5,7 @@ namespace AdminBundle\Controller;
 use AdminBundle\Form\FilterType;
 use FOS\UserBundle\Propel\UserQuery;
 use SiteBundle\Model\TemplatesQuery;
+use SiteBundle\Model\TownsQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use SiteBundle\Model\Settings;
@@ -97,11 +98,13 @@ class DefaultController extends Controller
         );
 
         $response = $this->render('AdminBundle:Default:index.html.twig',array(
-            'pages' => PagesQuery::create()->find()->count(),
-            'objects' => ObjectsQuery::create()->find()->count(),
-            'messages' => $items,
-            'on_page' => $on_page,
-            'filter_form' => $filter_form->createView(),
+            'pages'         => PagesQuery::create()->find()->count(),
+            'objects'       => ObjectsQuery::create()->find()->count(),
+            'towns'         => TownsQuery::create()->find()->count(),
+            'users'         => UserQuery::create()->find()->count(),
+            'messages'      => $items,
+            'on_page'       => $on_page,
+            'filter_form'   => $filter_form->createView(),
         ));
         $response->headers->setCookie(new Cookie('status', $status, time() + 3600 * 24 * 7, $this->generateUrl('admin_default_index')));
         $response->headers->setCookie(new Cookie('on_page', $on_page, time() + 3600 * 24 * 7, $this->generateUrl('admin_default_index')));

@@ -21,6 +21,7 @@
         <column name="counters" type="longvarchar" required="false"/>
         <column name="robots" type="longvarchar" required="false"/>
         <column name="yandex" type="varchar" size="255" required="false"/>
+        <column name="color" type="varchar" size="255" required="false"/>
         <column name="facebook" type="varchar" size="255" required="false"/>
         <column name="twitter" type="varchar" size="255" required="false"/>
         <column name="vk" type="varchar" size="255" required="false"/>

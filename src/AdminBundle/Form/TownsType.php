@@ -26,7 +26,7 @@ class TownsType extends AbstractType
         $builder
             ->add('title', 'text', array('label'  => 'Название нас.пункта', 'required' => TRUE))
             ->add('pagetitle', 'text', array('label'  => 'Написание нас.пункта', 'required' => TRUE))
-            ->add('areas', 'textarea', array('label'  => 'Районы/Микрорайоны (через запятую)', 'required' => FALSE, 'mapped'=>FALSE, 'data'=>$areas))
+            ->add('areas', 'textarea', array('label'  => 'Районы/Микрорайоны (через запятую)', 'attr' => array('rows' => 8), 'required' => FALSE, 'mapped'=>FALSE, 'data'=>$areas))
             ->getForm();
 
     }
